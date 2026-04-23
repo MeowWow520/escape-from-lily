@@ -1,0 +1,23 @@
+# ============================================
+# Gitignore file for EscapeFromGhost
+# ============================================
+
+
+
+# 忽略 vscode 设置文件夹、 测试用cmake配置文件夹、 cmake 生成的 build 文件夹
+/.vscode
+/cmake_test
+/build
+
+# 忽略 claude 相关文件
+/.claude
+/CLAUDE.md
+
+# 忽略下载的依赖库
+/external/SDL-release-*/
+/external/SDL_image-release-*/
+/external/SDL_mixer-release-*/
+/external/SDL_ttf-release-*/
+/external/glm-*/
+/external/spdlog-*/
+/external/json-*/
