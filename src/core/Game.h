@@ -20,6 +20,7 @@ class Game
 {
 private:
     bool IsRunning_;
+    bool IsLogCurrentFPS;
     float DeltaTime_;
     Uint64 FrameDelay_;
     Uint64 FPS_;
@@ -38,6 +39,7 @@ private:
 
 
         IsRunning_ = true;
+        IsLogCurrentFPS = Config_["log"]["fps"];
         DeltaTime_ = 0.00f;
         FPS_ = Config_["fps"];
         Title_ = Config_["window"]["title"];

@@ -8,6 +8,7 @@ int main(int argc, char *argv[])
 {
     SDL_Log("Hello escape-from-lily!");
     Game& gameInstance = Game::getInstance();
-    gameInstance.Initialize();
+    SDL_Log("gameInstance creeted");
+    if (gameInstance.Initialize() == -1) return -1;
     return gameInstance.Running(argc, argv);
 }
