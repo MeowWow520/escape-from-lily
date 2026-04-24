@@ -1,7 +1,7 @@
 ## 逃离姛
 
 ### 🌐多语言支持
-中文（简体） | [英文](../../README.md)
+中文（简体） | [英文](./translations/zn-ch/Readme.md)
 
 ### 🎮概览
 
