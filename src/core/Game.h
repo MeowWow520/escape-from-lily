@@ -31,7 +31,22 @@ private:
     Scene* CurrentScene_;
 
 private:
-    Game() { }
+    Game()
+    {
+        std::ifstream configFile("assets/json/config.json");
+        configFile >> Config_;
+
+
+        IsRunning_ = true;
+        DeltaTime_ = 0.00f;
+        FPS_ = Config_["fps"];
+        Title_ = Config_["window"]["title"];
+        Window_ = nullptr;
+        Renderer_ = nullptr;
+        WindowSize_.x = Config_["window"]["size"][0];
+        WindowSize_.y = Config_["window"]["size"][1];
+        CurrentScene_ = nullptr;
+    }
     Game(const Game&) = delete;
     Game& operator=(const Game&) = delete;
 
@@ -43,7 +58,6 @@ public:
         return instance;
     }
 
-private:
     /**
      * 运行主循环
      * @return 返回 0：成功；返回 -1：运行失败。
@@ -60,11 +74,11 @@ private:
     int Clean();           // 清理游戏资源
     static int OutputError();
 public:
-    glm::vec2 getWindowSize() const { }
-    bool getIsRunning() const { }
-    SDL_Window* getWindow() const { }
-    SDL_Renderer* getRenderer() const { }
-    Scene* getCurrentScene() const { }
+    glm::vec2 Game::getWindowSize() const { return WindowSize_; }
+    bool Game::getIsRunning() const { return IsRunning_; }
+    SDL_Window* Game::getWindow() const { return Window_; }
+    SDL_Renderer* Game::getRenderer() const { return Renderer_; }
+    Scene* Game::getCurrentScene() const { return CurrentScene_; }
 
 };
 

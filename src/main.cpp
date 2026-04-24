@@ -6,6 +6,8 @@
 
 int main(int argc, char *argv[])
 {
-    
-    return 0;
+    SDL_Log("Hello escape-from-lily!");
+    Game& gameInstance = Game::getInstance();
+    gameInstance.Initialize();
+    return gameInstance.Running(argc, argv);
 }

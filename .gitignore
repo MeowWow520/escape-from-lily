@@ -1,5 +1,5 @@
 # ============================================
-# Gitignore file for EscapeFromGhost
+# Gitignore file for escape-from-lily
 # ============================================
 
 
@@ -21,3 +21,7 @@
 /external/glm-*/
 /external/spdlog-*/
 /external/json-*/
+
+
+# 忽略笔记
+/MyLearningNote.md

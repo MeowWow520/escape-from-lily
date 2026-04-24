@@ -30,6 +30,8 @@ int Game::Running(int argc, char *argv[])
             } else { DeltaTime_ = (float)(elapsed / 1e9); }
         }
     }
+
+    return 0;
 }
 
 int Game::Initialize()
@@ -49,9 +51,6 @@ int Game::Initialize()
     if (!SDLSetRLP) return OutputError();
     
     // Create Scene
-    if (CurrentScene_ == nullptr)
-        CurrentScene_ = new SceneMain();
-    CurrentScene_->Initialize();
     return 0;
 }
 
@@ -77,9 +76,3 @@ int Game::OutputError()
     SDL_Log(SDL_GetError());
     return -1;
 }
-
-glm::vec2 Game::getWindowSize() const { return WindowSize_; }
-bool Game::getIsRunning() const { return IsRunning_; }
-SDL_Window* Game::getWindow() const { return Window_; }
-SDL_Renderer* Game::getRenderer() const { return Renderer_; }
-Scene* Game::getCurrentScene() const { return CurrentScene_; }

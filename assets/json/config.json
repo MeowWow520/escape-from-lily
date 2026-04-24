@@ -1,0 +1,9 @@
+{
+    "window": {
+        "size": [1960, 1080],
+        "title": "escape-from-lily",
+        "version": "1.00.0"
+    },
+    "fps": 120,
+    "worldscale": 3.00
+}
