@@ -2,7 +2,7 @@
 
 
 ### 🌐Multi-Language Support
-[Chinese (Simplified)](./translations/zh-ch/Readme.md) | English 
+[Chinese (Simplified)](./translations/zn-ch/Readme.md) | English 
 
 ### 🎮Overview
 
