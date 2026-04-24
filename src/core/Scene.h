@@ -10,9 +10,6 @@
 
 class Scene: public Object
 {
-
-protected:
-
 public:
     Scene() = default;
     virtual ~Scene() = default;

@@ -1,4 +1,5 @@
 #include "Game.h"
+#include "../SceneMain.h"
 
 
 
@@ -6,8 +7,6 @@ int Game::Running(int argc, char *argv[])
 {
     (void)argc, (void)argv;
 
-    auto FrameTime = (1e9 / FPS_);
-    auto DeltaTime = 0.0f;
     while (IsRunning_)
     {
         // 计算帧率延迟
@@ -20,18 +19,18 @@ int Game::Running(int argc, char *argv[])
         //<!-- END 逻辑处理
 
         // 计算帧率
-        {
-            Uint64 end = SDL_GetTicksNS();
-            Uint64 elapsed = end - start;
-            if (elapsed < FrameDelay_) {
-                Uint64 sdlDelatTimesNS = FrameDelay_ - elapsed;
-                SDL_DelayNS(sdlDelatTimesNS);
-                DeltaTime_ = (float)(FrameDelay_ / 1e9);
-            } else { DeltaTime_ = (float)(elapsed / 1e9); }
-        }
+        Uint64 end = SDL_GetTicksNS();
+        Uint64 elapsed = end - start;
+        if (elapsed < FrameDelay_) {
+            Uint64 SDLDelatTimesNS = FrameDelay_ - elapsed;
+            SDL_DelayNS(SDLDelatTimesNS);
+            DeltaTime_ = (float) (FrameDelay_ / 1e9);
+        } else { DeltaTime_ = (float)(elapsed / 1e9); }
+        
     }
 
-    return 0;
+    if(!IsRunning_) return Clean();
+    return -1;
 }
 
 int Game::Initialize()
@@ -51,23 +50,44 @@ int Game::Initialize()
     if (!SDLSetRLP) return OutputError();
     
     // Create Scene
+    if (CurrentScene_ == nullptr)
+        CurrentScene_ = new SceneMain();
+    CurrentScene_->Initialize();
+    
     return 0;
 }
 
 void Game::handleEvents()
 {
+    SDL_Event event;
+    while (SDL_PollEvent(&event)) {
+        switch (event.type) {
+        case SDL_EVENT_QUIT:
+            IsRunning_ = false;
+            break;
+        default:
+            CurrentScene_->handleEvents(event);
+            break;
+        }
+    }
 }
 
 void Game::Update(float dt)
 {
+    CurrentScene_->Update(dt);
 }
 
 void Game::Render()
 {
+    SDL_SetRenderDrawColor(Renderer_, 0, 0, 0, 255);
+    SDL_RenderClear(Renderer_);
+    CurrentScene_->Render();
+    SDL_RenderPresent(Renderer_);
 }
 
 int Game::Clean()
 {
+    
     return 0;
 }
 
