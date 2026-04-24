@@ -1,10 +1,14 @@
 ## escape-from-lily
 
-### Overview
+
+### 🌐Multi-Language Support
+[Chinese (Simplified)](./translations/zh-ch/Readme.md) | English 
+
+### 🎮Overview
 
 **"escape from lily"** is an escape game inspired by the anime series named **"unknow"**.
 
-### Using Langanges
+### 📚Using Libs
 | Name          | Version       | Website                                                       |
 |---------------|---------------|---------------------------------------------------------------|
 | SDL3          | release-3.4.2 | [Official Wiki](https://wiki.libsdl.org/SDL3/FrontPage)       |
@@ -15,33 +19,33 @@
 | nlohmann_json | v3.11.3       | [Official](https://json.nlohmann.me/api/ordered_json/)        |
 
 
-### Project Structure
+### 📁Project Structure
 
 ```
-📁 EscapeFromGhost    # 项目根目录
-├── 📁 assets         # 资源目录
-│   ├── 📁 audios           # 音频资源
-│   ├── 📁 fonts            # 字体资源
-│   ├── 📁 images           # 图片资源
-│   │   ├── 📁 backgrounds      # 背景
-│   │   ├── 📁 character        # 角色
-│   │   ├── 📁 enemy            # 敌人
+📁 EscapeFromGhost
+├── 📁 assets
+│   ├── 📁 audios
+│   ├── 📁 fonts
+│   ├── 📁 images
+│   │   ├── 📁 backgrounds
+│   │   ├── 📁 character
+│   │   ├── 📁 enemy
 │   │   ├── 📁 ......
-│   ├── 📁 ui               # UI资源
+│   ├── 📁 ui
 │   ├── 📁......
-├── 📁 cmake          # CMake配置文件
-├── 📁 docs           # 文档目录
-├── 📁 exteral        # 外部库目录
-├── 📁 src            # 源代码目录
-│   ├── 📁 core             # 核心代码目录
-│   ├── main.cpp            # 程序入口文件
+├── 📁 cmake
+├── 📁 docs
+├── 📁 exteral
+├── 📁 src
+│   ├── 📁 core
+│   ├── main.cpp
 │   ├── ......
-├── 📁 translations   # 翻译文件目录
-│   ├── 📁 en               # 英文翻译文件
-│   ├── 📁 zh-CN            # 中文翻译文件
+├── 📁 translations
+│   ├── 📁 en
+│   ├── 📁 zh-CN
 │   ├── 📁 ......
-├── CMakeLists.txt    # CMake配置文件
-├── LICENSE           # 许可证文件
-├── README.md         # 项目说明文件
+├── CMakeLists.txt
+├── LICENSE
+├── README.md
 ├── ......
 ```
