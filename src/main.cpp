@@ -1,9 +1,9 @@
-#include <iostream>
+#include "core/Game.h"
 
 
 
-int main()
+int main(int argc, char *argv[])
 {
-    std::cout << "Hello escape-from-lily!\n";
+    
     return 0;
 }
