@@ -3,6 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+// #include <cerrno>
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_image.h>
 #include <SDL3/SDL_ttf.h>
@@ -14,6 +15,7 @@
 
 
 class Scene;
+
 
 
 class Game
@@ -48,6 +50,9 @@ private:
         WindowSize_.x = Config_["window"]["size"][0];
         WindowSize_.y = Config_["window"]["size"][1];
         CurrentScene_ = nullptr;
+
+        FrameDelay_ = (Uint64)1e9 / FPS_;
+        configFile.close();
     }
     Game(const Game&) = delete;
     Game& operator=(const Game&) = delete;

@@ -41,15 +41,21 @@ int Game::Initialize()
     if (!MIX_Init()) return OutputError(); 
     SDL_Log("SDL lib initialized");
 
-    Window_ = SDL_CreateWindow(Title_.c_str(), static_cast<int>(WindowSize_.x), static_cast<int>(WindowSize_.y), SDL_WINDOW_RESIZABLE);
+    Window_ = SDL_CreateWindow(Title_.c_str(), 
+        static_cast<int>(WindowSize_.x), 
+        static_cast<int>(WindowSize_.y), 
+        SDL_WINDOW_RESIZABLE );
     if (Window_ == nullptr) return OutputError();
-    SDL_Log("SDL created window Game::Window_ been the window");
+    SDL_Log("SDL created window. Game::Window_ been the window");
 
     Renderer_ = SDL_CreateRenderer(Window_, NULL);
     if (Renderer_ == nullptr) return OutputError();
-    SDL_Log("SDL created renderer Game::Renderer_ been the renderer");
+    SDL_Log("SDL created renderer. Game::Renderer_ been the renderer");
 
-    bool SDLSetRLP = SDL_SetRenderLogicalPresentation(Renderer_, static_cast<int>(WindowSize_.x), static_cast<int>(WindowSize_.y), SDL_LOGICAL_PRESENTATION_LETTERBOX);
+    bool SDLSetRLP = SDL_SetRenderLogicalPresentation(Renderer_,
+        static_cast<int>(WindowSize_.x), 
+        static_cast<int>(WindowSize_.y), 
+        SDL_LOGICAL_PRESENTATION_LETTERBOX );
     if (!SDLSetRLP) return OutputError();
     SDL_Log("Logical presentation set");
     // Create Scene

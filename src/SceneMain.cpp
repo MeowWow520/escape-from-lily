@@ -14,6 +14,7 @@ void SceneMain::handleEvents(SDL_Event& event)
 
 void SceneMain::Update(float dt)
 {
+    (void)dt;
 }
 
 

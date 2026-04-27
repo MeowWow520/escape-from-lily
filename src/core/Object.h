@@ -14,8 +14,8 @@ public:
     virtual ~Object() = default;
 
     virtual void Initialize() { }
-    virtual void handleEvents(SDL_Event& event) { }
-    virtual void Update(float dt) { }
+    virtual void handleEvents([[maybe_unused]] SDL_Event& event) { }
+    virtual void Update([[maybe_unused]] float dt) { }
     virtual void Render() { }
     virtual void Clean() { }
 };
