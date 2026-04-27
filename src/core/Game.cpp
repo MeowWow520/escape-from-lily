@@ -109,3 +109,33 @@ int Game::OutputError()
     SDL_Log(SDL_GetError());
     return -1;
 }
+
+void Game::drawGrid(const glm::vec2 &x1, const glm::vec2 &x2, 
+    const size_t gridwidth, SDL_FColor color)
+{
+    SDL_SetRenderDrawColorFloat(Renderer_, color.r, color.g, color.b, color.a);
+    for (float x = x1.x; x <= x2.x; x += gridwidth)
+        SDL_RenderLine(Renderer_, x, x1.y, x, x2.y);
+    for (float y = x1.y; y <= x2.y; y += gridwidth)
+        SDL_RenderLine(Renderer_, x1.x, y, x2.x, y);
+    SDL_SetRenderDrawColorFloat(Renderer_, 0, 0, 0, 1);
+}
+
+void Game::drawBoundary(const glm::vec2 &x1, const glm::vec2 &x2, 
+    const size_t boundarywidth, SDL_FColor color)
+{
+    SDL_SetRenderDrawColorFloat(Renderer_, color.r, color.g, color.b, color.a);
+
+
+    for (float x = x1.x; x < x2.x; x += boundarywidth)
+        SDL_RenderLine(Renderer_, x, x1.y, x + boundarywidth, x1.y);
+    for (float x = x1.x; x < x2.x; x += boundarywidth)
+        SDL_RenderLine(Renderer_, x, x2.y, x + boundarywidth, x2.y);
+    for (float y = x1.y; y < x2.y; y += boundarywidth)
+        SDL_RenderLine(Renderer_, x1.x, y, x1.x, y + boundarywidth);
+    for (float y = x1.y; y < x2.y; y += boundarywidth)
+        SDL_RenderLine(Renderer_, x2.x, y, x2.x, y + boundarywidth);
+
+    
+    SDL_SetRenderDrawColorFloat(Renderer_, 0, 0, 0, 1);
+}

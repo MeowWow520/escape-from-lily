@@ -20,6 +20,7 @@ class Scene;
 
 class Game
 {
+    // 私有成员变量
 private:
     bool IsRunning_;
     bool IsLogCurrentFPS;
@@ -64,7 +65,6 @@ public:
         static Game instance;
         return instance;
     }
-
     /**
      * 运行主循环
      * @return 返回 0：成功；返回 -1：运行失败。
@@ -86,7 +86,11 @@ public:
     SDL_Window* Game::getWindow() const { return Window_; }
     SDL_Renderer* Game::getRenderer() const { return Renderer_; }
     Scene* Game::getCurrentScene() const { return CurrentScene_; }
-
+public:
+    void drawGrid(const glm::vec2& x1, const glm::vec2& x2,
+        const size_t gridwidth, SDL_FColor color);
+    void drawBoundary(const glm::vec2& x1, const glm::vec2& x2,
+        const size_t boundarywidth, SDL_FColor color);
 };
 
 

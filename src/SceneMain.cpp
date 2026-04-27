@@ -17,9 +17,6 @@ void SceneMain::Update(float dt)
     (void)dt;
 }
 
-
-
-
 void SceneMain::Render()
 {
 

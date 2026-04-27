@@ -53,6 +53,8 @@ set(SOURCES
     "src/core/Game.cpp" 
     "src/core/Scene.h"
     "src/SceneMain.cpp"
+    "src/core/ObjectWorld.cpp"
+    "src/core/ObjectScreen.cpp"
 ) 
 
 # Windows平台添加资源文件
