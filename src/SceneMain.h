@@ -6,6 +6,8 @@
 
 class SceneMain: public Scene
 {
+    glm::vec2 WorldSize_;
+    glm::vec2 PlayerPos_;
 public:
     SceneMain() = default;
     virtual ~SceneMain() = default;
@@ -15,6 +17,10 @@ public:
     virtual void Update(float dt) override;
     virtual void Render() override;
     virtual void Clean() override;
+
+
+public:
+    void renderBackground();
 };
 
 #endif //! SCENEMAIN_H

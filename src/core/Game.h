@@ -3,6 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <unordered_map>
 // #include <cerrno>
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_image.h>
@@ -28,16 +29,22 @@ private:
     Uint64 FrameDelay_;
     Uint64 FPS_;
     std::string Title_;
+    std::unordered_map<std::string, SDL_FColor> FColors_;
     SDL_Window* Window_;
     SDL_Renderer* Renderer_;
     glm::vec2 WindowSize_;
+    glm::vec2 defaultPlayerPos_;
+    glm::vec2 WorldScale_;
     nlohmann::json Config_;
     Scene* CurrentScene_;
 
 private:
     Game()
     {
+        IsRunning_ = false;
         std::ifstream configFile("assets/json/config.json");
+        // FIXME: 这里应该抛出异常或者返回错误码，而不是直接跳转到 defer 标签
+        if (!configFile.is_open()) goto defer;
         configFile >> Config_;
 
 
@@ -46,6 +53,8 @@ private:
         DeltaTime_ = 0.00f;
         FPS_ = Config_["fps"];
         Title_ = Config_["window"]["title"];
+        WorldScale_ = glm::vec2(Config_["worldscale"], Config_["worldscale"]);
+        defaultPlayerPos_ = glm::vec2(Config_["defaults"]["pos"][0], Config_["defaults"]["pos"][1]);
         Window_ = nullptr;
         Renderer_ = nullptr;
         WindowSize_.x = Config_["window"]["size"][0];
@@ -53,6 +62,7 @@ private:
         CurrentScene_ = nullptr;
 
         FrameDelay_ = (Uint64)1e9 / FPS_;
+defer:
         configFile.close();
     }
     Game(const Game&) = delete;
@@ -86,6 +96,8 @@ public:
     SDL_Window* Game::getWindow() const { return Window_; }
     SDL_Renderer* Game::getRenderer() const { return Renderer_; }
     Scene* Game::getCurrentScene() const { return CurrentScene_; }
+    glm::vec2 Game::getWorldScale() const { return WorldScale_; }
+    glm::vec2 Game::getDefaultPlayerPos() const { return defaultPlayerPos_; }
 public:
     void drawGrid(const glm::vec2& x1, const glm::vec2& x2,
         const size_t gridwidth, SDL_FColor color);

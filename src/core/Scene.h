@@ -10,6 +10,9 @@
 
 class Scene: public Object
 {
+protected:
+    glm::vec2 CameraPos_; // 相机位置
+    std::vector<Object*> Objects_; // 场景中的物体
 public:
     Scene() = default;
     virtual ~Scene() = default;

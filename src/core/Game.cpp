@@ -139,3 +139,5 @@ void Game::drawBoundary(const glm::vec2 &x1, const glm::vec2 &x2,
     
     SDL_SetRenderDrawColorFloat(Renderer_, 0, 0, 0, 1);
 }
+
+

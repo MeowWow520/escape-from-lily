@@ -5,8 +5,21 @@
         "version": "1.00.0"
     },
     "fps": 120,
-    "worldscale": 3.00,
+    "worldscale": 3,
     "log": {
         "fps": false
+    },
+    "colors": {
+        "background": [0.1, 0.1, 0.1, 1.0],
+        "grid": [0.2, 0.2, 0.2, 1.0],
+        "boundary": [1.0, 1.0, 1.0, 1.0]
+    },
+    "defaults": {
+        "pos": [0, 0],
+        "player": {
+            "speed": 200,
+            "jumpforce": 500,
+            "gravity": 1500
+        }
     }
 }
