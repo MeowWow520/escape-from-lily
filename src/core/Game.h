@@ -14,17 +14,12 @@
 
 
 
-
 class Scene;
-
-
-
 class Game
 {
     // 私有成员变量
 private:
     bool IsRunning_;
-    bool IsLogCurrentFPS;
     float DeltaTime_;
     Uint64 FrameDelay_;
     Uint64 FPS_;
@@ -33,7 +28,7 @@ private:
     SDL_Window* Window_;
     SDL_Renderer* Renderer_;
     glm::vec2 WindowSize_;
-    glm::vec2 defaultPlayerPos_;
+    glm::vec2 DefaultPlayerPos_;
     glm::vec2 WorldScale_;
     nlohmann::json Config_;
     Scene* CurrentScene_;
@@ -49,12 +44,15 @@ private:
 
 
         IsRunning_ = true;
-        IsLogCurrentFPS = Config_["log"]["fps"];
         DeltaTime_ = 0.00f;
         FPS_ = Config_["fps"];
         Title_ = Config_["window"]["title"];
-        WorldScale_ = glm::vec2(Config_["worldscale"], Config_["worldscale"]);
-        defaultPlayerPos_ = glm::vec2(Config_["defaults"]["pos"][0], Config_["defaults"]["pos"][1]);
+        WorldScale_ = glm::vec2(
+            Config_["worldscale"],
+            Config_["worldscale"]);
+        DefaultPlayerPos_ = glm::vec2(
+            Config_["defaults"]["pos"][0], 
+            Config_["defaults"]["pos"][1]);
         Window_ = nullptr;
         Renderer_ = nullptr;
         WindowSize_.x = Config_["window"]["size"][0];
@@ -84,20 +82,41 @@ public:
      * 初始化资源，初始化 SDL 字体库、图片库、音效库。
      * @return 返回 0：成功；返回 -1：初始化失败。
      */   
-    int Initialize();      // 初始化游戏
-    void handleEvents();   // 处理事件
-    void Update(float dt); // 更新游戏状态
-    void Render();         // 渲染游戏
-    int Clean();           // 清理游戏资源
+    int Initialize();
+    void handleEvents();
+    void Update(float dt);
+    void Render();
+    int Clean();
     static int OutputError();
 public:
-    glm::vec2 Game::getWindowSize() const { return WindowSize_; }
-    bool Game::getIsRunning() const { return IsRunning_; }
-    SDL_Window* Game::getWindow() const { return Window_; }
-    SDL_Renderer* Game::getRenderer() const { return Renderer_; }
-    Scene* Game::getCurrentScene() const { return CurrentScene_; }
-    glm::vec2 Game::getWorldScale() const { return WorldScale_; }
-    glm::vec2 Game::getDefaultPlayerPos() const { return defaultPlayerPos_; }
+    glm::vec2 Game::getWindowSize() const
+    { 
+        return WindowSize_; 
+    }
+    bool Game::getIsRunning() const
+    { 
+        return IsRunning_; 
+    }
+    SDL_Window* Game::getWindow() const
+    { 
+        return Window_; 
+    }
+    SDL_Renderer* Game::getRenderer() const
+    { 
+        return Renderer_; 
+    }
+    Scene* Game::getCurrentScene() const
+    { 
+        return CurrentScene_; 
+    }
+    glm::vec2 Game::getWorldScale() const
+    { 
+        return WorldScale_; 
+    }
+    glm::vec2 Game::getDefaultPlayerPos() const
+    { 
+        return DefaultPlayerPos_; 
+    }
 public:
     void drawGrid(const glm::vec2& x1, const glm::vec2& x2,
         const size_t gridwidth, SDL_FColor color);
@@ -106,4 +125,4 @@ public:
 };
 
 
-#endif // GAME_H    
+#endif // GAME_H

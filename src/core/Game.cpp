@@ -25,7 +25,6 @@ int Game::Running(int argc, char *argv[])
             SDL_DelayNS(FrameDelay_ - elapsed);
             DeltaTime_ = (float) (FrameDelay_ / 1e9);
         } else { DeltaTime_ = (float)(elapsed / 1e9); }
-        if (IsLogCurrentFPS) SDL_Log("Current FPS: %f", (1.0f / DeltaTime_));
 
     }
 

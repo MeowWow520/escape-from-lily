@@ -6,9 +6,6 @@
     },
     "fps": 120,
     "worldscale": 3,
-    "log": {
-        "fps": false
-    },
     "colors": {
         "background": [0.1, 0.1, 0.1, 1.0],
         "grid": [0.2, 0.2, 0.2, 1.0],
