@@ -6,6 +6,8 @@ set(CMAKE_CXX_STANDARD 20)
 
 add_executable(escape-from-lily
         src/main.cpp
+        src/core/Game.h
+        src/core/Game.cpp
 )
 
 find_package(ZLIB REQUIRED)
