@@ -1,0 +1,13 @@
+{
+  "name": "escape-from-lily",
+  "version": "0.1.0",
+  "dependencies": [
+    "sdl3",
+    "sdl3-image",
+    "sdl3-mixer",
+    "sdl3-ttf",
+    "glm",
+    "nlohmann-json"
+  ],
+  "builtin-baseline": "d09977e63111355bf0239592f47062b1ec3f767f"
+}
