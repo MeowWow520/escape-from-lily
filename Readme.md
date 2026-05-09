@@ -2,7 +2,7 @@
 
 ### Quickly Start
 
-1: Install [vcpkg](https://vcpkg.io)
+1: 安装 [vcpkg](https://vcpkg.io)
 
 ```terminal
 cd Path
@@ -10,4 +10,4 @@ git clone https://github.com/microsoft/vcpkg.git
 cd vcpkg
 .\bootstrap-vcpkg.bat
 ```
-2: **TODO**: add more
+2: **TBD**
