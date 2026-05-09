@@ -2,6 +2,11 @@ cmake_minimum_required(VERSION 3.28)
 project(escape-from-lily)
 set(CMAKE_CXX_STANDARD 20)
 
+if(MSVC)
+    # add_compile_options("/utf-8")
+    add_compile_options("/source-charset:utf-8" "/execution-charset:utf-8")
+endif()
+
 add_executable(escape-from-lily
         src/main.cpp
         src/core/Game.h
