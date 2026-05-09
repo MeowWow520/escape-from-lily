@@ -4,6 +4,10 @@
 
 #include "Game.h"
 
+#include <SDL3_image/SDL_image.h>
+#include <SDL3_mixer/SDL_mixer.h>
+#include <SDL3_ttf/SDL_ttf.h>
+
 
 Game::Game() {
    title_ = "escape-from-lily";
@@ -16,7 +20,7 @@ Game::Game() {
    renderer_ = nullptr;
    current_scene_ = nullptr;
    SDL_Log("[core] Private value initialized successfully");
-};
+}
 
 int Game::Initialize() {
 
@@ -94,10 +98,10 @@ void Game::HandleEvents() {
 void Game::Update(float dt) {
 
 }
-void Game::Render() {
+void Game::Render() const {
    SDL_SetRenderDrawColor(renderer_, 0, 0, 0, 255);
    SDL_RenderClear(renderer_);
-   // CurrentScene_->Render();
+   current_scene_->Render();
    SDL_RenderPresent(renderer_);
 }
 

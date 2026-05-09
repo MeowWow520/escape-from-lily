@@ -5,15 +5,13 @@
 #ifndef ESCAPE_FROM_LILY_GAME_H
 #define ESCAPE_FROM_LILY_GAME_H
 #include <string>
-#include <SDL3/SDL.h>
-#include <SDL3_ttf/SDL_ttf.h>
-#include <SDL3_image/SDL_image.h>
-#include <SDL3_mixer/SDL_mixer.h>
 #include <glm/glm.hpp>
-
+#include <SDL3/SDL.h>
+#include "Scene.h"
 
 
 class Scene;
+
 class Game {
     public:
         // 获取单例
@@ -37,7 +35,7 @@ class Game {
         void HandleEvents();
         // FIXME: static 是否可行？
         static void Update(float dt);
-        void Render();
+        void Render() const;
         static void Quit();
     private:
         Game();
