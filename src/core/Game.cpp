@@ -14,6 +14,7 @@ Game::Game() {
    FPS_ = 120;
    window_ = nullptr;
    renderer_ = nullptr;
+   current_scene_ = nullptr;
    SDL_Log("[core] Private value initialized successfully");
 };
 
@@ -44,8 +45,13 @@ int Game::Initialize() {
       return -1;
    } SDL_Log("[core] SDL_CreateWindow successfully");
 
-
-
+   // 创建场景
+   if (current_scene_ != nullptr) {
+      current_scene_->Quit();
+      delete current_scene_;
+   }
+   // current_scene_ = new SceneMain();
+   // current_scene_->Initialize();
    return 0;
 }
 

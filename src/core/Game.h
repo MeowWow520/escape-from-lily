@@ -6,18 +6,18 @@
 #define ESCAPE_FROM_LILY_GAME_H
 #include <string>
 #include <SDL3/SDL.h>
-// TODO: Is here useful?
-#include <string>
 #include <SDL3_ttf/SDL_ttf.h>
 #include <SDL3_image/SDL_image.h>
 #include <SDL3_mixer/SDL_mixer.h>
 #include <glm/glm.hpp>
 
 
+
+class Scene;
 class Game {
     public:
         // 获取单例
-        static Game& getInstance() {
+        static Game& GetInstance() {
             static Game instance;
             return instance;
         }
@@ -35,7 +35,7 @@ class Game {
          */
         int Running();
         void HandleEvents();
-
+        // FIXME: static 是否可行？
         static void Update(float dt);
         void Render();
         static void Quit();
@@ -50,7 +50,7 @@ class Game {
         Uint32 FPS_;
         SDL_Window* window_;
         SDL_Renderer* renderer_;
-
+        Scene* current_scene_;
 };
 
 #endif //ESCAPE_FROM_LILY_GAME_H

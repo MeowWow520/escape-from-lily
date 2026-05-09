@@ -5,7 +5,7 @@
 #include "core/Game.h"
 
 int main() {
-    Game& gameInstance = Game::getInstance();
+    Game& gameInstance = Game::GetInstance();
     if (gameInstance.Initialize() == -1) {
         SDL_Log("Game was unable to initialize. return -1");
     } return gameInstance.Running();
