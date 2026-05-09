@@ -10,8 +10,6 @@ add_executable(escape-from-lily
         src/core/Scene.h
         src/SceneMain.cpp
         src/SceneMain.h
-        src/core/ObjectWorld.cpp
-        src/core/ObjectWorld.h
 )
 
 find_package(ZLIB REQUIRED)

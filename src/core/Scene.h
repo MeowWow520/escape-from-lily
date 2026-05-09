@@ -15,11 +15,11 @@ class Scene : public Object {
     public:
         Scene() = default;
         ~Scene() override = default;
-        int Initialize() override;
-        void HandleEvents(SDL_Event event) override;
-        void Update(float dt) override;
-        void Render() override;
-        void Quit() override;
+        int Initialize() override { return 0; }
+        void HandleEvents(SDL_Event event) override { }
+        void Update(float dt) override { }
+        void Render() override { }
+        void Quit() override { }
 };
 
 #endif //ESCAPE_FROM_LILY_SCENE_H

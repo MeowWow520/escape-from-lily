@@ -3,6 +3,8 @@
 //
 
 #include "Game.h"
+#include "Scene.h"
+#include "../SceneMain.h"
 
 #include <SDL3_image/SDL_image.h>
 #include <SDL3_mixer/SDL_mixer.h>
@@ -49,13 +51,27 @@ int Game::Initialize() {
       return -1;
    } SDL_Log("[core] SDL_CreateWindow successfully");
 
+   // 创建渲染器
+   renderer_ = SDL_CreateRenderer(window_, NULL);
+   if (renderer_ == nullptr) {
+      SDL_Log("[core] SDL_CreateRenderer fail: %s", SDL_GetError());
+      return -1;
+   } SDL_Log("[core] SDL_CreateRenderer successfully");
+   // 设置渲染器 -- 垂直同步
+   if (!SDL_SetRenderVSync(renderer_, 1)) {
+      SDL_Log("[core] SDL_SetRenderVSync fail: %s", SDL_GetError());
+      return -1;
+   } SDL_Log("[core] SDL_SetRenderVSync successfully");
+
+
    // 创建场景
-   if (current_scene_ != nullptr) {
-      current_scene_->Quit();
+   current_scene_ = new SceneMain();
+   if (current_scene_->Initialize() != 0) {
+      SDL_Log("[core] SceneMain initialized fail");
       delete current_scene_;
-   }
-   // current_scene_ = new SceneMain();
-   // current_scene_->Initialize();
+      return -1;
+   } SDL_Log("[core] SceneMain initialized successfully");
+   // current_scene_.Initialize();
    return 0;
 }
 
@@ -99,7 +115,7 @@ void Game::Update(float dt) {
 
 }
 void Game::Render() const {
-   SDL_SetRenderDrawColor(renderer_, 0, 0, 0, 255);
+   SDL_SetRenderDrawColor(renderer_, 255, 0, 0, 255);
    SDL_RenderClear(renderer_);
    current_scene_->Render();
    SDL_RenderPresent(renderer_);
