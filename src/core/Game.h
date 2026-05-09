@@ -4,11 +4,13 @@
 
 #ifndef ESCAPE_FROM_LILY_GAME_H
 #define ESCAPE_FROM_LILY_GAME_H
+#include <string>
 #include <SDL3/SDL.h>
 // TODO: Is here useful?
-// #include <SDL3_ttf/SDL_ttf.h>
-// #include <SDL3_image/SDL_image.h>
-// #include <SDL3_mixer/SDL_mixer.h>
+#include <string>
+#include <SDL3_ttf/SDL_ttf.h>
+#include <SDL3_image/SDL_image.h>
+#include <SDL3_mixer/SDL_mixer.h>
 #include <glm/glm.hpp>
 
 
@@ -40,13 +42,14 @@ class Game {
     private:
         Game();
 
+        std::string title_;
         glm::vec2 window_size_{};
-        SDL_Window* window_;
-        SDL_Renderer* renderer_;
         bool running_;
         float delta_time_;
         Uint32 frame_delay_;
         Uint32 FPS_;
+        SDL_Window* window_;
+        SDL_Renderer* renderer_;
 
 };
 

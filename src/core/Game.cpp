@@ -6,14 +6,15 @@
 
 
 Game::Game() {
+   title_ = "escape-from-lily";
    window_size_ = {1960, 1080};
    running_ = true;
-   window_ = nullptr;
-   renderer_ = nullptr;
    delta_time_ = 0.0f;
    frame_delay_ = 0.0f;
    FPS_ = 120;
-   SDL_Log("Private value initialized successfully");
+   window_ = nullptr;
+   renderer_ = nullptr;
+   SDL_Log("[core] Private value initialized successfully");
 };
 
 int Game::Initialize() {
@@ -21,27 +22,27 @@ int Game::Initialize() {
 
    // 初始化 SDL 库
    if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO)) {
-      SDL_Log("SDL initialized fail: %s", SDL_GetError());
+      SDL_Log("[core] SDL initialized fail: %s", SDL_GetError());
       return -1;
-   } SDL_Log("SDL initialized successfully");
+   } SDL_Log("[core] SDL initialized successfully");
    if (!TTF_Init()) {
-      SDL_Log("SDL initialized fail: %s", SDL_GetError());
+      SDL_Log("[core] SDL initialized fail: %s", SDL_GetError());
       return -1;
-   } SDL_Log("SDL initialized successfully");
+   } SDL_Log("[core] SDL initialized successfully");
    if (!MIX_Init()) {
-      SDL_Log("SDL initialized fail: %s", SDL_GetError());
+      SDL_Log("[core] SDL initialized fail: %s", SDL_GetError());
       return -1;
-   } SDL_Log("SDL initialized successfully");
+   } SDL_Log("[core] SDL initialized successfully");
 
    // 创建窗口
    window_ = SDL_CreateWindow(
-      "title",
+      title_.c_str(),
       static_cast<int>(window_size_.x), static_cast<int>(window_size_.y),
       SDL_WINDOW_RESIZABLE);
    if (window_ == nullptr) {
-      SDL_Log("SDL_CreateWindow fail: %s", SDL_GetError());
+      SDL_Log("[core] SDL_CreateWindow fail: %s", SDL_GetError());
       return -1;
-   } SDL_Log("SDL_CreateWindow successfully");
+   } SDL_Log("[core] SDL_CreateWindow successfully");
 
 
 
@@ -74,7 +75,7 @@ void Game::HandleEvents() {
    while (SDL_PollEvent(&event)) {
       switch (event.type) {
          case SDL_EVENT_QUIT:
-            SDL_Log("handleEvent received SDL_EVENT_QUIT");
+            SDL_Log("[core] HandleEvent received SDL_EVENT_QUIT");
             running_ = false;
             break;
          default:
@@ -95,7 +96,7 @@ void Game::Render() {
 }
 
 void Game::Quit() {
-   SDL_Log("Cleaning Game class");
+   SDL_Log("[core] Cleaning Game class");
    SDL_Quit();
    TTF_Quit();
    MIX_Quit();
