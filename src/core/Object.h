@@ -11,7 +11,7 @@
 
 class Object {
     protected:
-        Game& game_instance_ = Game::GetInstance();
+        Game& m_game_instance = Game::GetInstance();
     public:
         Object() = default;
         virtual ~Object() = default;

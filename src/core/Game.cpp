@@ -14,15 +14,15 @@
 
 
 Game::Game() {
-   title_ = "escape-from-lily";
-   window_size_ = {1960, 1080};
-   running_ = true;
-   delta_time_ = 0.0f;
-   frame_delay_ = 0.0f;
-   FPS_ = 120;
-   window_ = nullptr;
-   renderer_ = nullptr;
-   current_scene_ = nullptr;
+   m_title = "escape-from-lily";
+   m_window_size = {1960, 1080};
+   m_running = true;
+   m_delta_time = 0.0f;
+   m_frame_delay = 0.0f;
+   m_FPS = 120;
+   m_window = nullptr;
+   m_renderer = nullptr;
+   m_current_scene = nullptr;
    SDL_Log("[core] Class Game initialized successfully");
 }
 
@@ -44,33 +44,33 @@ int Game::Initialize() {
    } SDL_Log("[core] MIX_Init initialized successfully");
 
    // 创建窗口
-   window_ = SDL_CreateWindow(
-      title_.c_str(),
-      static_cast<int>(window_size_.x), static_cast<int>(window_size_.y),
+   m_window = SDL_CreateWindow(
+      m_title.c_str(),
+      static_cast<int>(m_window_size.x), static_cast<int>(m_window_size.y),
       SDL_WINDOW_RESIZABLE);
-   if (window_ == nullptr) {
+   if (m_window == nullptr) {
       SDL_Log("[core] SDL_CreateWindow fail: %s", SDL_GetError());
       return -1;
    } SDL_Log("[core] SDL_CreateWindow successfully");
 
    // 创建渲染器
-   renderer_ = SDL_CreateRenderer(window_, nullptr);
-   if (renderer_ == nullptr) {
+   m_renderer = SDL_CreateRenderer(m_window, nullptr);
+   if (m_renderer == nullptr) {
       SDL_Log("[core] SDL_CreateRenderer fail: %s", SDL_GetError());
       return -1;
    } SDL_Log("[core] SDL_CreateRenderer successfully");
    // 设置渲染器 -- 垂直同步
-   if (!SDL_SetRenderVSync(renderer_, 1)) {
+   if (!SDL_SetRenderVSync(m_renderer, 1)) {
       SDL_Log("[core] SDL_SetRenderVSync fail: %s", SDL_GetError());
       return -1;
    } SDL_Log("[core] SDL_SetRenderVSync successfully");
 
 
    // 创建场景
-   current_scene_ = new SceneMain();
-   if (current_scene_->Initialize() != 0) {
+   m_current_scene = new SceneMain();
+   if (m_current_scene->Initialize() != 0) {
       SDL_Log("[core] SceneMain initialized fail");
-      delete current_scene_;
+      delete m_current_scene;
       return -1;
    } SDL_Log("[core] SceneMain initialized successfully");
 
@@ -79,19 +79,19 @@ int Game::Initialize() {
 
 int Game::Running() {
 
-   while (running_) {
+   while (m_running) {
       const Uint64 start = SDL_GetTicksNS();
 
       HandleEvents();
-      Update(delta_time_);
+      Update(m_delta_time);
       Render();
 
       const Uint64 end = SDL_GetTicksNS();
       const Uint64 elapsed = end - start;
-      if (elapsed < frame_delay_) {
-         SDL_DelayNS(frame_delay_ - elapsed);
-         delta_time_ = static_cast<float>(frame_delay_ / 1e9);
-      } delta_time_ = static_cast<float>(static_cast<double>(elapsed) / 1e9);
+      if (elapsed < m_frame_delay) {
+         SDL_DelayNS(m_frame_delay - elapsed);
+         m_delta_time = static_cast<float>(m_frame_delay / 1e9);
+      } m_delta_time = static_cast<float>(static_cast<double>(elapsed) / 1e9);
    }
 
    return Quit();
@@ -103,10 +103,10 @@ void Game::HandleEvents() {
       switch (event.type) {
          case SDL_EVENT_QUIT:
             SDL_Log("[core] HandleEvent received SDL_EVENT_QUIT");
-            running_ = false;
+            m_running = false;
             break;
          default:
-            current_scene_->HandleEvents(event);
+            m_current_scene->HandleEvents(event);
             break;
       }
    }
@@ -116,10 +116,10 @@ void Game::Update(float dt) {
 
 }
 void Game::Render() const {
-   SDL_SetRenderDrawColor(renderer_, COLOR(0xFF006EFF));
-   SDL_RenderClear(renderer_);
-   current_scene_->Render();
-   SDL_RenderPresent(renderer_);
+   SDL_SetRenderDrawColor(m_renderer, COLOR(0xFF006EFF));
+   SDL_RenderClear(m_renderer);
+   m_current_scene->Render();
+   SDL_RenderPresent(m_renderer);
 }
 
 int Game::Quit() const {
@@ -128,9 +128,9 @@ int Game::Quit() const {
    TTF_Quit();
    MIX_Quit();
    // 释放游戏资源
-   if (current_scene_ != nullptr) {
-      current_scene_->Quit();
-   } delete current_scene_;
+   if (m_current_scene != nullptr) {
+      m_current_scene->Quit();
+   } delete m_current_scene;
    SDL_Log("[core] Cleaned game_instance");
    return 0;
 }

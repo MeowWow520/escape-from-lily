@@ -9,7 +9,7 @@
 
 class SceneMain : public Scene {
     protected:
-        glm::vec2 player_position_{}; // 玩家的位置
+        glm::vec2 m_player_position{}; // 玩家的位置
     public:
         SceneMain() = default;
         ~SceneMain() override = default;
@@ -26,9 +26,8 @@ class SceneMain : public Scene {
          * }
          */
 
-
     private:
-        glm::vec2 world_scale_{};
+        glm::vec2 m_world_scale{};
 };
 
 #endif //ESCAPE_FROM_LILY_SCENEMAIN_H

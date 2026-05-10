@@ -7,6 +7,7 @@ if(MSVC)
     add_compile_options("/source-charset:utf-8" "/execution-charset:utf-8")
 endif()
 
+
 add_executable(escape-from-lily
         src/main.cpp
         src/SceneMain.cpp
@@ -15,9 +16,24 @@ add_executable(escape-from-lily
         src/core/Game.cpp
         src/core/Game.h
         src/core/Object.h
+        src/core/ObjectScreen.h
         src/core/ObjectWorld.h
         src/core/Scene.h
-        src/core/ObjectScreen.h
+        src/Background.cpp
+        src/Background.h
+        src/core/TexturedEntity.h
+)
+
+set(ASSETS_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/assets")
+
+add_custom_command(
+        TARGET escape-from-lily
+        POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "${ASSETS_SOURCE_DIR}"
+        "$<TARGET_FILE_DIR:escape-from-lily>/assets"
+        COMMENT "Copying assets folder to output directory..."
+        VERBATIM
 )
 
 find_package(ZLIB REQUIRED)

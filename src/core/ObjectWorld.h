@@ -11,7 +11,7 @@
 
 class ObjectWorld : public Object {
     protected:
-        glm::vec2 world_pos_{};
+        glm::vec2 m_world_pos{};
     public:
         ObjectWorld() = default;
         ~ObjectWorld() override = default;
@@ -26,7 +26,7 @@ class ObjectWorld : public Object {
          * @return 世界坐标
          */
         [[nodiscard]] glm::vec2 GetWorldPos() const {
-            return world_pos_;
+            return m_world_pos;
         }
         /**
          * 设置世界坐标
@@ -34,7 +34,7 @@ class ObjectWorld : public Object {
          * @return 设置后的世界坐标
          */
         glm::vec2 SetWorldPos(const glm::vec2& new_pos) {
-            world_pos_ = new_pos;
+            m_world_pos = new_pos;
             return new_pos;
         }
 };

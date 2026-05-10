@@ -10,7 +10,7 @@
 
 class ObjectScreen : public ObjectWorld {
     protected:
-        glm::vec2 screen_pos_{};
+        glm::vec2 m_screen_pos{};
     public:
         ObjectScreen() = default;
         ~ObjectScreen() override = default;
@@ -25,7 +25,7 @@ class ObjectScreen : public ObjectWorld {
          * @return 屏幕坐标
          */
         [[nodiscard]] glm::vec2 GetScreenPos() const {
-            return screen_pos_;
+            return m_screen_pos;
         }
         /**
          * 设置屏幕坐标
@@ -33,7 +33,7 @@ class ObjectScreen : public ObjectWorld {
          * @return 设置后的屏幕坐标
          */
         glm::vec2 SetScreenPos(const glm::vec2& new_pos) {
-            screen_pos_ = new_pos;
+            m_screen_pos = new_pos;
             return new_pos;
         }
 };

@@ -11,9 +11,9 @@
 
 class Scene : public Object {
     protected:
-        glm::vec2 world_size_{};       // 世界的大小
-        glm::vec2 camera_pos_{};       // 相机位置
-        std::vector<Object*> objects_; // 场景中的物体
+        glm::vec2 m_world_size{};       // 世界的大小
+        glm::vec2 m_camera_pos{};       // 相机位置
+        std::vector<Object*> m_objects; // 场景中的物体
     public:
         Scene() = default;
         ~Scene() override = default;
@@ -24,10 +24,10 @@ class Scene : public Object {
         int Quit() override { return 0; }
 
         [[nodiscard]] glm::vec2 GetWorldSize() const {
-             return world_size_;
+             return m_world_size;
         }
         [[nodiscard]] glm::vec2 GetCameraPos() const {
-            return camera_pos_;
+            return m_camera_pos;
         }
         [[nodiscard]] glm::vec2 TransScreenPos(glm::vec2 screen_pos) const;
 

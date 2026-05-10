@@ -40,29 +40,29 @@ class Game {
         int Quit() const;
         // Getter 和 Setter
         [[nodiscard]] glm::vec2 GetWindowSize() const {
-            return window_size_;
+            return m_window_size;
         }
         [[nodiscard]] SDL_Window *GetSDLWindow() const {
-            return window_;
+            return m_window;
         }
         [[nodiscard]] SDL_Renderer *GetSDLRenderer() const {
-            return renderer_;
+            return m_renderer;
         }
         [[nodiscard]] Scene* GetCurrentScene() const {
-            return current_scene_;
+            return m_current_scene;
         }
     private:
         Game();
 
-        std::string title_;
-        glm::vec2 window_size_{};
-        bool running_;
-        float delta_time_;
-        Uint32 frame_delay_;
-        Uint32 FPS_;
-        SDL_Window* window_;
-        SDL_Renderer* renderer_;
-        Scene* current_scene_;
+        std::string m_title;
+        glm::vec2 m_window_size{};
+        bool m_running;
+        float m_delta_time;
+        Uint32 m_frame_delay;
+        Uint32 m_FPS;
+        SDL_Window* m_window;
+        SDL_Renderer* m_renderer;
+        Scene* m_current_scene;
 };
 
 #endif //ESCAPE_FROM_LILY_GAME_H
