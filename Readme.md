@@ -22,6 +22,7 @@
 git clone https://github.com/MeowWow520/escape-from-lily.git
 ```
 2: 在 [CLion](https://www.jetbrains.com/clion/) 中打开项目
+
 3: 安装 [vcpkg](https://vcpkg.io) 包管理工具
 ```bash
 cd Path\you\known
