@@ -14,11 +14,6 @@ class ObjectScreen : public ObjectWorld {
     public:
         ObjectScreen() = default;
         ~ObjectScreen() override = default;
-        int Initialize() override { return 0; }
-        void HandleEvents(SDL_Event event) override { }
-        void Update(float dt) override { }
-        void Render() override { }
-        int Quit() override { return 0; }
 
         /**
          * 获取屏幕坐标
