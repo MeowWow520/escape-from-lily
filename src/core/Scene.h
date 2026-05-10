@@ -26,9 +26,9 @@ class Scene : public Object {
         [[nodiscard]] glm::vec2 GetWorldSize() const {
              return world_size_;
         }
-        [[nodiscard]] glm::vec2 TransWorldPos(glm::vec2 screen_pos) const {
-            return camera_pos_ + world_pos;
-        };
+        [[nodiscard]] glm::vec2 GetCameraPos() const {
+            return camera_pos_;
+        }
         [[nodiscard]] glm::vec2 TransScreenPos(glm::vec2 screen_pos) const;
 
 };

@@ -5,7 +5,6 @@
 #ifndef ESCAPE_FROM_LILY_OBJECT_H
 #define ESCAPE_FROM_LILY_OBJECT_H
 
-#include <SDL3/SDL.h>
 #include "Game.h"
 
 
