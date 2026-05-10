@@ -8,9 +8,8 @@
 
 
 class SceneMain : public Scene {
-
-        glm::vec2 world_size_;      // 世界的大小
-        glm::vec2 player_position_; // 玩家的位置
+    protected:
+        glm::vec2 player_position_{}; // 玩家的位置
     public:
         SceneMain() = default;
         ~SceneMain() override = default;
@@ -19,6 +18,17 @@ class SceneMain : public Scene {
         void Update(float dt) override;
         void Render() override;
         int Quit() override;
+
+        // FIXME: getter 和 setter 是否有必要？
+        /**
+         * [[nodiscard]] glm::vec2 GetPlayerPosition() const {
+         *     return player_position_;
+         * }
+         */
+
+
+    private:
+        glm::vec2 world_scale_{};
 };
 
 #endif //ESCAPE_FROM_LILY_SCENEMAIN_H

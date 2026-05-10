@@ -6,8 +6,13 @@
 
 
 int SceneMain::Initialize() {
-    camera_pos_ = glm::vec2(0.0f, 0.0f);
+    // 设置世界缩放 和 世界大小
+    world_scale_ = glm::vec2{3, 3};
+    world_size_ = game_instance_.GetWindowSize() * world_scale_;
+    // 设置相机初始位置
+    camera_pos_ = (world_size_ - game_instance_.GetWindowSize()) / glm::vec2(2) ;
     objects_ = std::vector<Object*>();
+    player_position_ = glm::vec2(0.0f, 0.0f);
     SDL_Log("[core] Initialized SceneMain");
     return 0;
 }
@@ -28,3 +33,4 @@ int SceneMain::Quit() {
     SDL_Log("[core] Quitting SceneMain");
     return 0;
 }
+
