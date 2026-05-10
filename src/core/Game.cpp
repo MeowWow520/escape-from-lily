@@ -23,7 +23,7 @@ Game::Game() {
    window_ = nullptr;
    renderer_ = nullptr;
    current_scene_ = nullptr;
-   SDL_Log("[core] Private value initialized successfully");
+   SDL_Log("[core] Class Game initialized successfully");
 }
 
 int Game::Initialize() {
@@ -73,7 +73,7 @@ int Game::Initialize() {
       delete current_scene_;
       return -1;
    } SDL_Log("[core] SceneMain initialized successfully");
-   // current_scene_.Initialize();
+
    return 0;
 }
 
@@ -94,8 +94,7 @@ int Game::Running() {
       } delta_time_ = static_cast<float>(static_cast<double>(elapsed) / 1e9);
    }
 
-   Quit();
-   return 0;
+   return Quit();
 }
 
 void Game::HandleEvents() {
@@ -107,7 +106,7 @@ void Game::HandleEvents() {
             running_ = false;
             break;
          default:
-            // CurrentScene_->handleEvents(event);
+            current_scene_->HandleEvents(event);
             break;
       }
    }
@@ -123,9 +122,15 @@ void Game::Render() const {
    SDL_RenderPresent(renderer_);
 }
 
-void Game::Quit() {
-   SDL_Log("[core] Cleaning Game class");
+int Game::Quit() const {
+   // 释放 SDL 资源
    SDL_Quit();
    TTF_Quit();
    MIX_Quit();
+   // 释放游戏资源
+   if (current_scene_ != nullptr) {
+      current_scene_->Quit();
+   } delete current_scene_;
+   SDL_Log("[core] Cleaned game_instance");
+   return 0;
 }

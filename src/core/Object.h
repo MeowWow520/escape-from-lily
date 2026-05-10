@@ -20,7 +20,7 @@ class Object {
         virtual void HandleEvents(SDL_Event event) { }
         virtual void Update(float dt) { }
         virtual void Render() { }
-        virtual void Quit() { }
+        virtual int Quit() { return 0; }
 };
 
 #endif //ESCAPE_FROM_LILY_OBJECT_H

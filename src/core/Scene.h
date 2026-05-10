@@ -20,7 +20,7 @@ class Scene : public Object {
         void HandleEvents(SDL_Event event) override { }
         void Update(float dt) override { }
         void Render() override { }
-        void Quit() override { }
+        int Quit() override { return 0; }
 };
 
 #endif //ESCAPE_FROM_LILY_SCENE_H

@@ -6,7 +6,10 @@
 
 int main() {
     Game& game_instance = Game::GetInstance();
-    if (game_instance.Initialize() == -1)
-        SDL_Log("[core] Game was unable to initialize. return -1");
+    SDL_Log("[core] game_instance created");
+    if (game_instance.Initialize() == -1) {
+        SDL_Log("[core] Game initialized fail, return -1");
+        return -1;
+    }
     return game_instance.Running();
 }

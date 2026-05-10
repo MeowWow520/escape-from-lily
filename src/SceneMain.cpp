@@ -6,6 +6,8 @@
 
 
 int SceneMain::Initialize() {
+    camera_pos_ = glm::vec2(0.0f, 0.0f);
+    objects_ = std::vector<Object*>();
     SDL_Log("[core] Initialized SceneMain");
     return 0;
 }
@@ -22,6 +24,7 @@ void SceneMain::Render() {
 
 }
 
-void SceneMain::Quit() {
-
+int SceneMain::Quit() {
+    SDL_Log("[core] Quitting SceneMain");
+    return 0;
 }

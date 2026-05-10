@@ -18,7 +18,7 @@ class SceneMain : public Scene {
         void HandleEvents(SDL_Event event) override;
         void Update(float dt) override;
         void Render() override;
-        void Quit() override;
+        int Quit() override;
 };
 
 #endif //ESCAPE_FROM_LILY_SCENEMAIN_H

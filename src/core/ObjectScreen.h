@@ -5,10 +5,10 @@
 #ifndef ESCAPE_FROM_LILY_OBJECTSCREEN_H
 #define ESCAPE_FROM_LILY_OBJECTSCREEN_H
 
-#include "Object.h"
+#include "ObjectWorld.h"
 
 
-class ObjectScreen : public Object {
+class ObjectScreen : public ObjectWorld {
     protected:
         glm::vec2 screen_pos_{};
     public:
@@ -18,7 +18,7 @@ class ObjectScreen : public Object {
         void HandleEvents(SDL_Event event) override { }
         void Update(float dt) override { }
         void Render() override { }
-        void Quit() override { }
+        int Quit() override { return 0; }
 
         /**
          * 获取屏幕坐标
@@ -27,7 +27,6 @@ class ObjectScreen : public Object {
         [[nodiscard]] glm::vec2 GetScreenPos() const {
             return screen_pos_;
         }
-
         /**
          * 设置屏幕坐标
          * @param new_pos 新的屏幕坐标

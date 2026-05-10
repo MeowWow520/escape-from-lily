@@ -19,7 +19,7 @@ class ObjectWorld : public Object {
         void HandleEvents(SDL_Event event) override { }
         void Update(float dt) override { }
         void Render() override { }
-        void Quit() override { }
+        int Quit() override { return 0; }
 
         /**
          * 获取世界坐标
@@ -28,7 +28,6 @@ class ObjectWorld : public Object {
         [[nodiscard]] glm::vec2 GetWorldPos() const {
             return world_pos_;
         }
-
         /**
          * 设置世界坐标
          * @param new_pos 新的世界坐标

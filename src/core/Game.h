@@ -37,7 +37,20 @@ class Game {
         // FIXME: static 是否可行？
         static void Update(float dt);
         void Render() const;
-        static void Quit();
+        int Quit() const;
+        // Getter 和 Setter
+        [[nodiscard]] glm::vec2 GetWindowSize() const {
+            return window_size_;
+        }
+        [[nodiscard]] SDL_Window *GetSDLWindow() const {
+            return window_;
+        }
+        [[nodiscard]] SDL_Renderer *GetSDLRenderer() const {
+            return renderer_;
+        }
+        [[nodiscard]] Scene* GetCurrentScene() const {
+            return current_scene_;
+        }
     private:
         Game();
 
