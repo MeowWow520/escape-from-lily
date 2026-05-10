@@ -3,7 +3,6 @@
 //
 
 #include "TexturedEntity.h"
-
 #include <SDL3_image/SDL_image.h>
 
 
@@ -34,6 +33,15 @@ glm::vec2 TexturedEntity::SetPivot(const glm::vec2 newpivot) {
 
 glm::vec2 TexturedEntity::GetPivot() const {
     return m_pivot;
+}
+
+bool TexturedEntity::SetVisible(const bool newvisible) {
+    m_visible = newvisible;
+    return newvisible;
+}
+
+bool TexturedEntity::GetVisible() const {
+    return m_visible;
 }
 
 bool TexturedEntity::SetTextureFromPath(const char *path) {
