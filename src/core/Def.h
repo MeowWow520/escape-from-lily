@@ -14,6 +14,6 @@
     ( (hex) >> 24 ) & 0xFF), \
     (((hex) >> 16 ) & 0xFF), \
     (((hex) >> 8  ) & 0xFF), \
-    ( (hex) & 0xFF)
+    ( (hex)         & 0xFF)
 
 #endif //ESCAPE_FROM_LILY_DEF_H
