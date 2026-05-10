@@ -13,9 +13,10 @@
 #include "../SceneMain.h"
 
 
+
 Game::Game() {
    m_title = "escape-from-lily";
-   m_window_size = {1960, 1080};
+   m_window_size = {1920, 1080};
    m_running = true;
    m_delta_time = 0.0f;
    m_frame_delay = 0.0f;

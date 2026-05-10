@@ -17,21 +17,30 @@ class TexturedEntity : public ObjectScreen {
             SDL_Texture,
             decltype(&SDL_DestroyTexture)
         > m_texture{nullptr, SDL_DestroyTexture};
-        SDL_Rect m_rect{};                  // 精灵图矩形
-        glm::vec2 m_texture_size{};         // 纹理原始尺寸
-        glm::vec2  m_scale{1.0f, 1.0f}; // 缩放
-        glm::vec2  m_pivot{0.5f, 0.5f}; // 旋转中心 归一化
-        float m_rotation = 0.0f;            // 旋转角度
+        float m_rotation = 0.0f;           // 旋转角度
+        SDL_Rect m_rect{};                 // 精灵图矩形
+        glm::vec2 m_texture_size{};        // 纹理原始尺寸
+        glm::vec2 m_scale{1.0f, 1.0f}; // 缩放
+        glm::vec2 m_pivot{0.5f, 0.5f}; // 旋转中心 归一化
 
         // 5. 视觉控制
         SDL_Color m_colorMod{COLOR(0xFFFFFFFF)};       // 颜色调制 + 透明度
         SDL_BlendMode m_blendMode = SDL_BLENDMODE_BLEND; // 像素混合模式
         bool m_textureDirty = false;                     // 脏标记
-        bool m_visible = true;
+        bool m_visible = false;
 
     public:
         TexturedEntity();
         ~TexturedEntity() override = default;
+
+        // getter 和 setter
+        float SetRotation(float rotation);
+        float GetRotation() const;
+        glm::vec2 SetScale(glm::vec2 newscale);
+        glm::vec2 GetScale() const;
+        glm::vec2 SetPivot(glm::vec2 newpivot);
+        glm::vec2 GetPivot() const;
+        bool SetTextureFromPath(const char* path);
 
 };
 
