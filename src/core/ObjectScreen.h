@@ -4,7 +4,6 @@
 
 #ifndef ESCAPE_FROM_LILY_OBJECTSCREEN_H
 #define ESCAPE_FROM_LILY_OBJECTSCREEN_H
-
 #include "ObjectWorld.h"
 
 

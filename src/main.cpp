@@ -4,6 +4,8 @@
 
 #include "core/Game.h"
 
+
+
 int main() {
     Game& game_instance = Game::GetInstance();
     SDL_Log("[core] game_instance created");

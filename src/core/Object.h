@@ -4,7 +4,6 @@
 
 #ifndef ESCAPE_FROM_LILY_OBJECT_H
 #define ESCAPE_FROM_LILY_OBJECT_H
-
 #include "Game.h"
 
 

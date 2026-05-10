@@ -4,7 +4,6 @@
 
 #ifndef ESCAPE_FROM_LILY_OBJECTWORLD_H
 #define ESCAPE_FROM_LILY_OBJECTWORLD_H
-
 #include "Object.h"
 
 

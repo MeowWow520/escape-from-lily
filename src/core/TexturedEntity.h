@@ -4,10 +4,9 @@
 
 #ifndef ESCAPE_FROM_LILY_TEXTUREDENTITY_H
 #define ESCAPE_FROM_LILY_TEXTUREDENTITY_H
-#include "ObjectScreen.h"
-#include "Def.h"
-
 #include <memory>
+#include "Def.h"
+#include "ObjectScreen.h"
 
 
 
