@@ -4,6 +4,7 @@
 
 #ifndef ESCAPE_FROM_LILY_GAME_H
 #define ESCAPE_FROM_LILY_GAME_H
+
 #include <string>
 #include <glm/glm.hpp>
 #include <SDL3/SDL.h>

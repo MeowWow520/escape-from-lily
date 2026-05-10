@@ -9,12 +9,15 @@ endif()
 
 add_executable(escape-from-lily
         src/main.cpp
-        src/core/Game.h
-        src/core/Game.cpp
-        src/core/Object.h
-        src/core/Scene.h
         src/SceneMain.cpp
         src/SceneMain.h
+        src/core/Def.h
+        src/core/Game.cpp
+        src/core/Game.h
+        src/core/Object.h
+        src/core/ObjectWorld.h
+        src/core/Scene.h
+        src/core/ObjectScreen.h
 )
 
 find_package(ZLIB REQUIRED)

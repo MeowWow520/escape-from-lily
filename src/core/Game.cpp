@@ -3,12 +3,14 @@
 //
 
 #include "Game.h"
-#include "Scene.h"
-#include "../SceneMain.h"
 
 #include <SDL3_image/SDL_image.h>
 #include <SDL3_mixer/SDL_mixer.h>
 #include <SDL3_ttf/SDL_ttf.h>
+
+#include "Def.h"
+#include "Scene.h"
+#include "../SceneMain.h"
 
 
 Game::Game() {
@@ -29,17 +31,17 @@ int Game::Initialize() {
 
    // 初始化 SDL 库
    if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO)) {
-      SDL_Log("[core] SDL initialized fail: %s", SDL_GetError());
+      SDL_Log("[core] SDL_Init initialized fail: %s", SDL_GetError());
       return -1;
-   } SDL_Log("[core] SDL initialized successfully");
+   } SDL_Log("[core] SDL_Init initialized successfully");
    if (!TTF_Init()) {
-      SDL_Log("[core] SDL initialized fail: %s", SDL_GetError());
+      SDL_Log("[core] TTF_Init initialized fail: %s", SDL_GetError());
       return -1;
-   } SDL_Log("[core] SDL initialized successfully");
+   } SDL_Log("[core] TTF_Init initialized successfully");
    if (!MIX_Init()) {
-      SDL_Log("[core] SDL initialized fail: %s", SDL_GetError());
+      SDL_Log("[core] MIX_Init initialized fail: %s", SDL_GetError());
       return -1;
-   } SDL_Log("[core] SDL initialized successfully");
+   } SDL_Log("[core] MIX_Init initialized successfully");
 
    // 创建窗口
    window_ = SDL_CreateWindow(
@@ -52,7 +54,7 @@ int Game::Initialize() {
    } SDL_Log("[core] SDL_CreateWindow successfully");
 
    // 创建渲染器
-   renderer_ = SDL_CreateRenderer(window_, NULL);
+   renderer_ = SDL_CreateRenderer(window_, nullptr);
    if (renderer_ == nullptr) {
       SDL_Log("[core] SDL_CreateRenderer fail: %s", SDL_GetError());
       return -1;
@@ -115,7 +117,7 @@ void Game::Update(float dt) {
 
 }
 void Game::Render() const {
-   SDL_SetRenderDrawColor(renderer_, 255, 0, 0, 255);
+   SDL_SetRenderDrawColor(renderer_, COLOR(0xFF006EFF));
    SDL_RenderClear(renderer_);
    current_scene_->Render();
    SDL_RenderPresent(renderer_);
