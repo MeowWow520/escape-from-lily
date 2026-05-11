@@ -8,10 +8,10 @@
 
 TexturedEntity::TexturedEntity() = default;
 
-using TexturedEntityPtr = std::unique_ptr<
+using TexturePtr = std::unique_ptr<
                 SDL_Texture,
                 decltype(&SDL_DestroyTexture)>;
-TexturedEntityPtr TexturedEntity::setTexture(TexturedEntityPtr newTexture) noexcept {
+TexturePtr TexturedEntity::setTexture(TexturePtr newTexture) noexcept {
     m_texture = std::move(newTexture);
     return newTexture;
 }
