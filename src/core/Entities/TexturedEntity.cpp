@@ -2,7 +2,7 @@
 // Created by MeowWow520 on 2026/5/10.
 //
 
-#include "../TexturedEntity.h"
+#include "TexturedEntity.h"
 #include <SDL3_image/SDL_image.h>
 
 
@@ -58,13 +58,13 @@ bool TexturedEntity::SetVisible(const bool newvisible) {
 
 bool TexturedEntity::SetTextureFromPath(const char *path) {
     if (!path || path[0] == '\0') {
-        SDL_Log("TexturedEntity::SetTextureFromPath failed: path is null");
+        SDL_Log("[core] TexturedEntity::SetTextureFromPath failed: path is null");
         return false;
     }
     // 创建新纹理
     SDL_Texture* newTexture = IMG_LoadTexture(m_game_instance.GetSDLRenderer(), path);
     if (!newTexture) {
-        SDL_Log("SDL_CreateTextureFromSurface failed: %s", SDL_GetError());
+        SDL_Log("[core] SDL_CreateTextureFromSurface failed: %s", SDL_GetError());
         return false;
     }
     // 设置新纹理
