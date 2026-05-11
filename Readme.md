@@ -29,8 +29,8 @@ git clone https://github.com/microsoft/vcpkg.git
 cd vcpkg
 .\bootstrap-vcpkg.bat
 ```
-4: 添加 CMake 选项
-```text
+4: 添加 CMake 选项 <font color="blue">注意文件路径</font>
+```textmate
 -DCMAKE_TOOLCHAIN_FILE=Path\you\known\vcpkg\scripts\buildsystems\vcpkg.cmake -DVCPKG_FEATURE_FLAGS=manifests -DVCPKG_TARGET_TRIPLET=x64-windows-static
 ```
 5: 构建项目
