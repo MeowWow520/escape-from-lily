@@ -5,15 +5,17 @@
 #include "TexturedEntity.h"
 #include <SDL3_image/SDL_image.h>
 
+#include "../Scene.h"
+
 
 TexturedEntity::TexturedEntity() = default;
 
 using TexturePtr = std::unique_ptr<
                 SDL_Texture,
                 decltype(&SDL_DestroyTexture)>;
-TexturePtr TexturedEntity::setTexture(TexturePtr newTexture) noexcept {
-    m_texture = std::move(newTexture);
-    return newTexture;
+TexturePtr TexturedEntity::setTexture(TexturePtr newtexture) noexcept {
+    m_texture = std::move(newtexture);
+    return newtexture;
 }
 
 [[nodiscard]] SDL_Texture* TexturedEntity::GetTexture() const {
@@ -56,6 +58,19 @@ bool TexturedEntity::SetVisible(const bool newvisible) {
     return m_visible;
 }
 
+bool TexturedEntity::InitializeTextureFromPath(const char *path) {
+    m_visible = true;
+    if (!path || path[0] == '\0') {
+        SDL_Log("[core] TexturedEntity::InitializeTextureFromPath failed: path is null");
+        return false;
+    }
+    m_path = path;
+    m_texture.reset(new SDL_Texture());
+    if (SetTextureFromPath(m_path.c_str()))
+        return false;
+    return true;
+}
+
 bool TexturedEntity::SetTextureFromPath(const char *path) {
     if (!path || path[0] == '\0') {
         SDL_Log("[core] TexturedEntity::SetTextureFromPath failed: path is null");
@@ -72,4 +87,17 @@ bool TexturedEntity::SetTextureFromPath(const char *path) {
     // 更新变量
     SDL_GetTextureSize(m_texture.get(),&m_texture_size.x,&m_texture_size.y);
     return true;
+}
+
+glm::vec2 TexturedEntity::TransScreenPos() const {
+    return m_world_pos - m_game_instance.GetCurrentScene()->GetCameraPos();
+}
+
+bool TexturedEntity::IsInCameraRange() const {
+    if (m_screen_pos.x < 0 ||
+        m_screen_pos.y < 0 ||
+        m_screen_pos.x > m_game_instance.GetWindowSize().x ||
+        m_screen_pos.y > m_game_instance.GetWindowSize().y) {
+        return false;
+    } return true;
 }

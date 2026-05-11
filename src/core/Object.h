@@ -15,8 +15,8 @@ class Object {
         Object() = default;
         virtual ~Object() = default;
         virtual int Initialize() { return 0; }
-        virtual void HandleEvents(SDL_Event event) { }
-        virtual void Update(float dt) { }
+        virtual void HandleEvents([[maybe_unused]]SDL_Event event) { }
+        virtual void Update([[maybe_unused]] const float dt) { }
         virtual void Render() { }
         virtual int Quit() { return 0; }
 };

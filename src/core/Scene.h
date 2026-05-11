@@ -12,7 +12,6 @@ class Scene : public Object {
     protected:
         glm::vec2 m_world_size{};       // 世界的大小
         glm::vec2 m_camera_pos{};       // 相机位置
-        std::vector<Object*> m_objects; // 场景中的物体
     public:
         Scene() = default;
         ~Scene() override = default;

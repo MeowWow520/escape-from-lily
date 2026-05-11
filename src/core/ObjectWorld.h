@@ -7,7 +7,6 @@
 #include "Object.h"
 
 
-
 class ObjectWorld : public Object {
     protected:
         glm::vec2 m_world_pos{};

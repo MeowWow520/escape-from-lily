@@ -9,7 +9,6 @@
 #include "../ObjectScreen.h"
 
 
-
 class TexturedEntity : public ObjectScreen {
     protected:
         using TexturePtr = std::unique_ptr<
@@ -18,6 +17,7 @@ class TexturedEntity : public ObjectScreen {
         // 实体的纹理
         TexturePtr m_texture{nullptr, SDL_DestroyTexture};
         float m_rotation = 0.0f;           // 旋转角度
+        std::string m_path{};              // 纹理的文件路径
         SDL_Rect m_rect{};                 // 精灵图矩形
         glm::vec2 m_texture_size{};        // 纹理原始尺寸
         glm::vec2 m_scale{1.0f, 1.0f}; // 缩放
@@ -28,13 +28,12 @@ class TexturedEntity : public ObjectScreen {
         SDL_BlendMode m_blendMode = SDL_BLENDMODE_BLEND; // 像素混合模式
         bool m_textureDirty = false;                     // 脏标记
         bool m_visible = false;
-
     public:
         TexturedEntity();
         ~TexturedEntity() override = default;
 
         // getter 和 setter
-        TexturePtr setTexture(TexturePtr newTexture) noexcept;
+        TexturePtr setTexture(TexturePtr newtexture) noexcept;
         [[nodiscard]] SDL_Texture* GetTexture() const;
         float SetRotation(float rotation);
         [[nodiscard]] float GetRotation() const;
@@ -44,8 +43,15 @@ class TexturedEntity : public ObjectScreen {
         [[nodiscard]] glm::vec2 GetPivot() const;
         bool SetVisible(bool newvisible);
         [[nodiscard]] bool GetVisible() const;
+        bool InitializeTextureFromPath(const char *path);
         bool SetTextureFromPath(const char* path);
 
+        /**
+         * TranScreenPos是将世界坐标转化为屏幕坐标的函数
+         * @return 屏幕坐标
+         */
+        glm::vec2 TransScreenPos() const;
+        bool IsInCameraRange() const;
 };
 
 #endif //ESCAPE_FROM_LILY_TEXTUREDENTITY_H

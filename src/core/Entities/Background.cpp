@@ -5,12 +5,9 @@
 #include "Background.h"
 
 int Background::Initialize() {
-    // 设置纹理
-    m_path = "assets/images/test.jpg";
-    m_texture.reset(nullptr);
-    if (SetTextureFromPath(m_path.c_str()))
+    if (!InitializeTextureFromPath(m_path.c_str()))
         return -1;
-    bool m_visible = true;
+
     return TexturedEntity::Initialize();
 }
 
