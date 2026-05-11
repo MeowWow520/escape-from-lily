@@ -2,11 +2,23 @@
 // Created by MeowWow520 on 2026/5/10.
 //
 
-#include "TexturedEntity.h"
+#include "../TexturedEntity.h"
 #include <SDL3_image/SDL_image.h>
 
 
 TexturedEntity::TexturedEntity() = default;
+
+using TexturedEntityPtr = std::unique_ptr<
+                SDL_Texture,
+                decltype(&SDL_DestroyTexture)>;
+TexturedEntityPtr TexturedEntity::setTexture(TexturedEntityPtr newTexture) noexcept {
+    m_texture = std::move(newTexture);
+    return newTexture;
+}
+
+[[nodiscard]] SDL_Texture* TexturedEntity::GetTexture() const {
+    return m_texture.get();
+}
 
 float TexturedEntity::SetRotation(const float rotation) {
     m_rotation = rotation;

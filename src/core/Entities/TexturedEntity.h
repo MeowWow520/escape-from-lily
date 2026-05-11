@@ -5,18 +5,18 @@
 #ifndef ESCAPE_FROM_LILY_TEXTUREDENTITY_H
 #define ESCAPE_FROM_LILY_TEXTUREDENTITY_H
 #include <memory>
-#include "Def.h"
-#include "ObjectScreen.h"
+#include "../Def.h"
+#include "../ObjectScreen.h"
 
 
 
 class TexturedEntity : public ObjectScreen {
     protected:
+        using TexturedEntityPtr = std::unique_ptr<
+                SDL_Texture,
+                decltype(&SDL_DestroyTexture)>;
         // 实体的纹理
-        std::unique_ptr<
-            SDL_Texture,
-            decltype(&SDL_DestroyTexture)
-        > m_texture{nullptr, SDL_DestroyTexture};
+        TexturedEntityPtr m_texture{nullptr, SDL_DestroyTexture};
         float m_rotation = 0.0f;           // 旋转角度
         SDL_Rect m_rect{};                 // 精灵图矩形
         glm::vec2 m_texture_size{};        // 纹理原始尺寸
@@ -34,6 +34,8 @@ class TexturedEntity : public ObjectScreen {
         ~TexturedEntity() override = default;
 
         // getter 和 setter
+        TexturedEntityPtr setTexture(TexturedEntityPtr newTexture) noexcept;
+        [[nodiscard]] SDL_Texture* GetTexture() const;
         float SetRotation(float rotation);
         [[nodiscard]] float GetRotation() const;
         glm::vec2 SetScale(glm::vec2 newscale);

@@ -4,6 +4,7 @@
 
 #ifndef ESCAPE_FROM_LILY_SCENEMAIN_H
 #define ESCAPE_FROM_LILY_SCENEMAIN_H
+#include <map>
 #include "core/Scene.h"
 
 
@@ -28,6 +29,7 @@ class SceneMain : public Scene {
 
     private:
         glm::vec2 m_world_scale{};
+        std::map<std::string, TexturedEntity*> m_texturedentitys;
 };
 
 #endif //ESCAPE_FROM_LILY_SCENEMAIN_H

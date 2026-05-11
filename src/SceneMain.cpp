@@ -13,7 +13,23 @@ int SceneMain::Initialize() {
     m_camera_pos = (m_world_size - m_game_instance.GetWindowSize()) / glm::vec2(2) ;
     m_objects = std::vector<Object*>();
     m_player_position = glm::vec2(0.0f, 0.0f);
-    SDL_Log("[core] Initialized SceneMain");
+
+    /*// 创建背景
+    if (auto [it, inserted] = m_texturedentitys.try_emplace("Background", nullptr);
+        !inserted) {
+            SDL_Log("[SceneMain] TexturedEntity - Background already have, try emplace");
+            if (m_texturedentitys["Background"]->Quit() != 0)
+                return -1;
+        }
+    else {
+        m_texturedentitys.insert(std::make_pair("Background", new TexturedEntity()));
+        m_texturedentitys["Background"]->Initialize();
+        SDL_Log("[SceneMain] TexturedEntity - Background created");
+    }
+    // 初始化背景*/
+
+    
+    SDL_Log("[SceneMain] Initialized SceneMain");
     return 0;
 }
 
@@ -30,7 +46,7 @@ void SceneMain::Render() {
 }
 
 int SceneMain::Quit() {
-    SDL_Log("[core] Quitting SceneMain");
+    SDL_Log("[SceneMain] Quitting SceneMain");
     return 0;
 }
 
