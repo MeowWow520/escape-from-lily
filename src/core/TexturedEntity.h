@@ -35,13 +35,13 @@ class TexturedEntity : public ObjectScreen {
 
         // getter 和 setter
         float SetRotation(float rotation);
-        float GetRotation() const;
+        [[nodiscard]] float GetRotation() const;
         glm::vec2 SetScale(glm::vec2 newscale);
-        glm::vec2 GetScale() const;
+        [[nodiscard]] glm::vec2 GetScale() const;
         glm::vec2 SetPivot(glm::vec2 newpivot);
-        glm::vec2 GetPivot() const;
+        [[nodiscard]] glm::vec2 GetPivot() const;
         bool SetVisible(bool newvisible);
-        bool GetVisible() const;
+        [[nodiscard]] bool GetVisible() const;
         bool SetTextureFromPath(const char* path);
 
 };

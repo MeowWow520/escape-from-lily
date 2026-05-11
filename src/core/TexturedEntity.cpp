@@ -6,14 +6,14 @@
 #include <SDL3_image/SDL_image.h>
 
 
-TexturedEntity::TexturedEntity() { }
+TexturedEntity::TexturedEntity() = default;
 
 float TexturedEntity::SetRotation(const float rotation) {
     m_rotation = rotation;
     return rotation;
 }
 
-float TexturedEntity::GetRotation() const {
+[[nodiscard]] float TexturedEntity::GetRotation() const {
     return m_rotation;
 }
 
@@ -22,7 +22,7 @@ glm::vec2 TexturedEntity::SetScale(const glm::vec2 newscale) {
     return newscale;
 }
 
-glm::vec2 TexturedEntity::GetScale() const {
+[[nodiscard]] glm::vec2 TexturedEntity::GetScale() const {
     return m_scale;
 }
 
@@ -31,7 +31,7 @@ glm::vec2 TexturedEntity::SetPivot(const glm::vec2 newpivot) {
     return newpivot;
 }
 
-glm::vec2 TexturedEntity::GetPivot() const {
+[[nodiscard]] glm::vec2 TexturedEntity::GetPivot() const {
     return m_pivot;
 }
 
@@ -40,7 +40,7 @@ bool TexturedEntity::SetVisible(const bool newvisible) {
     return newvisible;
 }
 
-bool TexturedEntity::GetVisible() const {
+[[nodiscard]] bool TexturedEntity::GetVisible() const {
     return m_visible;
 }
 
