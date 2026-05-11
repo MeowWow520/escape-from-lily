@@ -130,7 +130,10 @@ int Game::Quit() const {
    MIX_Quit();
    // 释放游戏资源
    if (m_current_scene != nullptr) {
-      m_current_scene->Quit();
+      if (m_current_scene->Quit() != 0) {
+         SDL_Log("[core] Quit fail");
+         return -1;
+      }
    } delete m_current_scene;
    SDL_Log("[core] Cleaned game_instance");
    return 0;
