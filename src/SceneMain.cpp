@@ -16,14 +16,14 @@ int SceneMain::Initialize() {
     /*// 创建背景
     if (auto [it, inserted] = m_texturedentitys.try_emplace("Background", nullptr);
         !inserted) {
-            SDL_Log("[SceneMain] TexturedEntity - Background already have, try emplace");
+            // TODO: chore
             if (m_texturedentitys["Background"]->Quit() != 0)
                 return -1;
         }
     else {
         m_texturedentitys.insert(std::make_pair("Background", new TexturedEntity()));
         m_texturedentitys["Background"]->Initialize();
-        SDL_Log("[SceneMain] TexturedEntity - Background created");
+        // TODO: chore
     }
     // 初始化背景*/
     m_current_background = new Background();
@@ -32,7 +32,7 @@ int SceneMain::Initialize() {
     if (!m_current_background->InitializeTextureFromPath())
         return -1;
     m_current_background->SetWorldPos(glm::vec2{0,0});
-    SDL_Log("[SceneMain] Initialized SceneMain");
+    // TODO: chore
     return 0;
 }
 
@@ -49,7 +49,7 @@ void SceneMain::Render() {
 }
 
 int SceneMain::Quit() {
-    SDL_Log("[SceneMain] Quitting SceneMain");
+    // TODO: chore
     return 0;
 }
 

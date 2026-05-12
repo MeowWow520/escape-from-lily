@@ -2,6 +2,7 @@
 # Created by MeowWow520 on 2026/5/8.
 #
 
+.opencode/
 build/
 .idea/
 cmake-build-*/

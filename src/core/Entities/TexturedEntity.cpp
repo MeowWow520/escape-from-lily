@@ -69,7 +69,7 @@ std::string TexturedEntity::GetPath() const {
 
 bool TexturedEntity::InitializeTextureFromPath() {
     if (!m_path.data() || m_path[0] == '\0') {
-        SDL_Log("[core] TexturedEntity::InitializeTextureFromPath failed: path is null");
+        // TODO: chore
         return false;
     }
     m_texture.reset(new SDL_Texture());
@@ -81,13 +81,13 @@ bool TexturedEntity::InitializeTextureFromPath() {
 
 bool TexturedEntity::SetTextureFromPath() {
     if (!m_path.data() || m_path[0] == '\0') {
-        SDL_Log("[core] TexturedEntity::SetTextureFromPath failed: path is null");
+        // TODO: chore
         return false;
     }
     // 创建新纹理
     SDL_Texture* newTexture = IMG_LoadTexture(m_game_instance.GetSDLRenderer(), m_path.c_str());
     if (!newTexture) {
-        SDL_Log("[core] SDL_CreateTextureFromSurface failed: %s", SDL_GetError());
+        // TODO: chore
         return false;
     }
     // 设置新纹理

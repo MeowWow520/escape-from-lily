@@ -24,7 +24,7 @@ Game::Game() {
    m_window = nullptr;
    m_renderer = nullptr;
    m_current_scene = nullptr;
-   SDL_Log("[core] Class Game initialized successfully");
+   // TODO: chore
 }
 
 int Game::Initialize() {
@@ -32,17 +32,17 @@ int Game::Initialize() {
 
    // 初始化 SDL 库
    if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO)) {
-      SDL_Log("[core] SDL_Init initialized fail: %s", SDL_GetError());
+      // TODO: chore
       return -1;
-   } SDL_Log("[core] SDL_Init initialized successfully");
+   } // TODO: chore
    if (!TTF_Init()) {
-      SDL_Log("[core] TTF_Init initialized fail: %s", SDL_GetError());
+      // TODO: chore
       return -1;
-   } SDL_Log("[core] TTF_Init initialized successfully");
+   } // TODO: chore
    if (!MIX_Init()) {
-      SDL_Log("[core] MIX_Init initialized fail: %s", SDL_GetError());
+      // TODO: chore
       return -1;
-   } SDL_Log("[core] MIX_Init initialized successfully");
+   } // TODO: chore
 
    // 创建窗口
    m_window = SDL_CreateWindow(
@@ -50,30 +50,30 @@ int Game::Initialize() {
       static_cast<int>(m_window_size.x), static_cast<int>(m_window_size.y),
       SDL_WINDOW_RESIZABLE);
    if (m_window == nullptr) {
-      SDL_Log("[core] SDL_CreateWindow fail: %s", SDL_GetError());
+      // TODO: chore
       return -1;
-   } SDL_Log("[core] SDL_CreateWindow successfully");
+   } // TODO: chore
 
    // 创建渲染器
    m_renderer = SDL_CreateRenderer(m_window, nullptr);
    if (m_renderer == nullptr) {
-      SDL_Log("[core] SDL_CreateRenderer fail: %s", SDL_GetError());
+      // TODO: chore
       return -1;
-   } SDL_Log("[core] SDL_CreateRenderer successfully");
+   } // TODO: chore
    // 设置渲染器 -- 垂直同步
    if (!SDL_SetRenderVSync(m_renderer, 1)) {
-      SDL_Log("[core] SDL_SetRenderVSync fail: %s", SDL_GetError());
+      // TODO: chore
       return -1;
-   } SDL_Log("[core] SDL_SetRenderVSync successfully");
+   } // TODO: chore
 
 
    // 创建场景
    m_current_scene = new SceneMain();
    if (m_current_scene->Initialize() != 0) {
-      SDL_Log("[core] SceneMain initialized fail");
+      // TODO: chore
       delete m_current_scene;
       return -1;
-   } SDL_Log("[core] SceneMain initialized successfully");
+   } // TODO: chore
 
    return 0;
 }
@@ -103,7 +103,7 @@ void Game::HandleEvents() {
    while (SDL_PollEvent(&event)) {
       switch (event.type) {
          case SDL_EVENT_QUIT:
-            SDL_Log("[core] HandleEvent received SDL_EVENT_QUIT");
+            // TODO: chore
             m_running = false;
             break;
          default:
@@ -131,10 +131,10 @@ int Game::Quit() const {
    // 释放游戏资源
    if (m_current_scene != nullptr) {
       if (m_current_scene->Quit() != 0) {
-         SDL_Log("[core] Quit fail");
+         // TODO: chore
          return -1;
       }
    } delete m_current_scene;
-   SDL_Log("[core] Cleaned game_instance");
+   // TODO: chore
    return 0;
 }

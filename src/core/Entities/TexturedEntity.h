@@ -52,8 +52,8 @@ class TexturedEntity : public ObjectScreen {
          * TranScreenPos是将世界坐标转化为屏幕坐标的函数
          * @return 屏幕坐标
          */
-        glm::vec2 TransScreenPos() const;
-        bool IsInCameraRange() const;
+        [[nodiscard]] glm::vec2 TransScreenPos() const;
+        [[nodiscard]] bool IsInCameraRange() const;
 };
 
 #endif //ESCAPE_FROM_LILY_TEXTUREDENTITY_H

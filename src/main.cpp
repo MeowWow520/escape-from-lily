@@ -8,9 +8,9 @@
 
 int main() {
     Game& game_instance = Game::GetInstance();
-    SDL_Log("[core] game_instance created");
+    // TODO: chore
     if (game_instance.Initialize() == -1) {
-        SDL_Log("[core] Game initialized fail, return -1");
+        // TODO: chore
         return -1;
     }
     return game_instance.Running();
