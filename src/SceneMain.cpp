@@ -26,8 +26,10 @@ int SceneMain::Initialize() {
         SDL_Log("[SceneMain] TexturedEntity - Background created");
     }
     // 初始化背景*/
-
-    if (!m_current_background->InitializeTextureFromPath("assets/images/test_backgrd.jpg"))
+    m_current_background = new Background();
+    m_current_background->SetPath("assets/images/test_backgrd.png");
+    m_current_background->Initialize();
+    if (!m_current_background->InitializeTextureFromPath())
         return -1;
     m_current_background->SetWorldPos(glm::vec2{0,0});
     SDL_Log("[SceneMain] Initialized SceneMain");
@@ -43,7 +45,7 @@ void SceneMain::Update(float dt) {
 }
 
 void SceneMain::Render() {
-
+    m_current_background->Render();
 }
 
 int SceneMain::Quit() {

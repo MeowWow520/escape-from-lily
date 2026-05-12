@@ -43,8 +43,10 @@ class TexturedEntity : public ObjectScreen {
         [[nodiscard]] glm::vec2 GetPivot() const;
         bool SetVisible(bool newvisible);
         [[nodiscard]] bool GetVisible() const;
-        bool InitializeTextureFromPath(const char *path);
-        bool SetTextureFromPath(const char* path);
+        std::string SetPath(std::string newpath);
+        [[nodiscard]] std::string GetPath() const;
+        bool InitializeTextureFromPath();
+        bool SetTextureFromPath();
 
         /**
          * TranScreenPos是将世界坐标转化为屏幕坐标的函数

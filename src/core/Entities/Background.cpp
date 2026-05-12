@@ -5,7 +5,8 @@
 #include "Background.h"
 
 int Background::Initialize() {
-    if (!InitializeTextureFromPath(m_path.c_str()))
+
+    if (!InitializeTextureFromPath())
         return -1;
 
     return TexturedEntity::Initialize();
@@ -20,7 +21,7 @@ void Background::Update(float dt) {
 }
 
 void Background::Render() {
-
+    SDL_RenderTexture(m_game_instance.GetSDLRenderer(), m_texture.get(), nullptr, nullptr);
 }
 
 int Background::Quit() {

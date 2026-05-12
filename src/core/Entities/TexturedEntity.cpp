@@ -58,26 +58,34 @@ bool TexturedEntity::SetVisible(const bool newvisible) {
     return m_visible;
 }
 
-bool TexturedEntity::InitializeTextureFromPath(const char *path) {
-    m_visible = true;
-    if (!path || path[0] == '\0') {
+std::string TexturedEntity::SetPath(std::string newpath) {
+    m_path = newpath;
+    return newpath;
+}
+
+std::string TexturedEntity::GetPath() const {
+    return m_path;
+}
+
+bool TexturedEntity::InitializeTextureFromPath() {
+    if (!m_path.data() || m_path[0] == '\0') {
         SDL_Log("[core] TexturedEntity::InitializeTextureFromPath failed: path is null");
         return false;
     }
-    m_path = path;
     m_texture.reset(new SDL_Texture());
-    if (SetTextureFromPath(m_path.c_str()))
+    if (!SetTextureFromPath())
         return false;
+    m_visible = true;
     return true;
 }
 
-bool TexturedEntity::SetTextureFromPath(const char *path) {
-    if (!path || path[0] == '\0') {
+bool TexturedEntity::SetTextureFromPath() {
+    if (!m_path.data() || m_path[0] == '\0') {
         SDL_Log("[core] TexturedEntity::SetTextureFromPath failed: path is null");
         return false;
     }
     // 创建新纹理
-    SDL_Texture* newTexture = IMG_LoadTexture(m_game_instance.GetSDLRenderer(), path);
+    SDL_Texture* newTexture = IMG_LoadTexture(m_game_instance.GetSDLRenderer(), m_path.c_str());
     if (!newTexture) {
         SDL_Log("[core] SDL_CreateTextureFromSurface failed: %s", SDL_GetError());
         return false;
