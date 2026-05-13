@@ -6,10 +6,13 @@
 
 int Background::Initialize() {
 
-    if (!InitializeTextureFromPath())
-        return -1;
-
-    return TexturedEntity::Initialize();
+    if (!InitializeTextureFromPath()) {
+        m_return_code = -1;
+        goto to_quit;
+    }
+to_quit:
+    const ssl loc = ssl::current();
+    return EFL_ClassInit(m_return_code, loc);
 }
 
 void Background::HandleEvents(SDL_Event event) {
@@ -25,5 +28,8 @@ void Background::Render() {
 }
 
 int Background::Quit() {
-    return TexturedEntity::Quit();
+    goto to_quit;
+to_quit:
+    const ssl loc = ssl::current();
+    return EFL_ClassQuit(m_return_code, loc);
 }

@@ -36,20 +36,13 @@ class Game {
         // FIXME: static 是否可行？
         static void Update(float dt);
         void Render() const;
-        [[nodiscard]] int Quit() const;
+        [[nodiscard]] int Quit();
+
         // Getter 和 Setter
-        [[nodiscard]] glm::vec2 GetWindowSize() const {
-            return m_window_size;
-        }
-        [[nodiscard]] SDL_Window *GetSDLWindow() const {
-            return m_window;
-        }
-        [[nodiscard]] SDL_Renderer *GetSDLRenderer() const {
-            return m_renderer;
-        }
-        [[nodiscard]] Scene* GetCurrentScene() const {
-            return m_current_scene;
-        }
+        [[nodiscard]] glm::vec2 GetWindowSize() const;
+        [[nodiscard]] SDL_Window *GetSDLWindow() const;
+        [[nodiscard]] SDL_Renderer *GetSDLRenderer() const;
+        [[nodiscard]] Scene* GetCurrentScene() const;
     private:
         Game();
 
@@ -62,6 +55,7 @@ class Game {
         SDL_Window* m_window;
         SDL_Renderer* m_renderer;
         Scene* m_current_scene;
+        int m_return_code;
 };
 
 #endif //ESCAPE_FROM_LILY_GAME_H

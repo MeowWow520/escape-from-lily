@@ -7,6 +7,14 @@
 #include <string>
 #include <source_location>
 #include <spdlog/spdlog.h>
+
+// FIXME: 这些转义符在其他平台是否有效？
+#define CLR_RESET   "\033[0m"
+#define CLR_RED     "\033[31m"
+#define CLR_GREEN   "\033[32m"
+#define CLR_YELLOW  "\033[33m"
+#define CLR_BLUE    "\033[34m"
+#define CLR_CYAN    "\033[36m"
 /**
  * 将 RGBA 颜色值分开转换为 4 位数值
  *
@@ -18,7 +26,6 @@
     (((HEX) >> 16 ) & 0xFF), \
     (((HEX) >> 8  ) & 0xFF), \
     ( (HEX)         & 0xFF)
-
 
 /**
  * SDL_LibInitChecker 检查 bool 形式的标志是否为真，并为其额外配备 log 功能
@@ -36,25 +43,43 @@ inline bool SDL_LibInitChecker(const bool flag, std::string name) {
 }
 
 using ssl = std::source_location;
+
+/**
+ * EFL_ClassInit 为类内的初始化返回值进行 log 输出。
+ *
+ * @param flag 返回值
+ * @param location 所在源码的定位
+ * @return flag
+ */
 inline int EFL_ClassInit(const int flag, const ssl &location) {
-    const char* c_file_name = std::strstr(location.file_name(), "src");
+    const char* c_file_name = std::strstr(location.file_name(), "src") + 4;
     const char* c_function_name = location.function_name() + 12;
     if (flag != 0) {
-        spdlog::error("[{}:{}] {} initialization failed", c_file_name, location.line(), c_function_name);
-        return -1;
+        spdlog::error("[{}{}:{}] {}{}{} initialization failed",
+            CLR_RED, c_file_name, location.line(), CLR_YELLOW, c_function_name, CLR_RESET);
+        return flag;
     }
-    spdlog::info("[{}:{}] {} initialization successfully", c_file_name, location.line(), c_function_name);
+    spdlog::info("[{}{}:{}] {}{}{} initialization successfully",
+        CLR_BLUE, c_file_name, location.line(), CLR_YELLOW, c_function_name, CLR_RESET);
     return 0;
 }
-
+/**
+ * EFL_ClassQuit 为类内的清理返回值进行 log 输出。
+ *
+ * @param flag 返回值
+ * @param location 所在源码的定位
+ * @return flag
+ */
 inline int EFL_ClassQuit(const int flag,  const ssl &location) {
-    const char* c_file_name = std::strstr(location.file_name(), "src");
+    const char* c_file_name = std::strstr(location.file_name(), "src") + 4;
     const char* c_function_name = location.function_name() + 12;
     if (flag != 0) {
-        spdlog::error("[{}:{}] {} quit failed", c_file_name, location.line(), c_function_name);
-        return -1;
+        spdlog::error("[{}{}:{}] {}{}{} quit failed",
+            CLR_RED, c_file_name, location.line(), CLR_YELLOW, c_function_name, CLR_RESET);
+        return flag;
     }
-    spdlog::info("[{}:{}] {} quit successfully", c_file_name, location.line(), c_function_name);
+    spdlog::info("[{}{}:{}] {}{}{} quit successfully",
+        CLR_BLUE, c_file_name, location.line(), CLR_YELLOW, c_function_name, CLR_RESET);
     return 0;
 }
 

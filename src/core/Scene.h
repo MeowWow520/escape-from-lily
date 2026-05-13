@@ -24,9 +24,14 @@ class Scene : public Object {
         [[nodiscard]] glm::vec2 GetWorldSize() const {
              return m_world_size;
         }
+        glm::vec2 SetCameraPos(const glm::vec2 newcamerapos) {
+            m_camera_pos = newcamerapos;
+            return m_camera_pos;
+        }
         [[nodiscard]] glm::vec2 GetCameraPos() const {
             return m_camera_pos;
         }
+        // FIXME: 这里有意义吗？
         [[nodiscard]] glm::vec2 TransScreenPos(glm::vec2 screen_pos) const;
 
 };

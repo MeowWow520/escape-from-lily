@@ -17,12 +17,14 @@ int SceneMain::Initialize() {
     // 初始化背景
     m_current_background = new Background();
     m_current_background->SetPath("assets/images/test_backgrd.png");
-    if (m_current_background->Initialize())
-        return -1;
+    if (m_current_background->Initialize()) {
+        m_return_code = -1;
+        goto to_quit;
+    }
     m_current_background->SetWorldPos(glm::vec2{0,0});
-
+to_quit:
     const ssl loc = ssl::current();
-    return EFL_ClassInit(Scene::Initialize(), loc);
+    return EFL_ClassInit(m_return_code, loc);
 }
 
 void SceneMain::HandleEvents(SDL_Event event) {
@@ -38,8 +40,10 @@ void SceneMain::Render() {
 }
 
 int SceneMain::Quit() {
-    // TODO: chore
-    return 0;
+    goto to_quit;
+to_quit:
+    const ssl loc = ssl::current();
+    return EFL_ClassQuit(Scene::Quit(), loc);
 }
 
 glm::vec2 SceneMain::SetPlayerPosition(const glm::vec2 newplayerpos) {

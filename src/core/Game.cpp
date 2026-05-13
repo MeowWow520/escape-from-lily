@@ -24,27 +24,37 @@ Game::Game() {
    m_window = nullptr;
    m_renderer = nullptr;
    m_current_scene = nullptr;
+   m_return_code = 0;
    // TODO: chore
 }
 
 int Game::Initialize() {
 
-   if (SDL_LibInitChecker(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO), "SDL_Init"))
-      return -1;
-   if (SDL_LibInitChecker(TTF_Init(), "TTF_Init"))
-      return -1;
-   if (SDL_LibInitChecker(MIX_Init(), "Mix_Init"))
-      return -1;
+   if (SDL_LibInitChecker(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO), "SDL_Init")) {
+      m_return_code = -1;
+      goto to_quit;
+   }
+   if (SDL_LibInitChecker(TTF_Init(), "TTF_Init")) {
+      m_return_code = -1;
+      goto to_quit;
+   }
+   if (SDL_LibInitChecker(MIX_Init(), "Mix_Init")) {
+      m_return_code = -1;
+      goto to_quit;
+   }
    if (!SDL_CreateWindowAndRenderer(m_title.c_str(),
          static_cast<int>(m_window_size.x),
          static_cast<int>(m_window_size.y),
          SDL_WINDOW_RESIZABLE,&m_window, &m_renderer)) {
       spdlog::error("{} failed to create window and renderer: {}", m_title.c_str(), SDL_GetError());
-      return -1;
+      m_return_code = -1;
+      goto to_quit;
    } spdlog::info("{} successfully to create window and renderer", m_title.c_str());
    // 设置渲染器 -- 垂直同步
-   if (SDL_LibInitChecker(SDL_SetRenderVSync(m_renderer, 1), "SDL_SetRenderVSync"))
-      return -1;
+   if (SDL_LibInitChecker(SDL_SetRenderVSync(m_renderer, 1), "SDL_SetRenderVSync")) {
+      m_return_code = -1;
+      goto to_quit;
+   }
 
 
    // TODO: 使用工厂方法注册对象
@@ -54,8 +64,9 @@ int Game::Initialize() {
       delete m_current_scene;
       return -1;
    }
-
-   return 0;
+to_quit:
+   const ssl loc = ssl::current();
+   return EFL_ClassInit(m_return_code, loc);
 }
 
 int Game::Running() {
@@ -74,8 +85,8 @@ int Game::Running() {
          m_delta_time = static_cast<float>(m_frame_delay / 1e9);
       } m_delta_time = static_cast<float>(static_cast<double>(elapsed) / 1e9);
    }
-
-   return Quit();
+   const ssl loc = ssl::current();
+   return EFL_ClassQuit(Quit(), loc);
 }
 
 void Game::HandleEvents() {
@@ -103,18 +114,37 @@ void Game::Render() const {
    SDL_RenderPresent(m_renderer);
 }
 
-int Game::Quit() const {
+
+int Game::Quit() {
    // 释放 SDL 资源
    SDL_Quit();
    TTF_Quit();
    MIX_Quit();
    // 释放游戏资源
    if (m_current_scene != nullptr) {
-      if (m_current_scene->Quit() != 0) {
-         // TODO: chore
-         return -1;
+      if (const ssl loc = ssl::current(); EFL_ClassQuit(m_current_scene->Quit(), loc) != 0) {
+         m_return_code = -1;
+         goto to_quit;
       }
    } delete m_current_scene;
-   // TODO: chore
-   return 0;
+
+to_quit:
+   const ssl loc = ssl::current();
+   return EFL_ClassQuit(m_return_code, loc);
+}
+
+glm::vec2 Game::GetWindowSize() const {
+   return m_window_size;
+}
+
+SDL_Window * Game::GetSDLWindow() const {
+   return m_window;
+}
+
+SDL_Renderer * Game::GetSDLRenderer() const {
+   return m_renderer;
+}
+
+Scene * Game::GetCurrentScene() const {
+   return m_current_scene;
 }
