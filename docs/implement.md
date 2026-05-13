@@ -27,6 +27,7 @@ exe quit  <--  main   <---  Game::Initialize() <-
 ```
 
 后者传入 std::source_location 类型的数据，为在 return 语句前创建的 `loc` 变量，他记录当前语句所在的函数和文件路径。`EFL_ClassInit()` 方法内对 `loc` 变量这样处理：
+
 **1. file_name()**: 新建字符串 `c_file_name`，他截取并删去路径中 "src" 字符之前的所有字符，此时 location.file_name() 的原值 `G:\programming\cpp\src\core\Entities\Background.cpp` 被转化为 `src\core\Entities\Background.cpp`，随后对 `c_file_name` + 4 删去 "src\" 字符串。最后得到 `core\Entities\Background.cpp`。
 
 **2. line()**: 无特殊转化。
