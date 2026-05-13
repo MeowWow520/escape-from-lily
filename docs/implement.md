@@ -3,17 +3,12 @@
 
 #### core/Def.h
 
-`Def.h` 中宏定义了 win64 平台下的 PowerShell 的转义字符，为之后实现的方法提供更易读的格式
-```c++
-#define CLR_RESET   "\033[0m"
+`Def.h` 中宏定义了 win64 平台下的 PowerShell 的转义字符，为之后实现的方法提供更易读的格式。如红色：
+```c++ 
 #define CLR_RED     "\033[31m"
-#define CLR_GREEN   "\033[32m"
-#define CLR_YELLOW  "\033[33m"
-#define CLR_BLUE    "\033[34m"
-#define CLR_CYAN    "\033[36m"
 ```
 
-宏定义了 HEX 格式的颜色转化为 SDL api 要求的 RGBA 分量
+宏定义了 HEX 格式的颜色转化为 SDL api 要求的 RGBA 分量。可将 `0xff00ff00` 转化为 `255, 0, 255, 0`。
 ```c++
 #define COLOR(HEX) (\
     ( (HEX) >> 24 ) & 0xFF), \
