@@ -36,7 +36,7 @@ class Game {
         // FIXME: static 是否可行？
         static void Update(float dt);
         void Render() const;
-        int Quit() const;
+        [[nodiscard]] int Quit() const;
         // Getter 和 Setter
         [[nodiscard]] glm::vec2 GetWindowSize() const {
             return m_window_size;

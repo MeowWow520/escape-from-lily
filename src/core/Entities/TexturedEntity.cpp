@@ -13,7 +13,7 @@ TexturedEntity::TexturedEntity() = default;
 using TexturePtr = std::unique_ptr<
                 SDL_Texture,
                 decltype(&SDL_DestroyTexture)>;
-TexturePtr TexturedEntity::setTexture(TexturePtr newtexture) noexcept {
+TexturePtr TexturedEntity::SetTexture(TexturePtr newtexture) noexcept {
     m_texture = std::move(newtexture);
     return newtexture;
 }
@@ -72,7 +72,7 @@ bool TexturedEntity::InitializeTextureFromPath() {
         // TODO: chore
         return false;
     }
-    m_texture.reset(new SDL_Texture());
+    m_texture.reset();
     if (!SetTextureFromPath())
         return false;
     m_visible = true;

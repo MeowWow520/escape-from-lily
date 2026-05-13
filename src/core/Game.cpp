@@ -29,51 +29,31 @@ Game::Game() {
 
 int Game::Initialize() {
 
-
-   // 初始化 SDL 库
-   if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO)) {
-      // TODO: chore
+   if (SDL_LibInitChecker(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO), "SDL_Init"))
       return -1;
-   } // TODO: chore
-   if (!TTF_Init()) {
-      // TODO: chore
+   if (SDL_LibInitChecker(TTF_Init(), "TTF_Init"))
       return -1;
-   } // TODO: chore
-   if (!MIX_Init()) {
-      // TODO: chore
+   if (SDL_LibInitChecker(MIX_Init(), "Mix_Init"))
       return -1;
-   } // TODO: chore
-
-   // 创建窗口
-   m_window = SDL_CreateWindow(
-      m_title.c_str(),
-      static_cast<int>(m_window_size.x), static_cast<int>(m_window_size.y),
-      SDL_WINDOW_RESIZABLE);
-   if (m_window == nullptr) {
-      // TODO: chore
+   if (!SDL_CreateWindowAndRenderer(m_title.c_str(),
+         static_cast<int>(m_window_size.x),
+         static_cast<int>(m_window_size.y),
+         SDL_WINDOW_RESIZABLE,&m_window, &m_renderer)) {
+      spdlog::error("{} failed to create window and renderer: {}", m_title.c_str(), SDL_GetError());
       return -1;
-   } // TODO: chore
-
-   // 创建渲染器
-   m_renderer = SDL_CreateRenderer(m_window, nullptr);
-   if (m_renderer == nullptr) {
-      // TODO: chore
-      return -1;
-   } // TODO: chore
+   } spdlog::info("{} successfully to create window and renderer", m_title.c_str());
    // 设置渲染器 -- 垂直同步
-   if (!SDL_SetRenderVSync(m_renderer, 1)) {
-      // TODO: chore
+   if (SDL_LibInitChecker(SDL_SetRenderVSync(m_renderer, 1), "SDL_SetRenderVSync"))
       return -1;
-   } // TODO: chore
 
 
+   // TODO: 使用工厂方法注册对象
    // 创建场景
    m_current_scene = new SceneMain();
    if (m_current_scene->Initialize() != 0) {
-      // TODO: chore
       delete m_current_scene;
       return -1;
-   } // TODO: chore
+   }
 
    return 0;
 }

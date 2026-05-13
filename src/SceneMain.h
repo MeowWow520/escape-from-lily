@@ -4,7 +4,6 @@
 
 #ifndef ESCAPE_FROM_LILY_SCENEMAIN_H
 #define ESCAPE_FROM_LILY_SCENEMAIN_H
-#include <map>
 #include "core/Scene.h"
 #include "core/Entities/Background.h"
 
@@ -20,16 +19,12 @@ class SceneMain : public Scene {
         void Update(float dt) override;
         void Render() override;
         int Quit() override;
-
-        // FIXME: getter 和 setter 是否有必要？
-        /**
-         * [[nodiscard]] glm::vec2 GetPlayerPosition() const {
-         *     return player_position_;
-         * }
-         */
-
+        // getter 和 setter
+        glm::vec2 SetPlayerPosition(glm::vec2 newplayerpos);
+        [[nodiscard]] glm::vec2 GetPlayerPosition() const;
     private:
         glm::vec2 m_world_scale{};
+        // TODO: 添加背景转换
         Background *m_current_background{};
 };
 

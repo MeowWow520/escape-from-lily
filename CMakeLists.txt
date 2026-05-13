@@ -1,10 +1,10 @@
 cmake_minimum_required(VERSION 3.28)
 project(escape-from-lily)
 set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
 if(MSVC)
-    # add_compile_options("/utf-8")
-    add_compile_options("/source-charset:utf-8" "/execution-charset:utf-8")
+    add_compile_options("/utf-8")
 endif()
 
 
@@ -43,10 +43,13 @@ find_package(SDL3_image CONFIG REQUIRED)
 find_package(SDL3_mixer CONFIG REQUIRED)
 find_package(SDL3_ttf CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
+find_package(fmt CONFIG REQUIRED)
+
 target_link_libraries(escape-from-lily PRIVATE
         SDL3::SDL3
         SDL3_image::SDL3_image
         SDL3_mixer::SDL3_mixer
         SDL3_ttf::SDL3_ttf
         glm::glm
+        fmt::fmt
 )

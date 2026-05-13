@@ -33,7 +33,7 @@ class TexturedEntity : public ObjectScreen {
         ~TexturedEntity() override = default;
 
         // getter 和 setter
-        TexturePtr setTexture(TexturePtr newtexture) noexcept;
+        TexturePtr SetTexture(TexturePtr newtexture) noexcept;
         [[nodiscard]] SDL_Texture* GetTexture() const;
         float SetRotation(float rotation);
         [[nodiscard]] float GetRotation() const;

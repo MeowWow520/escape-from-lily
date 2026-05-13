@@ -13,27 +13,16 @@ int SceneMain::Initialize() {
     m_camera_pos = (m_world_size - m_game_instance.GetWindowSize()) / glm::vec2(2);
     m_player_position = glm::vec2(0.0f, 0.0f);
 
-    /*// 创建背景
-    if (auto [it, inserted] = m_texturedentitys.try_emplace("Background", nullptr);
-        !inserted) {
-            // TODO: chore
-            if (m_texturedentitys["Background"]->Quit() != 0)
-                return -1;
-        }
-    else {
-        m_texturedentitys.insert(std::make_pair("Background", new TexturedEntity()));
-        m_texturedentitys["Background"]->Initialize();
-        // TODO: chore
-    }
-    // 初始化背景*/
+    // TODO: 使用工厂方法重构
+    // 初始化背景
     m_current_background = new Background();
     m_current_background->SetPath("assets/images/test_backgrd.png");
-    m_current_background->Initialize();
-    if (!m_current_background->InitializeTextureFromPath())
+    if (m_current_background->Initialize())
         return -1;
     m_current_background->SetWorldPos(glm::vec2{0,0});
-    // TODO: chore
-    return 0;
+
+    const ssl loc = ssl::current();
+    return EFL_ClassInit(Scene::Initialize(), loc);
 }
 
 void SceneMain::HandleEvents(SDL_Event event) {
@@ -51,5 +40,14 @@ void SceneMain::Render() {
 int SceneMain::Quit() {
     // TODO: chore
     return 0;
+}
+
+glm::vec2 SceneMain::SetPlayerPosition(const glm::vec2 newplayerpos) {
+    m_player_position = newplayerpos;
+    return newplayerpos;
+}
+
+glm::vec2 SceneMain::GetPlayerPosition() const {
+    return m_player_position;
 }
 
