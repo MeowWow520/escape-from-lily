@@ -62,7 +62,8 @@ int Game::Initialize() {
    m_current_scene = new SceneMain();
    if (m_current_scene->Initialize() != 0) {
       delete m_current_scene;
-      return -1;
+      m_return_code = -1;
+      goto to_quit;
    }
 to_quit:
    const ssl loc = ssl::current();

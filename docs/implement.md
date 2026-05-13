@@ -33,3 +33,29 @@ exe quit  <--  main   <---  Game::Initialize() <-
 **2. line()**: 无特殊转化。
 
 **3. function_name()**: 对原值 + 12 删去了 `int __cdecl ` 字符串得到函数名。`int __cdecl SceneMain::Initialize(void)` 被转化为 `SceneMain::Initialize(void)`。
+
+Game 类初始化对 `EFL_ClassInit` 的应用：
+```c++
+int Game::Initialize() {
+   if (SDL_LibInitChecker(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO), "SDL_Init")) {
+      m_return_code = -1;
+      goto to_quit;
+   }
+   // 其他初始化......
+   if (SDL_LibInitChecker(SDL_SetRenderVSync(m_renderer, 1), "SDL_SetRenderVSync")) {
+      m_return_code = -1;
+      goto to_quit;
+   }
+   m_current_scene = new SceneMain();
+   // Scene 的 Initialize() 在自己的函数中调用了 EFL_ClassInit() 只需判断返回值
+   if (m_current_scene->Initialize() != 0) {
+      delete m_current_scene;
+      m_return_code = -1;
+      goto to_quit;
+   }
+to_quit:
+   // Def.h 已定义 using sll = std::source_location;
+   const ssl loc = ssl::current();
+   return EFL_ClassInit(m_return_code, loc);
+}
+```
