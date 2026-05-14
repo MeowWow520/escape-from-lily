@@ -22,7 +22,7 @@ jobs:
       - name: Run vcpkg (with binary cache)
         uses: lukka/run-vcpkg@v10
         with:
-          vcpkgGitCommitId: 'latest'
+          vcpkgGitCommitId: 'd09977e63111355bf0239592f47062b1ec3f767f'
           # vcpkgJsonGlob: 'vcpkg.json'       
 
       - name: Configure CMake
