@@ -34,16 +34,20 @@ jobs:
       - name: Bootstrap vcpkg
         shell: pwsh
         run: |
-          # 如果你想固定 vcpkg 版本，建议把 vcpkg 作为 submodule 加到仓库
-          # 这里使用 GitHub 上最新的 vcpkg（推荐方式）
-          git clone https://github.com/microsoft/vcpkg.git ${{ github.workspace }}/vcpkg
-          cd ${{ github.workspace }}/vcpkg
-          ./bootstrap-vcpkg.bat -disableMetrics
+          git clone https://github.com/microsoft/vcpkg.git "${{ github.workspace }}/vcpkg"
+          cd "${{ github.workspace }}/vcpkg"
+          .\bootstrap-vcpkg.bat -disableMetrics
 
       - name: Install vcpkg dependencies (manifest mode)
         shell: pwsh
-        run: \( {{ github.workspace }}/vcpkg/vcpkg install --triplet x64-windows --x-install-root=" \){{ github.workspace }}/vcpkg_installed"
-     
+        run: |
+          \( VCPKG = Join-Path " \){{ github.workspace }}" "vcpkg" "vcpkg.exe"
+          
+          & $VCPKG install `
+            --triplet x64-windows `
+            --x-install-root="${{ github.workspace }}/vcpkg_installed" `
+            --clean-after-build
+
       # ==================== CMake 配置与构建 ====================
       - name: Configure CMake
         shell: pwsh
