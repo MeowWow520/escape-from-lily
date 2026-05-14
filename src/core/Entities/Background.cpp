@@ -4,12 +4,16 @@
 
 #include "Background.h"
 
-int Background::Initialize() {
+#include "../Scene.h"
 
+int Background::Initialize() {
     if (!InitializeTextureFromPath()) {
         m_return_code = -1;
         goto to_quit;
     }
+    m_rect = {0, 0, 0, 0};
+    m_world_pos = glm::vec2(0.0f, 0.0f);
+    m_screen_pos = TransScreenPos();
 to_quit:
     const ssl loc = ssl::current();
     return EFL_ClassInit(m_return_code, loc);
@@ -20,12 +24,13 @@ void Background::HandleEvents(const SDL_Event event) {
 }
 
 void Background::Update(float dt) {
-
+    (void)dt;
 }
 
 void Background::Render() {
     // FIXME: 修复此处的 bug
-    SDL_RenderTexture(m_game_instance.GetSDLRenderer(), m_texture.get(), nullptr, nullptr);
+    const SDL_FRect destination = EFL_Vec2AddToRectFloat(m_world_pos, m_game_instance.GetCurrentScene()->GetWorldSize());
+    SDL_RenderTexture(m_game_instance.GetSDLRenderer(), m_texture.get(), nullptr, &destination);
 }
 
 int Background::Quit() {

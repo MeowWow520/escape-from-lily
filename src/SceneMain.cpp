@@ -7,11 +7,12 @@
 
 int SceneMain::Initialize() {
     // 设置世界缩放 和 世界大小
-    m_world_scale = glm::vec2{1.1, 1.1};
+    m_world_scale = glm::vec2{3, 3};
     m_world_size = m_game_instance.GetWindowSize() * m_world_scale;
-    // 设置相机初始位置 应为世界的中心
+    // 相机的中心在世界的中心
     m_camera_pos = (m_world_size - m_game_instance.GetWindowSize()) / glm::vec2(2);
-    m_player_position = glm::vec2(0.0f, 0.0f);
+    // 玩家在世界的中间
+    m_player_position = m_camera_pos + m_game_instance.GetWindowSize() / glm::vec2(2);
 
     // TODO: 使用工厂方法重构
     // 初始化背景
@@ -31,9 +32,8 @@ void SceneMain::HandleEvents(SDL_Event event) {
     (void)event;
 }
 
-void SceneMain::Update(float dt) {
+void SceneMain::Update(const float dt) {
     m_current_background->Update(dt);
-    (void)dt;
 }
 
 void SceneMain::Render() {
@@ -56,3 +56,6 @@ glm::vec2 SceneMain::GetPlayerPosition() const {
     return m_player_position;
 }
 
+glm::vec2 SceneMain::GetWorldScale() const {
+    return m_world_scale;
+}

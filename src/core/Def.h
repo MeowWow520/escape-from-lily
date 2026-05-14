@@ -6,6 +6,8 @@
 #define ESCAPE_FROM_LILY_DEF_H
 #include <string>
 #include <source_location>
+#include <glm/vec2.hpp>
+#include <SDL3/SDL_rect.h>
 #include <spdlog/spdlog.h>
 
 // FIXME: 这些转义符在其他平台是否有效？
@@ -83,4 +85,12 @@ inline int EFL_ClassQuit(const int flag,  const ssl &location) {
     return 0;
 }
 
+inline SDL_Rect EFL_Vec2AddToRect(const glm::vec2 a, const glm::vec2 b) {
+    return {static_cast<int>(a.x), static_cast<int>(a.y),
+        static_cast<int>(b.x), static_cast<int>(b.y)};
+}
+
+inline SDL_FRect EFL_Vec2AddToRectFloat(const glm::vec2 a, const glm::vec2 b) {
+    return {a.x, a.y, b.x, b.y};
+}
 #endif //ESCAPE_FROM_LILY_DEF_H

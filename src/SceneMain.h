@@ -22,6 +22,7 @@ class SceneMain : public Scene {
         // getter 和 setter
         glm::vec2 SetPlayerPosition(glm::vec2 newplayerpos);
         [[nodiscard]] glm::vec2 GetPlayerPosition() const;
+        glm::vec2 GetWorldScale() const;
     private:
         glm::vec2 m_world_scale{};
         // TODO: 添加背景转换
