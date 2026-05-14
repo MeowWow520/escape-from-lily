@@ -37,3 +37,28 @@ cd vcpkg
 
 #### 其他平台
 前往 --> [Build.md](docs/Build.md)
+
+### 文件结构速览
+
+```
+📁 escape-from-lily          # 项目根目录
+├── 📁 .github               # GitHub Actions 配置
+├── 📁 assets                # 资源目录
+│   └── 📁 images            # 图片资源
+├── 📁 docs                  # 文档目录
+├── 📁 draft                 # 草稿/原型资源
+├── 📁 src                   # 源代码目录
+│   ├── 📁 core              # 核心代码
+│   │   ├── 📁 Entities      # 实体类
+│   │   │   └── 📁 Base      # 实体基类
+│   │   └── 📁 Input         # 输入处理
+│   ├── main.cpp             # 程序入口
+│   └── SceneMain.h / .cpp   # 主场景
+├── CMakeLists.txt           # CMake 构建配置
+├── CMakePresets.json        # CMake 预设
+├── LICENSE                  # 许可证文件
+├── Readme.md                # 项目说明
+└── vcpkg.json               # vcpkg 依赖清单
+```
+
+> 完整版请参阅 [docs/FileStructure.md](docs/FileStructure.md)
