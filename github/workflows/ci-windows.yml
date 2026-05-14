@@ -1,0 +1,60 @@
+name: CI - Windows MSVC
+
+on:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master, develop ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: false 
+
+      - name: Setup CMake
+        uses: lukka/get-cmake@latest
+
+      - name: Run vcpkg (with binary cache)
+        uses: lukka/run-vcpkg@v11
+        with:
+          vcpkgGitCommitId: 'latest'
+          # vcpkgJsonGlob: 'vcpkg.json'       
+
+      - name: Configure CMake
+        uses: lukka/run-cmake@v11
+        with:
+          configurePreset: 'debug'
+          # 或者手动写（如果你暂时不想加 Presets）
+          # buildDirectory: '${{ github.workspace }}/build'
+          # cmakeGenerator: 'Visual Studio 17 2022'
+          # cmakeListsTxtPath: '${{ github.workspace }}/CMakeLists.txt'
+          # cmakeArgs: >
+          #   -DCMAKE_TOOLCHAIN_FILE=${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake
+          #   -DVCPKG_FEATURE_FLAGS=manifests
+          #   -DVCPKG_TARGET_TRIPLET=x64-windows-static
+          #   -DCMAKE_BUILD_TYPE=Debug
+
+      - name: Build
+        uses: lukka/run-cmake@v11
+        with:
+          buildPreset: 'debug'
+
+      - name: Run tests
+        if: false 
+        run: ctest -C Debug --output-on-failure
+        working-directory: ${{ github.workspace }}/build
+
+      # 可选：上传构建产物（EXE + assets）
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: escape-from-lily-windows-debug
+          path: |
+            cmake-build-debug-visual-studio/escape-from-lily.exe
+            cmake-build-debug-visual-studio/assets/
+          retention-days: 3
