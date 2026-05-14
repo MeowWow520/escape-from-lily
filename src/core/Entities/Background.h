@@ -4,7 +4,7 @@
 
 #ifndef ESCAPE_FROM_LILY_BACKGROUND_H
 #define ESCAPE_FROM_LILY_BACKGROUND_H
-#include "TexturedEntity.h"
+#include "Base/TexturedEntity.h"
 
 
 class Background : public TexturedEntity {

@@ -5,8 +5,8 @@
 #ifndef ESCAPE_FROM_LILY_TEXTUREDENTITY_H
 #define ESCAPE_FROM_LILY_TEXTUREDENTITY_H
 #include <memory>
-#include "../Def.h"
-#include "../ObjectScreen.h"
+#include "../../Def.h"
+#include "../../ObjectScreen.h"
 
 
 class TexturedEntity : public ObjectScreen {

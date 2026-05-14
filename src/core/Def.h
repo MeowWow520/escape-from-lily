@@ -9,7 +9,11 @@
 #include <glm/vec2.hpp>
 #include <SDL3/SDL_rect.h>
 #include <spdlog/spdlog.h>
-
+// Switchers
+constexpr bool SWITCHER_ACCELERATION = false;
+// Default values
+#define DEFAULT_MAX_SPEED 500.0f
+#define DEFAULT_ACCELERATION 50.0f
 // FIXME: 这些转义符在其他平台是否有效？
 #define CLR_RESET   "\033[0m"
 #define CLR_RED     "\033[31m"

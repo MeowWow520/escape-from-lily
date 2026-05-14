@@ -5,7 +5,7 @@
 #include "TexturedEntity.h"
 #include <SDL3_image/SDL_image.h>
 
-#include "../Scene.h"
+#include "../../Scene.h"
 
 
 TexturedEntity::TexturedEntity() = default;
