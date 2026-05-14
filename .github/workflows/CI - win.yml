@@ -42,11 +42,8 @@ jobs:
 
       - name: Install vcpkg dependencies (manifest mode)
         shell: pwsh
-        run: |
-          ${{ github.workspace }}/vcpkg/vcpkg install --triplet x64-windows \
-            --x-install-root=${{ github.workspace }}/vcpkg_installed
-          # 如果想启用更多 features： --x-feature=xxx
-
+        run: \( {{ github.workspace }}/vcpkg/vcpkg install --triplet x64-windows --x-install-root=" \){{ github.workspace }}/vcpkg_installed"
+     
       # ==================== CMake 配置与构建 ====================
       - name: Configure CMake
         shell: pwsh
