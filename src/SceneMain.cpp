@@ -7,7 +7,7 @@
 
 int SceneMain::Initialize() {
     // 设置世界缩放 和 世界大小
-    m_world_scale = glm::vec2{1, 1};
+    m_world_scale = glm::vec2{1.1, 1.1};
     m_world_size = m_game_instance.GetWindowSize() * m_world_scale;
     // 设置相机初始位置 应为世界的中心
     m_camera_pos = (m_world_size - m_game_instance.GetWindowSize()) / glm::vec2(2);
@@ -16,7 +16,7 @@ int SceneMain::Initialize() {
     // TODO: 使用工厂方法重构
     // 初始化背景
     m_current_background = new Background();
-    m_current_background->SetPath("assets/images/test_backgrd.png");
+    m_current_background->SetPath("assets/images/draft_Background_final.png");
     if (m_current_background->Initialize()) {
         m_return_code = -1;
         goto to_quit;
@@ -32,6 +32,7 @@ void SceneMain::HandleEvents(SDL_Event event) {
 }
 
 void SceneMain::Update(float dt) {
+    m_current_background->Update(dt);
     (void)dt;
 }
 

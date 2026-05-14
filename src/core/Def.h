@@ -56,7 +56,7 @@ inline int EFL_ClassInit(const int flag, const ssl &location) {
     const char* c_function_name = location.function_name() + 12;
     if (flag != 0) {
         spdlog::error("[{}{}:{}] {}{}{} initialization failed",
-            CLR_RED, c_file_name, location.line(), CLR_YELLOW, c_function_name, CLR_RESET);
+            CLR_BLUE, c_file_name, location.line(), CLR_YELLOW, c_function_name, CLR_RESET);
         return flag;
     }
     spdlog::info("[{}{}:{}] {}{}{} initialization successfully",
@@ -75,7 +75,7 @@ inline int EFL_ClassQuit(const int flag,  const ssl &location) {
     const char* c_function_name = location.function_name() + 12;
     if (flag != 0) {
         spdlog::error("[{}{}:{}] {}{}{} quit failed",
-            CLR_RED, c_file_name, location.line(), CLR_YELLOW, c_function_name, CLR_RESET);
+            CLR_BLUE, c_file_name, location.line(), CLR_YELLOW, c_function_name, CLR_RESET);
         return flag;
     }
     spdlog::info("[{}{}:{}] {}{}{} quit successfully",

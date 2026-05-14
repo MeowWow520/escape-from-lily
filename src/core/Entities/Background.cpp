@@ -15,8 +15,8 @@ to_quit:
     return EFL_ClassInit(m_return_code, loc);
 }
 
-void Background::HandleEvents(SDL_Event event) {
-
+void Background::HandleEvents(const SDL_Event event) {
+    (void)event;
 }
 
 void Background::Update(float dt) {
@@ -24,6 +24,7 @@ void Background::Update(float dt) {
 }
 
 void Background::Render() {
+    // FIXME: 修复此处的 bug
     SDL_RenderTexture(m_game_instance.GetSDLRenderer(), m_texture.get(), nullptr, nullptr);
 }
 

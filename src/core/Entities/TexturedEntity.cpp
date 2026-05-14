@@ -68,10 +68,8 @@ std::string TexturedEntity::GetPath() const {
 }
 
 bool TexturedEntity::InitializeTextureFromPath() {
-    if (!m_path.data() || m_path[0] == '\0') {
-        // TODO: chore
+    if (SDL_LibInitChecker(!(!m_path.data() || m_path[0] == '\0'), "TexturedEntity::InitializeTextureFromPath"))
         return false;
-    }
     m_texture.reset();
     if (!SetTextureFromPath())
         return false;
@@ -80,14 +78,11 @@ bool TexturedEntity::InitializeTextureFromPath() {
 }
 
 bool TexturedEntity::SetTextureFromPath() {
-    if (!m_path.data() || m_path[0] == '\0') {
-        // TODO: chore
-        return false;
-    }
     // 创建新纹理
     SDL_Texture* newTexture = IMG_LoadTexture(m_game_instance.GetSDLRenderer(), m_path.c_str());
     if (!newTexture) {
         // TODO: chore
+        spdlog::error("texture creant");
         return false;
     }
     // 设置新纹理

@@ -25,7 +25,6 @@ Game::Game() {
    m_renderer = nullptr;
    m_current_scene = nullptr;
    m_return_code = 0;
-   // TODO: chore
 }
 
 int Game::Initialize() {
@@ -95,7 +94,7 @@ void Game::HandleEvents() {
    while (SDL_PollEvent(&event)) {
       switch (event.type) {
          case SDL_EVENT_QUIT:
-            // TODO: chore
+            spdlog::info("Receive SDL_EVENT_QUIT events, main loop quitting");
             m_running = false;
             break;
          default:
