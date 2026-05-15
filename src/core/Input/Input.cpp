@@ -6,7 +6,8 @@
 
 
 Input::Input() {
-    Input::SetDefaultKeyBind();
+    m_return_code = 0;
+
 }
 
 void Input::Update(float dt) {
@@ -24,12 +25,11 @@ bool Input::IsActionHeld(const Action action) const {
     return (m_preframe_action_state.find(action)->second == ActionState::Held);
 }
 
-bool Input::IsActionReleased(Action action) const {
+bool Input::IsActionReleased(const Action action) const {
     return (m_preframe_action_state.find(action)->second == ActionState::Released);
 }
 
 bool Input::BindAction(const SDL_Keycode key, Action action) {
-    // TODO: 检测
     m_key_bind.try_emplace(key, action);
     return true;
 }
@@ -44,7 +44,8 @@ bool Input::UnbindAction(const Action action) {
     return false;
 }
 
-void Input::SetDefaultKeyBind() {
+bool Input::SetDefaultKeyBind() {
+    return true;
 }
 
 void Input::SetActionState(const Action action, const ActionState state) {

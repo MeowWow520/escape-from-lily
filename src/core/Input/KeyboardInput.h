@@ -9,6 +9,13 @@
 
 
 class KeyboardInput : public Input {
+    protected:
+        bool SetDefaultKeyBind() override;
+
+    public:
+        KeyboardInput();
+        void HandleEvents(SDL_Event event) override;
+        void Update(float dt) override;
 };
 
 #endif //ESCAPE_FROM_LILY_KEYBOARDINPUT_H

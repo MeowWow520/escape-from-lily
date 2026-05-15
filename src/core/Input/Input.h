@@ -17,7 +17,7 @@ class Input {
         // 帧数动作状态映射表
         std::unordered_map<Action, ActionState> m_current_action_state;
         std::unordered_map<Action, ActionState> m_preframe_action_state;
-
+        int m_return_code{};
     public:
         Input();
         virtual ~Input() = default;
@@ -55,7 +55,7 @@ class Input {
 
     protected:
         // 设置默认按键映射
-        virtual void SetDefaultKeyBind();
+        virtual bool SetDefaultKeyBind();
 
         /**
          * SetActionState 设置 xxx 动作的当前状态。

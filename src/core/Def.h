@@ -5,22 +5,26 @@
 #ifndef ESCAPE_FROM_LILY_DEF_H
 #define ESCAPE_FROM_LILY_DEF_H
 #include <string>
+#include <cmath>
+
 #include <source_location>
 #include <glm/vec2.hpp>
 #include <SDL3/SDL_rect.h>
 #include <spdlog/spdlog.h>
+
+
 // Switchers
 constexpr bool SWITCHER_ACCELERATION = false;
 // Default values
-#define DEFAULT_MAX_SPEED 500.0f
+#define DEFAULT_MAX_SPEED    500.0f
 #define DEFAULT_ACCELERATION 50.0f
 // FIXME: 这些转义符在其他平台是否有效？
-#define CLR_RESET   "\033[0m"
-#define CLR_RED     "\033[31m"
-#define CLR_GREEN   "\033[32m"
-#define CLR_YELLOW  "\033[33m"
-#define CLR_BLUE    "\033[34m"
-#define CLR_CYAN    "\033[36m"
+#define CLR_RESET  "\033[0m"
+#define CLR_RED    "\033[31m"
+#define CLR_GREEN  "\033[32m"
+#define CLR_YELLOW "\033[33m"
+#define CLR_BLUE   "\033[34m"
+#define CLR_CYAN   "\033[36m"
 /**
  * 将 RGBA 颜色值分开转换为 4 位数值
  *
@@ -89,12 +93,35 @@ inline int EFL_ClassQuit(const int flag,  const ssl &location) {
     return 0;
 }
 
+/**
+ * EFL_Vec2AddToRect 将 a 和 b 合成为一个 SDL_Rect c。c 的前两个分量为 a 的值，后两个为 b 的值。
+ * @param a 其中一个向量
+ * @param b 另一个向量
+ * @return a 和 b 合成的新向量
+ */
 inline SDL_Rect EFL_Vec2AddToRect(const glm::vec2 a, const glm::vec2 b) {
     return {static_cast<int>(a.x), static_cast<int>(a.y),
         static_cast<int>(b.x), static_cast<int>(b.y)};
 }
 
+/**
+ * EFL_Vec2AddToRectFloat 将 a 和 b 合成为一个 SDL_FRect c。c 的前两个分量为 a 的值，后两个为 b 的值。
+ * @param a 其中一个向量
+ * @param b 另一个向量
+ * @return a 和 b 合成的新向量
+ */
 inline SDL_FRect EFL_Vec2AddToRectFloat(const glm::vec2 a, const glm::vec2 b) {
     return {a.x, a.y, b.x, b.y};
+}
+
+/**
+ * EFL_NormalizeVec2Float 归一化向量 a。
+ * @param a 要归一化的向量
+ * @return 归一化的向量
+ */
+inline glm::vec2 EFL_NormalizeVec2Float(const glm::vec2 a) {
+    return
+    { a.x / std::sqrt(a.x * a.x + a.y * a.y),
+        a.y / std::sqrt(a.x * a.x + a.y * a.y) };
 }
 #endif //ESCAPE_FROM_LILY_DEF_H
