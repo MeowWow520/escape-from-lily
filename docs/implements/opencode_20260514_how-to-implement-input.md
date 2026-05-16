@@ -114,7 +114,7 @@ protected:
 - `m_action_states[A] == Pressed` → 转为 `m_action_states[A] = Held`
 - `m_action_states[A] == Released` → 转为 `m_action_states[A] = Idle`
 
-同时复制 `m_action_states` 到 `m_prev_states`。
+只落边缘，不拷贝。`Pressed` / `Released` 本身就编码了"本帧刚发生"。
 
 ### 默认绑定（基类 `SetDefaultBindings`）
 
@@ -229,8 +229,8 @@ void Game::HandleEvents() {
 **Game::Update 修改：**
 ```cpp
 void Game::Update(float dt) {
-    m_input->Update(dt);           // ← 新增
-    m_current_scene->Update(dt);
+    m_current_scene->Update(dt);   // ← Scene 先消费 Pressed/Released 边缘
+    m_input->Update(dt);           // ← Input 后落地：Pressed→Held, Released→Idle
 }
 ```
 

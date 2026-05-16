@@ -9,11 +9,9 @@
 
 
 class KeyboardInput : public Input {
-    protected:
-        bool SetDefaultKeyBind() override;
-
     public:
         KeyboardInput();
+        bool SetDefaultKeyBind() override;
         void HandleEvents(SDL_Event event) override;
         void Update(float dt) override;
 };

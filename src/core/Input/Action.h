@@ -8,7 +8,7 @@
 
 enum class Action : int {
     MoveUp, MoveDown, MoveLeft, MoveRight,
-    Pause, Quit, End_Count
+    Pause, Quit
 };
 
 enum class ActionState : int {

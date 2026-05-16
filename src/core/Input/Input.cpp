@@ -18,15 +18,15 @@ ActionState Input::GetActionState(const Action action) const {
 }
 
 bool Input::IsActionPressed(const Action action) const {
-    return (m_preframe_action_state.find(action)->second == ActionState::Pressed);
+    return (m_current_action_state.find(action)->second == ActionState::Pressed);
 }
 
 bool Input::IsActionHeld(const Action action) const {
-    return (m_preframe_action_state.find(action)->second == ActionState::Held);
+    return (m_current_action_state.find(action)->second == ActionState::Held);
 }
 
 bool Input::IsActionReleased(const Action action) const {
-    return (m_preframe_action_state.find(action)->second == ActionState::Released);
+    return (m_current_action_state.find(action)->second == ActionState::Released);
 }
 
 bool Input::BindAction(const SDL_Keycode key, Action action) {

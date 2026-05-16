@@ -14,6 +14,12 @@ int SceneMain::Initialize() {
     // 玩家在世界的中间
     m_player_position = m_camera_pos + m_game_instance.GetWindowSize() / glm::vec2(2);
 
+    // 设置按键绑定
+    m_key_input = new KeyboardInput();
+    if (m_key_input->SetDefaultKeyBind()) {
+        m_return_code = -1;
+        goto to_quit;
+    }
     // TODO: 使用工厂方法重构
     // 初始化背景
     m_current_background = new Background();
@@ -29,6 +35,7 @@ to_quit:
 }
 
 void SceneMain::HandleEvents(SDL_Event event) {
+    m_key_input->HandleEvents(event);
     (void)event;
 }
 

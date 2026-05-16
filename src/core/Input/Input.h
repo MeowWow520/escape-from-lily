@@ -16,7 +16,6 @@ class Input {
         std::unordered_map<SDL_Keycode, Action> m_key_bind;
         // 帧数动作状态映射表
         std::unordered_map<Action, ActionState> m_current_action_state;
-        std::unordered_map<Action, ActionState> m_preframe_action_state;
         int m_return_code{};
     public:
         Input();
