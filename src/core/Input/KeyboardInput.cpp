@@ -4,6 +4,8 @@
 
 #include "KeyboardInput.h"
 
+#include <ranges>
+
 #include "../Def.h"
 
 
@@ -12,17 +14,40 @@ KeyboardInput::KeyboardInput() {
 }
 
 void KeyboardInput::HandleEvents(SDL_Event event) {
+    // 如果不是键盘事件，跳过
+    if (event.type != SDL_EVENT_KEY_DOWN && event.type != SDL_EVENT_KEY_UP)
+        return;
+    const auto it = m_key_bind.find(event.key.key);
+    // 如果未绑定事件，跳过
+    if (it == m_key_bind.end()) return;
+    if (event.type == SDL_EVENT_KEY_DOWN) {
+        if (m_current_action_state[it->second] == ActionState::Idle)
+            m_current_action_state[it->second] = ActionState::Pressed;
+    }
+    if (event.type == SDL_EVENT_KEY_UP) {
+        if (m_current_action_state[it->second] == ActionState::Held)
+            m_current_action_state[it->second] = ActionState::Released;
+    }
 }
 
 void KeyboardInput::Update(const float dt) {
-    // 遍历
-    for (auto& [sdlk, action] : m_key_bind) {
-        // 复制本帧到上一帧
+    for (auto &action: m_key_bind | std::views::values) {
         if (m_current_action_state[action] == ActionState::Pressed)
             m_current_action_state[action]  = ActionState::Held;
         if (m_current_action_state[action] == ActionState::Released)
             m_current_action_state[action]  = ActionState::Idle;
     }
+}
+
+glm::vec2 KeyboardInput::GetMovementNormalizeVec2() {
+    glm::vec2 ret(0.0f);
+    if (m_current_action_state[Action::MoveUp]    == ActionState::Held) ret.y += 1.0f; // SDLK_W
+    if (m_current_action_state[Action::MoveDown]  == ActionState::Held) ret.y -= 1.0f; // SDLK_S
+    if (m_current_action_state[Action::MoveLeft]  == ActionState::Held) ret.x -= 1.0f; // SDLK_A
+    if (m_current_action_state[Action::MoveRight] == ActionState::Held) ret.x += 1.0f; // SDLK_D
+    if (ret.x != 0.0f && ret.y != 0.0f)
+        ret = glm::normalize(ret);
+    return ret;
 }
 
 bool KeyboardInput::SetDefaultKeyBind() {

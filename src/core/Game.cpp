@@ -55,6 +55,12 @@ int Game::Initialize() {
       goto to_quit;
    }
 
+   // 设置按键绑定
+   m_key_input = new KeyboardInput();
+   if (m_key_input->SetDefaultKeyBind()) {
+      m_return_code = -1;
+      goto to_quit;
+   }
 
    // TODO: 使用工厂方法注册对象
    // 创建场景
@@ -92,6 +98,7 @@ int Game::Running() {
 void Game::HandleEvents() {
    SDL_Event event;
    while (SDL_PollEvent(&event)) {
+      m_key_input->HandleEvents(event);
       switch (event.type) {
          case SDL_EVENT_QUIT:
             spdlog::info("Receive SDL_EVENT_QUIT events, main loop quitting");

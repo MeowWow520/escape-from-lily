@@ -8,6 +8,8 @@
 #include <glm/glm.hpp>
 #include <SDL3/SDL.h>
 
+#include "Input/KeyboardInput.h"
+
 
 
 class Scene;
@@ -56,6 +58,7 @@ class Game {
         SDL_Renderer* m_renderer;
         Scene* m_current_scene;
         int m_return_code;
+        KeyboardInput *m_key_input{};
 };
 
 #endif //ESCAPE_FROM_LILY_GAME_H

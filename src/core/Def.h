@@ -114,14 +114,4 @@ inline SDL_FRect EFL_Vec2AddToRectFloat(const glm::vec2 a, const glm::vec2 b) {
     return {a.x, a.y, b.x, b.y};
 }
 
-/**
- * EFL_NormalizeVec2Float 归一化向量 a。
- * @param a 要归一化的向量
- * @return 归一化的向量
- */
-inline glm::vec2 EFL_NormalizeVec2Float(const glm::vec2 a) {
-    return
-    { a.x / std::sqrt(a.x * a.x + a.y * a.y),
-        a.y / std::sqrt(a.x * a.x + a.y * a.y) };
-}
 #endif //ESCAPE_FROM_LILY_DEF_H

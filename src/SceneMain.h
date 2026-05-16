@@ -29,7 +29,6 @@ class SceneMain : public Scene {
         glm::vec2 m_world_scale{};
         // TODO: 添加背景转换
         Background *m_current_background{};
-        KeyboardInput *m_key_input{};
 };
 
 #endif //ESCAPE_FROM_LILY_SCENEMAIN_H
