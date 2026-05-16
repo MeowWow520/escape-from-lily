@@ -35,8 +35,7 @@ class Game {
          */
         int Running();
         void HandleEvents();
-        // FIXME: static 是否可行？
-        static void Update(float dt);
+        void Update(float dt) const;
         void Render() const;
         [[nodiscard]] int Quit();
 

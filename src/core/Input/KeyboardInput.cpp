@@ -21,12 +21,18 @@ void KeyboardInput::HandleEvents(SDL_Event event) {
     // 如果未绑定事件，跳过
     if (it == m_key_bind.end()) return;
     if (event.type == SDL_EVENT_KEY_DOWN) {
-        if (m_current_action_state[it->second] == ActionState::Idle)
+        if (m_current_action_state[it->second] == ActionState::Idle) {
+            if (SWITCHER_KEYLOGGING)
+                spdlog::info("SDL Key_{} Down", SDL_GetKeyName(event.key.key));
             m_current_action_state[it->second] = ActionState::Pressed;
+        }
     }
     if (event.type == SDL_EVENT_KEY_UP) {
-        if (m_current_action_state[it->second] == ActionState::Held)
+        if (m_current_action_state[it->second] == ActionState::Held) {
+            if (SWITCHER_KEYLOGGING)
+                spdlog::info("SDL Key_{} Up", SDL_GetKeyName(event.key.key));
             m_current_action_state[it->second] = ActionState::Released;
+        }
     }
 }
 

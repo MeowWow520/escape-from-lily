@@ -15,6 +15,7 @@
 
 // Switchers
 constexpr bool SWITCHER_ACCELERATION = false;
+constexpr bool SWITCHER_KEYLOGGING = true;
 // Default values
 #define DEFAULT_MAX_SPEED    500.0f
 #define DEFAULT_ACCELERATION 50.0f

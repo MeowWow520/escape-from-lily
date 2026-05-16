@@ -111,8 +111,11 @@ void Game::HandleEvents() {
     }
 }
 
-void Game::Update(float dt) {
+void Game::Update(const float dt) const {
+    m_current_scene->Update(dt);
+    m_key_input->Update(dt);
 }
+
 void Game::Render() const {
     SDL_SetRenderDrawColor(m_renderer, COLOR(0xFF006EFF));
     SDL_RenderClear(m_renderer);
