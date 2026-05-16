@@ -10,6 +10,7 @@
 KeyboardInput::KeyboardInput() {
     m_return_code = 0;
     KeyboardInput::SetDefaultKeyBind();
+    // 初始化两个哈希表
     for (auto it = m_key_bind.begin(); it != m_key_bind.end(); ++it)
         m_preframe_action_state[it->second] = ActionState::Idle;
     for (auto it = m_key_bind.begin(); it != m_key_bind.end(); ++it)
@@ -19,18 +20,16 @@ KeyboardInput::KeyboardInput() {
 void KeyboardInput::HandleEvents(SDL_Event event) {
 }
 
-void KeyboardInput::Update(const float dt) {
-    // FIXME: 神奇的逻辑？烧脑的逻辑!
-    for (auto it = m_current_action_state.begin(); it != m_current_action_state.end(); ++it) {
-        m_preframe_action_state[it->first] = m_current_action_state[it->first];
-        if (it->second == ActionState::Pressed) {
-            m_current_action_state[it->first] = ActionState::Held;
-        } else if (it->second == ActionState::Released) {
-            m_current_action_state[it->first] = ActionState::Idle;
-        } else {
-            m_current_action_state[it->first] = ActionState::Idle;
-        }
+void KeyboardInput::Update(const float dt) {// 遍历
+    for (auto& [action, state] : m_key_bind) {
+        // 复制本帧到上一帧
+        if (m_current_action_state[state] == ActionState::Pressed)
+            m_current_action_state[state]  = ActionState::Held;
+        if (m_current_action_state[state] == ActionState::Released)
+            m_current_action_state[state]  = ActionState::Idle;
+        m_preframe_action_state[state] = m_current_action_state[state]; // 本操作应该在哪里?
     }
+    // FIXME: ？烧脑的逻辑!
 }
 
 bool KeyboardInput::SetDefaultKeyBind() {
@@ -47,6 +46,10 @@ bool KeyboardInput::SetDefaultKeyBind() {
         goto to_quit;
     }
     if (!BindAction(SDLK_A, Action::MoveLeft)) {
+        m_return_code = -1;
+        goto to_quit;
+    }
+    if (!BindAction(SDLK_ESCAPE, Action::Quit)) {
         m_return_code = -1;
         goto to_quit;
     }

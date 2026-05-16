@@ -53,9 +53,8 @@ protected:
     /// 按键绑定映射表
     std::unordered_map<SDL_Keycode, Action> m_key_bindings;
     /// 当前帧动作状态
+    /// Pressed / Released 本身就是边缘信号，无需额外变量对比两帧
     std::unordered_map<Action, ActionState> m_action_states;
-    /// 上一帧动作状态（用于边缘检测）
-    std::unordered_map<Action, ActionState> m_prev_states;
 
     /// 设置默认键位绑定（构造函数中调用）
     virtual void SetDefaultBindings();
