@@ -112,7 +112,6 @@ void Game::HandleEvents() {
 }
 
 void Game::Update(float dt) {
-
 }
 void Game::Render() const {
    SDL_SetRenderDrawColor(m_renderer, COLOR(0xFF006EFF));

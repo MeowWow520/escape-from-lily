@@ -9,7 +9,6 @@ MovableEntity::MovableEntity() {
     m_max_speed = DEFAULT_MAX_SPEED;
     if (SWITCHER_ACCELERATION)
         m_acceleration = DEFAULT_ACCELERATION;
-    m_movement = {false, false, false, false};
 }
 
 float MovableEntity::GetMaxSpeed() const {
