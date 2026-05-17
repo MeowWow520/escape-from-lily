@@ -6,8 +6,9 @@
 #define ESCAPE_FROM_LILY_SCENEMAIN_H
 #include "core/Scene.h"
 #include "core/Entities/Background.h"
-#include "core/Input/Input.h"
 #include "core/Input/KeyboardInput.h"
+#include "core/Entities/Camera.h"
+
 
 
 class SceneMain : public Scene {
@@ -29,6 +30,7 @@ class SceneMain : public Scene {
         glm::vec2 m_world_scale{};
         // TODO: 添加背景转换
         Background *m_current_background{};
+        Camera *m_camera{};
 };
 
 #endif //ESCAPE_FROM_LILY_SCENEMAIN_H

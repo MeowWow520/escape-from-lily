@@ -157,3 +157,7 @@ SDL_Renderer * Game::GetSDLRenderer() const {
 Scene * Game::GetCurrentScene() const {
     return m_current_scene;
 }
+
+KeyboardInput * Game::GetKeyboardInput() const {
+    return m_key_input;
+}

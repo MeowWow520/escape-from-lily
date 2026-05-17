@@ -44,6 +44,7 @@ class Game {
         [[nodiscard]] SDL_Window *GetSDLWindow() const;
         [[nodiscard]] SDL_Renderer *GetSDLRenderer() const;
         [[nodiscard]] Scene* GetCurrentScene() const;
+        [[nodiscard]] KeyboardInput* GetKeyboardInput() const;
     private:
         Game();
 

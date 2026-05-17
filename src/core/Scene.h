@@ -24,7 +24,7 @@ class Scene : public Object {
         [[nodiscard]] glm::vec2 GetWorldSize() const {
              return m_world_size;
         }
-        glm::vec2 SetCameraPos(const glm::vec2 newcamerapos) {
+        glm::vec2 SetCameraPos(const glm::vec2 newcamerapo
             m_camera_pos = newcamerapos;
             return m_camera_pos;
         }

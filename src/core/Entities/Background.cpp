@@ -24,16 +24,17 @@ void Background::HandleEvents(const SDL_Event event) {
 }
 
 void Background::Update(float dt) {
-    (void)dt;
+    m_screen_pos = TransScreenPos();
 }
 
 void Background::Render() {
     // FIXME: 修复此处的 bug
-    const SDL_FRect destination = EFL_Vec2AddToRectFloat(m_world_pos, m_game_instance.GetCurrentScene()->GetWorldSize());
+    const SDL_FRect destination = EFL_Vec2AddToRectFloat(m_screen_pos, m_game_instance.GetCurrentScene()->GetWorldSize());
     SDL_RenderTexture(m_game_instance.GetSDLRenderer(), m_texture.get(), nullptr, &destination);
 }
 
 int Background::Quit() {
+    // TODO: 释放资源
     goto to_quit;
 to_quit:
     const ssl loc = ssl::current();

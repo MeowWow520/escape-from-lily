@@ -4,15 +4,16 @@
 
 #ifndef ESCAPE_FROM_LILY_USERINTERFACE_H
 #define ESCAPE_FROM_LILY_USERINTERFACE_H
-#define UI UserInterface
 #include "Base/TexturedEntity.h"
 
 
 
 class UserInterface : public TexturedEntity {
+
 };
 
 
 
 
+using UI = UserInterface;
 #endif //ESCAPE_FROM_LILY_USERINTERFACE_H
