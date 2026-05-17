@@ -7,8 +7,12 @@
 
 
 enum class Action : int {
-    MoveUp, MoveDown, MoveLeft, MoveRight,
-    Pause, Quit
+    MoveUp,    // 向上移动
+    MoveDown,  // 向下移动
+    MoveLeft,  // 向左移动
+    MoveRight, // 向右移动
+    Pause,     // 暂停游戏
+    Quit       // 退出游戏
 };
 
 enum class ActionState : int {

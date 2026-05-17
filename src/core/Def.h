@@ -13,13 +13,17 @@
 #include <spdlog/spdlog.h>
 
 
-// Switchers
+// 是否开启加速功能
 constexpr bool SWITCHER_ACCELERATION = false;
+// 是否在 log 打印按键的状态
 constexpr bool SWITCHER_KEYLOGGING = true;
-// Default values
+
+// 实体默认最大速度
 #define DEFAULT_MAX_SPEED    500.0f
+// 实体默认最大加速度
 #define DEFAULT_ACCELERATION 50.0f
-// FIXME: 这些转义符在其他平台是否有效？
+
+// FIXME: 这些转义字符在其他平台不可用，仅 Windows PowerShell 可用
 #define CLR_RESET  "\033[0m"
 #define CLR_RED    "\033[31m"
 #define CLR_GREEN  "\033[32m"

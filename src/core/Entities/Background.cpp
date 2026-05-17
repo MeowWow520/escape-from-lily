@@ -19,9 +19,6 @@ to_quit:
     return EFL_ClassInit(m_return_code, loc);
 }
 
-void Background::HandleEvents(const SDL_Event event) {
-    (void)event;
-}
 
 void Background::Update(float dt) {
     m_screen_pos = TransScreenPos();

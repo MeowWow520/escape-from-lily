@@ -23,6 +23,33 @@ TexturePtr TexturedEntity::SetTexture(TexturePtr newtexture) noexcept {
     return m_texture.get();
 }
 
+SDL_Color TexturedEntity::SetColor(const SDL_Color newcolor) {
+    m_color_mod = newcolor;
+    return newcolor;
+}
+
+SDL_Color TexturedEntity::GetColorMod() const {
+    return m_color_mod;
+}
+
+SDL_BlendMode TexturedEntity::SetBlendMode(const SDL_BlendMode newblendmode) {
+    m_blend_mode = newblendmode;
+    return newblendmode;
+}
+
+SDL_BlendMode TexturedEntity::GetBlendMode() const {
+    return m_blend_mode;
+}
+
+bool TexturedEntity::SetDirty(const bool newdirty) {
+    m_texture_dirty = newdirty;
+    return newdirty;
+}
+
+bool TexturedEntity::GetDirty() const {
+    return m_texture_dirty;
+}
+
 float TexturedEntity::SetRotation(const float rotation) {
     m_rotation = rotation;
     return rotation;
@@ -41,6 +68,15 @@ glm::vec2 TexturedEntity::SetScale(const glm::vec2 newscale) {
     return m_scale;
 }
 
+glm::vec2 TexturedEntity::SetTextureSize(glm::vec2 newtexturesize) {
+    m_texture_size = newtexturesize;
+    return newtexturesize;
+}
+
+glm::vec2 TexturedEntity::GetTextureSize() const {
+    return m_texture_size;
+}
+
 glm::vec2 TexturedEntity::SetPivot(const glm::vec2 newpivot) {
     m_pivot = newpivot;
     return newpivot;
@@ -48,6 +84,15 @@ glm::vec2 TexturedEntity::SetPivot(const glm::vec2 newpivot) {
 
 [[nodiscard]] glm::vec2 TexturedEntity::GetPivot() const {
     return m_pivot;
+}
+
+glm::vec2 TexturedEntity::SetHitbox(const glm::vec2 newhitbox) {
+    m_entity_hitbox = newhitbox;
+    return newhitbox;
+}
+
+glm::vec2 TexturedEntity::GetHitbox() const {
+    return m_entity_hitbox;
 }
 
 bool TexturedEntity::SetVisible(const bool newvisible) {
@@ -66,6 +111,15 @@ std::string TexturedEntity::SetPath(std::string newpath) {
 
 [[nodiscard]] std::string TexturedEntity::GetPath() const {
     return m_path;
+}
+
+SDL_Rect TexturedEntity::SetRect(const SDL_Rect newrect) {
+    m_rect = newrect;
+    return newrect;
+}
+
+SDL_Rect TexturedEntity::GetRect() const {
+    return m_rect;
 }
 
 bool TexturedEntity::InitializeTextureFromPath() {

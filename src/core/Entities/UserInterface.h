@@ -13,7 +13,5 @@ class UserInterface : public TexturedEntity {
 };
 
 
-
-
 using UI = UserInterface;
 #endif //ESCAPE_FROM_LILY_USERINTERFACE_H

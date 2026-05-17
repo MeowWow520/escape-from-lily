@@ -16,8 +16,12 @@ class Camera : public MovableEntity {
         int Initialize() override;
         void Update(float dt) override;
 
-        // getter 和 setter
+        // setter 和 getter
+        SDL_FRect SetCameraActiveRange(SDL_FRect newactiverange);
         [[nodiscard]] SDL_FRect GetCameraActiveRange() const;
+        float SetBorder(float newborder);
+        [[nodiscard]] float GetBorder() const;
+
     private:
         [[nodiscard]] bool CanCameraActive() const;
 };

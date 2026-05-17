@@ -10,17 +10,22 @@
 
 class MovableEntity : public TexturedEntity {
     protected:
+        // 实体的最大速度，默认值为：TBD
         float m_max_speed{};
-        // FIXME: 使用加速度有意义吗？
+        // 实体的加速度，默认值为：TBD。// TODO：待实装
         float m_acceleration{};
-        glm::vec2 m_velocity{};
+        // 实体的运动方向
+        glm::vec2 m_vector{};
     public:
         MovableEntity();
         ~MovableEntity() override = default;
         // getter 和 setter
         [[nodiscard]] float GetMaxSpeed() const;
         float SetMaxSpeed(float newmaxspeed);
-
+        [[nodiscard]] float GetAcceleration() const;
+        float SetAcceleration(float newacceleration);
+        [[nodiscard]] glm::vec2 GetVector() const;
+        glm::vec2 SetVector(glm::vec2 newvector);
 };
 
 

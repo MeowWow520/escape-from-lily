@@ -30,12 +30,26 @@ to_quit:
 }
 
 void Camera::Update(const float dt) {
-    if (CanCameraActive())
-        m_game_instance.GetCurrentScene()->GetCameraPos() += m_game_instance.GetKeyboardInput()->GetMovementNormalizeVec2() * m_max_speed * dt;
+    // if (CanCameraActive())
+    //       m_game_instance.GetCurrentScene()->GetCameraPos() += m_game_instance.GetKeyboardInput()->GetMovementNormalizeVec2() * m_max_speed * dt;
+}
+
+SDL_FRect Camera::SetCameraActiveRange(const SDL_FRect newactiverange) {
+    m_camera_active_range = newactiverange;
+    return newactiverange;
 }
 
 SDL_FRect Camera::GetCameraActiveRange() const {
     return m_camera_active_range;
+}
+
+float Camera::SetBorder(float newborder) {
+    m_border = newborder;
+    return newborder;
+}
+
+float Camera::GetBorder() const {
+    return m_border;
 }
 
 bool Camera::CanCameraActive() const {

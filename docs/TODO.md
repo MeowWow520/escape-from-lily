@@ -11,3 +11,28 @@
 - [ ] 添加 `Readme.md` 中对 **其他平台** 构建方法的支持
 - [ ] 完成 [Build.md](Build.md)
 - [ ] 完成对 [Class.docs.md](Class.docs.md) 的编辑
+
+
+
+
+### Temp TODO task
+
+- [ ] 添加注释
+- [ ] 为必要的类完善 setter 和 getter
+- [ ] 检查是否有一些 SDL_FRect 可以使用 Def.h 来获得
+- [ ] 确认对象的 Quit 方法可用
+- [ ] 调整声明和实现的顺序
+- [ ] none
+
+
+
+
+
+
+
+
+
+
+
+
+

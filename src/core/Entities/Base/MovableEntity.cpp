@@ -19,3 +19,21 @@ float MovableEntity::SetMaxSpeed(const float newmaxspeed) {
     m_max_speed = newmaxspeed;
     return newmaxspeed;
 }
+
+float MovableEntity::GetAcceleration() const {
+    return m_acceleration;
+}
+
+float MovableEntity::SetAcceleration(float newacceleration) {
+    m_acceleration = newacceleration;
+    return newacceleration;
+}
+
+glm::vec2 MovableEntity::GetVector() const {
+    return m_vector;
+}
+
+glm::vec2 MovableEntity::SetVector(glm::vec2 newvector) {
+    m_vector = newvector;
+    return newvector;
+}

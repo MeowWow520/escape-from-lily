@@ -11,10 +11,29 @@
 class KeyboardInput : public Input {
     public:
         KeyboardInput();
+
+        // 设置键盘的默认按键绑定
         bool SetDefaultKeyBind() override;
+        /**
+         * HandleEvents 通过处理 SDL_Event 来获取键盘上哪些按键被按下，哪些松开
+         *
+         * @param event 要处理的 SDL 事件系统
+         */
         void HandleEvents(SDL_Event event) override;
+
+        /**
+         * Update 更新 m_current_action_state 表格：
+         * Idle --> Idle || Pressed --> Held || Held --> Held || Released --> Idle
+         *
+         * @param dt delta time
+         */
         void Update(float dt) override;
 
+        /**
+         * GetMovementNormalizeVec2 通过 m_current_action_state 中移动方向的按键来计算得到实体移动方向的单位向量
+         *
+         * @return 移动方向的单位向量
+         */
         glm::vec2 GetMovementNormalizeVec2();
 
 
