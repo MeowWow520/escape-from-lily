@@ -142,16 +142,17 @@ bool TexturedEntity::SetTextureFromPath() {
     SDL_GetTextureSize(m_texture.get(),&m_texture_size.x,&m_texture_size.y);
     return true;
 }
-
+// FIXME: 疑似无效？
 glm::vec2 TexturedEntity::TransScreenPos() const {
-    // return m_world_pos - m_game_instance.GetCurrentScene()->GetCameraPos();
+    return m_world_pos - m_game_instance.GetCurrentScene()->GetCamera()->GetWorldPos();
 }
 
+// FIXME: 疑似逻辑错误？
 bool TexturedEntity::IsInCameraRange() const {
-    if (m_screen_pos.x < 0 ||
-        m_screen_pos.y < 0 ||
-        m_screen_pos.x > m_game_instance.GetWindowSize().x ||
-        m_screen_pos.y > m_game_instance.GetWindowSize().y) {
+    if (m_world_pos.x < 0 ||
+        m_world_pos.y < 0 ||
+        m_world_pos.x > m_game_instance.GetWindowSize().x ||
+        m_world_pos.y > m_game_instance.GetWindowSize().y) {
         return false;
     } return true;
 }

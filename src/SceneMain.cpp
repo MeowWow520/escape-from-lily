@@ -10,13 +10,18 @@ int SceneMain::Initialize() {
     m_world_scale = glm::vec2{3, 3};
     m_world_size = m_game_instance.GetWindowSize() * m_world_scale;
     // TODO: 在派生类中实现?
-    // 相机的中心在世界的中心
-    m_camera_pos = (m_world_size - m_game_instance.GetWindowSize()) / glm::vec2(2);
-    // 玩家在世界的中间
-    m_player_position = m_camera_pos + m_game_instance.GetWindowSize() / glm::vec2(2);
+    // TODO: 玩家在世界的中间
+    // m_player_position = m_camera_pos + m_game_instance.GetWindowSize() / glm::vec2(2);
 
 
     // TODO: 使用工厂方法重构
+
+    m_camera = new Camera();
+    if (m_camera->Initialize()) {
+        m_return_code = -1;
+        goto to_quit;
+    }
+    m_camera->SetWorldPos((m_world_size - m_game_instance.GetWindowSize()) / glm::vec2(2));
     // 初始化背景
     m_current_background = new Background();
     m_current_background->SetPath("assets/images/draft_Background_final.png");
@@ -25,12 +30,6 @@ int SceneMain::Initialize() {
         goto to_quit;
     }
     m_current_background->SetWorldPos(glm::vec2{0,0});
-
-    m_camera = new Camera();
-    if (m_camera->Initialize()) {
-        m_return_code = -1;
-        goto to_quit;
-    }
 to_quit:
     const ssl loc = ssl::current();
     return EFL_ClassInit(m_return_code, loc);
@@ -56,15 +55,6 @@ to_quit:
     return EFL_ClassQuit(Scene::Quit(), loc);
 }
 
-glm::vec2 SceneMain::SetPlayerPosition(const glm::vec2 newplayerpos) {
-    m_player_position = newplayerpos;
-    return newplayerpos;
-}
-
-glm::vec2 SceneMain::GetPlayerPosition() const {
-    return m_player_position;
-}
-
-glm::vec2 SceneMain::GetWorldScale() const {
-    return m_world_scale;
+Camera* SceneMain::GetCamera() {
+    return m_camera;
 }

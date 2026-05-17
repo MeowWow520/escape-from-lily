@@ -47,8 +47,8 @@ void KeyboardInput::Update(const float dt) {
 
 glm::vec2 KeyboardInput::GetMovementNormalizeVec2() {
     glm::vec2 ret(0.0f);
-    if (m_current_action_state[Action::MoveUp]    == ActionState::Held) ret.y += 1.0f; // SDLK_W
-    if (m_current_action_state[Action::MoveDown]  == ActionState::Held) ret.y -= 1.0f; // SDLK_S
+    if (m_current_action_state[Action::MoveUp]    == ActionState::Held) ret.y -= 1.0f; // SDLK_W
+    if (m_current_action_state[Action::MoveDown]  == ActionState::Held) ret.y += 1.0f; // SDLK_S
     if (m_current_action_state[Action::MoveLeft]  == ActionState::Held) ret.x -= 1.0f; // SDLK_A
     if (m_current_action_state[Action::MoveRight] == ActionState::Held) ret.x += 1.0f; // SDLK_D
     if (ret.x != 0.0f && ret.y != 0.0f)

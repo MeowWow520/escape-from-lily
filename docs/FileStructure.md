@@ -16,6 +16,9 @@
 │   ├── CONTRIBUTORS.md      # 贡献者列表
 │   ├── FileStructure.md     # 文件结构（本文件）
 │   ├── implement.md         # 实现文档
+│   ├── 📁 implements         # 实现参考文档
+│   │   ├── opencode_20260514_how-to-implement-input.md  # 输入系统设计
+│   │   └── opencode_20260514_sdl3-events.md             # SDL3 事件参考
 │   └── TODO.md              # 待办事项
 ├── 📁 draft                 # 草稿/原型资源
 │   ├── draft_Background_final.png   # 背景终稿
@@ -27,8 +30,10 @@
 │   │   │   │   ├── MovableEntity.h / .cpp   # 可移动实体
 │   │   │   │   └── TexturedEntity.h / .cpp  # 带纹理实体
 │   │   │   ├── Background.h / .cpp          # 背景
+│   │   │   ├── Camera.h / .cpp              # 相机
 │   │   │   └── UserInterface.h / .cpp       # 用户界面
 │   │   ├── 📁 Input         # 输入处理
+│   │   │   ├── Action.h                      # 动作/状态枚举
 │   │   │   ├── Input.h / .cpp               # 输入抽象
 │   │   │   └── KeyboardInput.h / .cpp       # 键盘输入
 │   │   ├── Def.h            # 通用定义/宏

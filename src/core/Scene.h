@@ -5,13 +5,13 @@
 #ifndef ESCAPE_FROM_LILY_SCENE_H
 #define ESCAPE_FROM_LILY_SCENE_H
 #include "Object.h"
-
+#include "Entities/Camera.h"
 
 
 class Scene : public Object {
     protected:
         glm::vec2 m_world_size{};       // 世界的大小
-        glm::vec2 m_camera_pos{};       // 相机位置
+        glm::vec2 m_world_scale{};
     public:
         Scene() = default;
         ~Scene() override = default;
@@ -20,17 +20,14 @@ class Scene : public Object {
         void Update(float dt) override { }
         void Render() override { }
         int Quit() override { return 0; }
+        [[nodiscard]] virtual Camera* GetCamera() { return nullptr; }
 
         // setter 和 getter
         [[nodiscard]] glm::vec2 GetWorldSize() const {
              return m_world_size;
         }
-        glm::vec2 SetCameraPos(const glm::vec2 newcamerapos) {
-            m_camera_pos = newcamerapos;
-            return newcamerapos;
-        }
-        [[nodiscard]] glm::vec2 GetCameraPos() const {
-            return m_camera_pos;
+        [[nodiscard]] glm::vec2 GetWorldScale() const{
+            return m_world_scale;
         }
 
 };

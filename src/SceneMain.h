@@ -12,9 +12,6 @@
 
 
 class SceneMain : public Scene {
-    protected:
-        // 玩家的位置
-        glm::vec2 m_player_position{};
     public:
         SceneMain() = default;
         ~SceneMain() override = default;
@@ -24,13 +21,9 @@ class SceneMain : public Scene {
         void Render() override;
         int Quit() override;
 
-        // setter 和 getter
-        glm::vec2 SetPlayerPosition(glm::vec2 newplayerpos);
-        [[nodiscard]] glm::vec2 GetPlayerPosition() const;
-        [[nodiscard]] glm::vec2 GetWorldScale() const;
+        [[nodiscard]] Camera* GetCamera() override;
 
     private:
-        glm::vec2 m_world_scale{};
         // TODO: 添加背景转换
         Background *m_current_background{};
         Camera *m_camera{};

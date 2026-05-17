@@ -16,10 +16,10 @@
 // 是否开启加速功能
 constexpr bool SWITCHER_ACCELERATION = false;
 // 是否在 log 打印按键的状态
-constexpr bool SWITCHER_KEYLOGGING = true;
+constexpr bool SWITCHER_KEYLOGGING = false;
 
 // 实体默认最大速度
-#define DEFAULT_MAX_SPEED    500.0f
+#define DEFAULT_MAX_SPEED    1500.0f
 // 实体默认最大加速度
 #define DEFAULT_ACCELERATION 50.0f
 
@@ -70,11 +70,11 @@ inline int EFL_ClassInit(const int flag, const ssl &location) {
     const char* c_file_name = std::strstr(location.file_name(), "src") + 4;
     const char* c_function_name = location.function_name() + 12;
     if (flag != 0) {
-        spdlog::error("[{}{}:{}] {}{}{} initialization failed",
+        spdlog::error("{}[{}:{}] {}{}{} initialization failed",
             CLR_BLUE, c_file_name, location.line(), CLR_YELLOW, c_function_name, CLR_RESET);
         return flag;
     }
-    spdlog::info("[{}{}:{}] {}{}{} initialization successfully",
+    spdlog::info("{}[{}:{}] {}{}{} initialization successfully",
         CLR_BLUE, c_file_name, location.line(), CLR_YELLOW, c_function_name, CLR_RESET);
     return 0;
 }
@@ -89,11 +89,11 @@ inline int EFL_ClassQuit(const int flag,  const ssl &location) {
     const char* c_file_name = std::strstr(location.file_name(), "src") + 4;
     const char* c_function_name = location.function_name() + 12;
     if (flag != 0) {
-        spdlog::error("[{}{}:{}] {}{}{} quit failed",
+        spdlog::error("{}[{}:{}] {}{}{} quit failed",
             CLR_BLUE, c_file_name, location.line(), CLR_YELLOW, c_function_name, CLR_RESET);
         return flag;
     }
-    spdlog::info("[{}{}:{}] {}{}{} quit successfully",
+    spdlog::info("{}[{}:{}] {}{}{} quit successfully",
         CLR_BLUE, c_file_name, location.line(), CLR_YELLOW, c_function_name, CLR_RESET);
     return 0;
 }

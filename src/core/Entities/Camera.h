@@ -10,6 +10,7 @@
 
 class Camera : public MovableEntity {
     protected:
+        glm::vec2 m_camera_pos{};
         SDL_FRect m_camera_active_range{};
         float m_border{};
     public:
@@ -17,10 +18,10 @@ class Camera : public MovableEntity {
         void Update(float dt) override;
 
         // setter 和 getter
-        SDL_FRect SetCameraActiveRange(SDL_FRect newactiverange);
         [[nodiscard]] SDL_FRect GetCameraActiveRange() const;
         float SetBorder(float newborder);
         [[nodiscard]] float GetBorder() const;
+
 
     private:
         [[nodiscard]] bool CanCameraActive() const;
