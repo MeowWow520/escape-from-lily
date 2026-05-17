@@ -146,6 +146,19 @@ glm::vec2 Game::GetWindowSize() const {
     return m_window_size;
 }
 
+bool Game::SetRunning(const bool newrunning) {
+    m_running = newrunning;
+    return newrunning;
+}
+
+bool Game::GetRunning() const {
+    return m_running;
+}
+
+Uint32 Game::GetFPS() const {
+    return m_FPS;
+}
+
 SDL_Window * Game::GetSDLWindow() const {
     return m_window;
 }

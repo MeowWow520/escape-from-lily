@@ -18,9 +18,7 @@ class ObjectScreen : public ObjectWorld {
          * 获取屏幕坐标
          * @return 屏幕坐标
          */
-        [[nodiscard]] glm::vec2 GetScreenPos() const {
-            return m_screen_pos;
-        }
+        [[nodiscard]] glm::vec2 GetScreenPos() const { return m_screen_pos; }
         /**
          * 设置屏幕坐标
          * @param new_pos 新的屏幕坐标

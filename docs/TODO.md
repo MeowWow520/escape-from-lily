@@ -17,7 +17,7 @@
 
 ### Temp TODO task
 
-- [ ] 添加注释
+- [x] 添加注释
 - [ ] 为必要的类完善 setter 和 getter
 - [ ] 检查是否有一些 SDL_FRect 可以使用 Def.h 来获得
 - [ ] 确认对象的 Quit 方法可用

@@ -10,7 +10,9 @@
 
 class Object {
     protected:
+        // 获取 Game 的单例
         Game& m_game_instance = Game::GetInstance();
+        // 检查函数的返回值
         int m_return_code{0};
     public:
         Object() = default;

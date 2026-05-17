@@ -68,7 +68,7 @@ glm::vec2 TexturedEntity::SetScale(const glm::vec2 newscale) {
     return m_scale;
 }
 
-glm::vec2 TexturedEntity::SetTextureSize(glm::vec2 newtexturesize) {
+glm::vec2 TexturedEntity::SetTextureSize(const glm::vec2 newtexturesize) {
     m_texture_size = newtexturesize;
     return newtexturesize;
 }
@@ -144,7 +144,7 @@ bool TexturedEntity::SetTextureFromPath() {
 }
 
 glm::vec2 TexturedEntity::TransScreenPos() const {
-    return m_world_pos - m_game_instance.GetCurrentScene()->GetCameraPos();
+    // return m_world_pos - m_game_instance.GetCurrentScene()->GetCameraPos();
 }
 
 bool TexturedEntity::IsInCameraRange() const {

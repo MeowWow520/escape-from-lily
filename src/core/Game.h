@@ -25,26 +25,38 @@ class Game {
         Game& operator=(const Game&) = delete;
 
         /**
-         * 初始化 SDL 库
-         * @return -1 -- 初始化库失败 || 0 -- 无异常
+         * 初始化游戏资源，包含：SDL 库、相机、背景、各个实体的初始化
+         *
+         * @return 初始化成功返回 0，失败返回 -1
          */
         int Initialize();
         /**
          * 运行游戏
-         * @return 0 -- 成功 || -1 -- 异常
+         * @return 运行成功返回 0，失败返回 -1
          */
         int Running();
         void HandleEvents();
         void Update(float dt) const;
         void Render() const;
-        [[nodiscard]] int Quit();
 
-        // Getter 和 Setter
+        /**
+         * 清理游戏资源
+         *
+         * @return 清理成功返回 0，失败返回 -1
+         */
+        int Quit();
+
+        // setter 和 getter
         [[nodiscard]] glm::vec2 GetWindowSize() const;
+        bool SetRunning(bool newrunning);
+        [[nodiscard]] bool GetRunning() const;
+        // m_delta_time
+        [[nodiscard]] Uint32 GetFPS() const;
         [[nodiscard]] SDL_Window *GetSDLWindow() const;
         [[nodiscard]] SDL_Renderer *GetSDLRenderer() const;
         [[nodiscard]] Scene* GetCurrentScene() const;
         [[nodiscard]] KeyboardInput* GetKeyboardInput() const;
+
     private:
         Game();
 
