@@ -59,7 +59,7 @@ NOTE: `docs/CONTRIBUTING.md` claims `camelCase` variables and `_` suffix for mem
 - `CLR_RED`, `CLR_BLUE` etc. — ANSI color escape codes for log output
 - `using ssl = std::source_location;` alias
 - `SWITCHER_ACCELERATION` / `SWITCHER_KEYLOGGING` — runtime feature toggles (constexpr bool)
-- `DEFAULT_MAX_SPEED` (500.0f) / `DEFAULT_ACCELERATION` (50.0f) — default movement values
+- `DEFAULT_MAX_SPEED` (1500.0f) / `DEFAULT_ACCELERATION` (50.0f) — default movement values
 
 ### spdlog
 
@@ -69,22 +69,29 @@ NOTE: `docs/CONTRIBUTING.md` claims `camelCase` variables and `_` suffix for mem
 
 ```
 Game (singleton, main loop)
+  ├─ KeyboardInput (Input subclass — key→action bindings, movement vector)
   └─ SceneMain (current scene, created in Game::Initialize)
        ├─ Background (TexturedEntity)
-       └─ uses Input/KeyboardInput for input handling
+       └─ Camera (MovableEntity — independent camera that follows player)
 
 Object               ← base: holds Game& reference, virtual lifecycle methods
   ├─ ObjectWorld     ← adds m_world_pos
   │    └─ ObjectScreen   ← adds m_screen_pos (screen coordinates)
-  │         └─ TexturedEntity ← texture, rotation, scale, pivot, blend mode
+  │         └─ TexturedEntity ← texture, rotation, scale, pivot, blend mode,
+  │              │               TransScreenPos() (world→screen conversion)
   │              ├─ Background
   │              ├─ UserInterface
-  │              └─ MovableEntity ← movement flags, max speed, acceleration
-  └─ Scene           ← adds m_world_size, m_camera_pos, TransScreenPos()
+  │              └─ MovableEntity ← m_max_speed, m_acceleration, m_vector
+  │                   ├─ Camera   ← m_camera_pos, active range, border
+  │                   └─ Player   ← player character (WIP)
+  └─ Scene           ← adds m_world_size, m_world_scale, virtual GetCamera()
        └─ SceneMain  ← main gameplay scene
 
 Input (standalone — does NOT inherit Object)
-  └─ KeyboardInput
+  ├─ uses Action/ActionState enums (Action: MoveUp/Down/Left/Right/Pause/Quit;
+  │   ActionState: Idle/Pressed/Held/Released)
+  └─ KeyboardInput    ← m_key_bind, HandleEvents drives press/release,
+                         GetMovementNormalizeVec2() returns movement direction
 ```
 
 **Lifecycle pattern** (all classes follow this):
@@ -124,7 +131,7 @@ return EFL_ClassInit(m_return_code, loc);  // or EFL_ClassQuit for Quit()
 
 ## CI
 
-GitHub Actions workflow at `.github/workflows/ci-windows.yml` builds on push/PR to `main`/`master`/`develop`. Uses CMakePresets (`debug` preset). The "Run tests" step is disabled (`if: false`) — there are no tests yet. Qodana config (`qodana.yaml`) exists but is not wired into CI.
+Qodana config (`qodana.yaml`) exists but is not wired into CI. No GitHub Actions workflow exists yet.
 
 Manual build-and-run is the primary verification method.
 

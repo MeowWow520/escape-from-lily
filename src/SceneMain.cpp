@@ -22,6 +22,8 @@ int SceneMain::Initialize() {
         goto to_quit;
     }
     m_camera->SetWorldPos((m_world_size - m_game_instance.GetWindowSize()) / glm::vec2(2));
+
+
     // 初始化背景
     m_current_background = new Background();
     m_current_background->SetPath("assets/images/draft_Background_final.png");
@@ -49,7 +51,12 @@ void SceneMain::Render() {
 }
 
 int SceneMain::Quit() {
-    goto to_quit;
+    if (m_current_background->Quit()) {
+        m_return_code = -1;
+        goto to_quit;
+    }
+    // 删除相机资源
+    delete m_camera;
 to_quit:
     const ssl loc = ssl::current();
     return EFL_ClassQuit(Scene::Quit(), loc);
