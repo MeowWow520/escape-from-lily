@@ -58,6 +58,12 @@ NOTE: `docs/CONTRIBUTING.md` claims `camelCase` variables and `_` suffix for mem
 - `EFL_Vec2AddToRect(vec2 pos, vec2 size)` / `EFL_Vec2AddToRectFloat` — glm vec2 to SDL_Rect/SDL_FRect
 - `CLR_RED`, `CLR_BLUE` etc. — ANSI color escape codes for log output
 - `using ssl = std::source_location;` alias
+- `SWITCHER_ACCELERATION` / `SWITCHER_KEYLOGGING` — runtime feature toggles (constexpr bool)
+- `DEFAULT_MAX_SPEED` (500.0f) / `DEFAULT_ACCELERATION` (50.0f) — default movement values
+
+### spdlog
+
+`spdlog` is header-only in this project — it is listed in `vcpkg.json` for the headers but does NOT appear in `CMakeLists.txt` `target_link_libraries`. Do not add `find_package(spdlog)` or `spdlog::spdlog` to CMake.
 
 ## Architecture
 
@@ -76,8 +82,9 @@ Object               ← base: holds Game& reference, virtual lifecycle methods
   │              └─ MovableEntity ← movement flags, max speed, acceleration
   └─ Scene           ← adds m_world_size, m_camera_pos, TransScreenPos()
        └─ SceneMain  ← main gameplay scene
-  └─ Input           ← (standalone) input handling base
-       └─ KeyboardInput
+
+Input (standalone — does NOT inherit Object)
+  └─ KeyboardInput
 ```
 
 **Lifecycle pattern** (all classes follow this):
@@ -85,6 +92,14 @@ Object               ← base: holds Game& reference, virtual lifecycle methods
 2. `Initialize()` — creates SDL resources, returns 0 on success, -1 on failure
 3. `HandleEvents(SDL_Event)` / `Update(float dt)` / `Render()` — per-frame
 4. `Quit()` — cleanup, returns 0 on success
+
+Canonical lifecycle return pattern:
+```cpp
+const ssl loc = ssl::current();
+return EFL_ClassInit(m_return_code, loc);  // or EFL_ClassQuit for Quit()
+```
+
+**Error handling**: `goto to_quit` is used in `Game::Initialize()` and `Game::Quit()` for centralized cleanup. New code that follows the lifecycle pattern should use this convention when multiple failure points share teardown.
 
 **Game singleton**: `Game::GetInstance()` returns the single instance. Copy/assign deleted. Main loop in `Game::Running()`:
 - Poll events → dispatch to current scene's HandleEvents
@@ -116,6 +131,5 @@ Manual build-and-run is the primary verification method.
 ## Git
 
 - `.idea/` and `.opencode/` are in `.gitignore` — IDE settings and OpenCode config are not shared
-- `CLAUDE.md` is in `.gitignore` — does not ship with the repo
 - Commit convention: Conventional Commits with custom `upd` type (see `docs/CONTRIBUTING.md`)
 - Branch naming: `feature/*`, `fix/*`, etc.

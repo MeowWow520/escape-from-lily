@@ -24,9 +24,9 @@ class TexturedEntity : public ObjectScreen {
         glm::vec2 m_pivot{0.5f, 0.5f}; // 旋转中心 归一化
 
         // 5. 视觉控制
-        SDL_Color m_colorMod{COLOR(0xFFFFFFFF)};       // 颜色调制 + 透明度
-        SDL_BlendMode m_blendMode = SDL_BLENDMODE_BLEND; // 像素混合模式
-        bool m_textureDirty = false;                     // 脏标记
+        SDL_Color m_color_mod{COLOR(0xFFFFFFFF)};       // 颜色调制 + 透明度
+        SDL_BlendMode m_blend_mode = SDL_BLENDMODE_BLEND; // 像素混合模式
+        bool m_texture_dirty = false;                     // 脏标记
         bool m_visible = false;
     public:
         TexturedEntity();

@@ -13,7 +13,7 @@ KeyboardInput::KeyboardInput() {
     m_return_code = 0;
 }
 
-void KeyboardInput::HandleEvents(SDL_Event event) {
+void KeyboardInput::HandleEvents(const SDL_Event event) {
     // 如果不是键盘事件，跳过
     if (event.type != SDL_EVENT_KEY_DOWN && event.type != SDL_EVENT_KEY_UP)
         return;
