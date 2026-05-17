@@ -47,16 +47,16 @@ class Game {
     private:
         Game();
 
-        std::string m_title;
+        std::string m_title{};
         glm::vec2 m_window_size{};
-        bool m_running;
-        float m_delta_time;
-        Uint32 m_frame_delay;
-        Uint32 m_FPS;
-        SDL_Window* m_window;
-        SDL_Renderer* m_renderer;
-        Scene* m_current_scene;
-        int m_return_code;
+        bool m_running{};
+        float m_delta_time{};
+        Uint32 m_frame_delay{};
+        Uint32 m_FPS{};
+        SDL_Window* m_window{};
+        SDL_Renderer* m_renderer{};
+        Scene* m_current_scene{};
+        int m_return_code{};
         KeyboardInput *m_key_input{};
 };
 
