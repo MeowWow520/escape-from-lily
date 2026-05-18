@@ -117,7 +117,7 @@ void Game::Update(const float dt) const {
 }
 
 void Game::Render() const {
-    SDL_SetRenderDrawColor(m_renderer, COLOR(0xFF006EFF));
+    SDL_SetRenderDrawColor(m_renderer, COLOR(HEX_COLOR_BACKGROUND));
     SDL_RenderClear(m_renderer);
     m_current_scene->Render();
     SDL_RenderPresent(m_renderer);

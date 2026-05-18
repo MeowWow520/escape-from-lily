@@ -36,6 +36,8 @@ add_executable(escape-from-lily
         src/core/Entities/Camera.h
         src/core/Entities/Player.cpp
         src/core/Entities/Player.h
+        src/SceneTitle.cpp
+        src/SceneTitle.h
 )
 
 set(ASSETS_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/assets")

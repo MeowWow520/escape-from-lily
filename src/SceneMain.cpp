@@ -26,7 +26,7 @@ int SceneMain::Initialize() {
 
     // 初始化背景
     m_current_background = new Background();
-    m_current_background->SetPath("assets/images/draft_Background_final.png");
+    m_current_background->SetPath("assets/images/backgrounds/original_picture.png");
     if (m_current_background->Initialize()) {
         m_return_code = -1;
         goto to_quit;

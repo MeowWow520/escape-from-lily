@@ -1,13 +1,17 @@
 ## TODO 
 
 ### 对项目
-- [x] 将 `Game.h` 中的定义从声明中移出
-- [x] 重构初始化变量
-- [x] 对各个类的变量进行同步消息
-- [x] 派生类清理
-- [ ] 实现 Player 类
+- ✨ 实现 Background 类
+- ❌ 实现 Player 类
+- ❌ 实现 SceneTitle 类
+- ❌ 实现 UserInterface(UI) 类
+- ❌
+
+
+
+
 
 ### 对仓库
-- [ ] 添加 `Readme.md` 中对 **其他平台** 构建方法的支持
-- [ ] 完成 [Build.md](Build.md)
-- [ ] 完成对 [Class.docs.md](Class.docs.md) 的编辑
+- ❌ 添加 `Readme.md` 中对 **其他平台** 构建方法的支持
+- ❌ 完成 [Build.md](Build.md)
+- ❌ 完成对 [Class.docs.md](Class.docs.md) 的编辑

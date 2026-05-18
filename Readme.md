@@ -43,20 +43,50 @@ cd vcpkg
 ```
 📁 escape-from-lily          # 项目根目录
 ├── 📁 .github               # GitHub Actions 配置
+│   └── 📁 workflows         # CI 工作流
+│       └── ci-windows.yml
 ├── 📁 assets                # 资源目录
 │   └── 📁 images            # 图片资源
+│       ├── draft_Background_final.png
+│       └── test.jpg
 ├── 📁 docs                  # 文档目录
+│   ├── Build.md
+│   ├── Class.docs.md
+│   ├── CONTRIBUTING.md
+│   ├── CONTRIBUTORS.md
+│   ├── FileStructure.md
+│   ├── implement.md
+│   ├── 📁 implements        # 实现参考
+│   └── TODO.md
 ├── 📁 draft                 # 草稿/原型资源
 ├── 📁 src                   # 源代码目录
 │   ├── 📁 core              # 核心代码
 │   │   ├── 📁 Entities      # 实体类
-│   │   │   └── 📁 Base      # 实体基类
-│   │   └── 📁 Input         # 输入处理
+│   │   │   ├── 📁 Base      # 实体基类
+│   │   │   │   ├── MovableEntity.h / .cpp
+│   │   │   │   └── TexturedEntity.h / .cpp
+│   │   │   ├── Background.h / .cpp
+│   │   │   ├── Camera.h / .cpp
+│   │   │   └── UserInterface.h / .cpp
+│   │   ├── 📁 Input         # 输入处理
+│   │   │   ├── Action.h
+│   │   │   ├── Input.h / .cpp
+│   │   │   └── KeyboardInput.h / .cpp
+│   │   ├── Def.h
+│   │   ├── Game.h / .cpp
+│   │   ├── Object.h
+│   │   ├── ObjectScreen.h
+│   │   ├── ObjectWorld.h
+│   │   └── Scene.h
 │   ├── main.cpp             # 程序入口
 │   └── SceneMain.h / .cpp   # 主场景
+├── .gitignore
+├── AGENTS.md
 ├── CMakeLists.txt           # CMake 构建配置
 ├── CMakePresets.json        # CMake 预设
+├── CODE_OF_CONDUCT.md
 ├── LICENSE                  # 许可证文件
+├── qodana.yaml
 ├── Readme.md                # 项目说明
 └── vcpkg.json               # vcpkg 依赖清单
 ```

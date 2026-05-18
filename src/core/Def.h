@@ -36,12 +36,14 @@ constexpr bool SWITCHER_KEYLOGGING = false;
  * 如 COLOR(0xFF00FF00) --> 255, 0, 255, 0
  * @param HEX RGBA 颜色值
  */
-#define COLOR(HEX) (\
+#define COLOR(HEX) (         \
     ( (HEX) >> 24 ) & 0xFF), \
     (((HEX) >> 16 ) & 0xFF), \
     (((HEX) >> 8  ) & 0xFF), \
     ( (HEX)         & 0xFF)
 
+
+#define HEX_COLOR_BACKGROUND 0x0096C7FF
 /**
  * SDL_LibInitChecker 检查 bool 形式的标志是否为真，并为其额外配备 log 功能
  *

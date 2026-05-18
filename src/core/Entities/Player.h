@@ -8,6 +8,15 @@
 
 
 class Player : public MovableEntity {
+    protected:
+        // 玩家名称
+        std::string m_player_name;
+    public:
+        int Initialize() override;
+        void HandleEvents(SDL_Event event) override;
+        void Update(float dt) override;
+        void Render() override;
+        int Quit() override;
 };
 
 

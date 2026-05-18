@@ -25,14 +25,15 @@ void Background::Update(float dt) {
 }
 
 void Background::Render() {
-    // FIXME: 修复此处的 bug
     const SDL_FRect destination = EFL_Vec2AddToRectFloat(m_screen_pos, m_game_instance.GetCurrentScene()->GetWorldSize());
     SDL_RenderTexture(m_game_instance.GetSDLRenderer(), m_texture.get(), nullptr, &destination);
 }
 
 int Background::Quit() {
-    // TODO: 释放资源
+    if (m_texture != nullptr)
+        SDL_DestroyTexture(m_texture.get());
     goto to_quit;
+
 to_quit:
     const ssl loc = ssl::current();
     return EFL_ClassQuit(m_return_code, loc);
