@@ -12,11 +12,14 @@ class Object {
     protected:
         // 获取 Game 的单例
         Game& m_game_instance = Game::GetInstance();
+        // 实例名字，用语日志系统
+        const char* m_entity_name;
         // 检查函数的返回值
         int m_return_code{0};
     public:
-        Object() = default;
-        virtual ~Object() = default;
+        Object(Game& m_game_instance, const char* m_entity_name) noexcept;
+        virtual ~Object();
+
         virtual int Initialize() { return 0; }
         virtual void HandleEvents([[maybe_unused]]SDL_Event event) { }
         virtual void Update([[maybe_unused]] const float dt) { }

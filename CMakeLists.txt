@@ -40,6 +40,8 @@ add_executable(escape-from-lily
         src/SceneTitle.h
         src/core/Logger/Log.cpp
         src/core/Logger/Log.h
+        src/core/Logger/LogCategory.h
+        src/core/Object/Object.cpp
 )
 
 set(ASSETS_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/assets")
