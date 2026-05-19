@@ -23,7 +23,6 @@ constexpr bool SWITCHER_KEYLOGGING = false;
 // 实体默认最大加速度
 #define DEFAULT_ACCELERATION 50.0f
 
-// FIXME: 这些转义字符在其他平台不可用，仅 Windows PowerShell 可用
 #define CLR_RESET  "\033[0m"
 #define CLR_RED    "\033[31m"
 #define CLR_GREEN  "\033[32m"
