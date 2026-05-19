@@ -11,7 +11,9 @@ class ObjectScreen : public ObjectWorld {
     protected:
         glm::vec2 m_screen_pos{};
     public:
-        ObjectScreen() = default;
+        explicit ObjectScreen(const char* m_entity_name = "ObjectScreen")
+            : ObjectWorld(m_entity_name) {}
+
         ~ObjectScreen() override = default;
 
         /**

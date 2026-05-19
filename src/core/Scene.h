@@ -4,7 +4,7 @@
 
 #ifndef ESCAPE_FROM_LILY_SCENE_H
 #define ESCAPE_FROM_LILY_SCENE_H
-#include "Object.h"
+#include "Object/Object.h"
 #include "Entities/Camera.h"
 
 
@@ -13,7 +13,8 @@ class Scene : public Object {
         glm::vec2 m_world_size{};       // 世界的大小
         glm::vec2 m_world_scale{};
     public:
-        Scene() = default;
+        explicit Scene(const char* m_entity_name = "Scene") : Object(m_entity_name) {}
+
         ~Scene() override = default;
         int Initialize() override { return 0; }
         void HandleEvents(SDL_Event event) override { }

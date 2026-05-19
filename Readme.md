@@ -67,24 +67,32 @@ cd vcpkg
 │   │   │   │   └── TexturedEntity.h / .cpp
 │   │   │   ├── Background.h / .cpp
 │   │   │   ├── Camera.h / .cpp
+│   │   │   ├── Player.h / .cpp
 │   │   │   └── UserInterface.h / .cpp
 │   │   ├── 📁 Input         # 输入处理
 │   │   │   ├── Action.h
 │   │   │   ├── Input.h / .cpp
 │   │   │   └── KeyboardInput.h / .cpp
+│   │   ├── 📁 Logger        # 日志系统
+│   │   │   ├── Log.h / .cpp
+│   │   │   └── LogCategory.h
+│   │   ├── 📁 Object        # 对象基类
+│   │   │   ├── Object.h / .cpp
+│   │   │   ├── ObjectScreen.h
+│   │   │   └── ObjectWorld.h
 │   │   ├── Def.h
 │   │   ├── Game.h / .cpp
-│   │   ├── Object.h
-│   │   ├── ObjectScreen.h
-│   │   ├── ObjectWorld.h
 │   │   └── Scene.h
 │   ├── main.cpp             # 程序入口
-│   └── SceneMain.h / .cpp   # 主场景
+│   ├── SceneMain.h / .cpp   # 主场景
+│   └── SceneTitle.h / .cpp  # 标题场景
 ├── .gitignore
 ├── AGENTS.md
 ├── CMakeLists.txt           # CMake 构建配置
 ├── CMakePresets.json        # CMake 预设
 ├── CODE_OF_CONDUCT.md
+├── icon.ico
+├── 📁 innosetup              # Inno Setup 安装程序
 ├── LICENSE                  # 许可证文件
 ├── qodana.yaml
 ├── Readme.md                # 项目说明

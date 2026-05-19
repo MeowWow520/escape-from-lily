@@ -7,16 +7,11 @@
 #include "../Scene.h"
 
 int Background::Initialize() {
-    if (!InitializeTextureFromPath()) {
-        m_return_code = -1;
-        goto to_quit;
-    }
+    if (!InitializeTextureFromPath()) return -1;
     m_rect = {0, 0, 0, 0};
     m_world_pos = glm::vec2(0.0f, 0.0f);
     m_screen_pos = TransScreenPos();
-to_quit:
-    const ssl loc = ssl::current();
-    return EFL_ClassInit(m_return_code, loc);
+    return 0;
 }
 
 
@@ -30,11 +25,9 @@ void Background::Render() {
 }
 
 int Background::Quit() {
-    if (m_texture != nullptr)
+    if (m_texture != nullptr) {
         SDL_DestroyTexture(m_texture.get());
-    goto to_quit;
-
-to_quit:
-    const ssl loc = ssl::current();
-    return EFL_ClassQuit(m_return_code, loc);
+        m_texture.release();
+    }
+    return 0;
 }

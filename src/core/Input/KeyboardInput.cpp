@@ -57,30 +57,13 @@ glm::vec2 KeyboardInput::GetMovementNormalizeVec2() {
 }
 
 bool KeyboardInput::SetDefaultKeyBind() {
-    if (!BindAction(SDLK_W, Action::MoveUp)) {
-        m_return_code = -1;
-        goto to_quit;
-    }
-    if (!BindAction(SDLK_S, Action::MoveDown)) {
-        m_return_code = -1;
-        goto to_quit;
-    }
-    if (!BindAction(SDLK_D, Action::MoveRight)) {
-        m_return_code = -1;
-        goto to_quit;
-    }
-    if (!BindAction(SDLK_A, Action::MoveLeft)) {
-        m_return_code = -1;
-        goto to_quit;
-    }
-    if (!BindAction(SDLK_ESCAPE, Action::Quit)) {
-        m_return_code = -1;
-        goto to_quit;
-    }
+    if (!BindAction(SDLK_W, Action::MoveUp))    return false;
+    if (!BindAction(SDLK_S, Action::MoveDown))  return false;
+    if (!BindAction(SDLK_D, Action::MoveRight)) return false;
+    if (!BindAction(SDLK_A, Action::MoveLeft))  return false;
+    if (!BindAction(SDLK_ESCAPE, Action::Quit)) return false;
     // 初始化两个哈希表
     for (auto it = m_key_bind.begin(); it != m_key_bind.end(); ++it)
         m_current_action_state[it->second]  = ActionState::Idle;
-to_quit:
-    const ssl loc = ssl::current();
-    return EFL_ClassInit(m_return_code, loc);
+    return true;
 }

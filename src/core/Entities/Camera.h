@@ -14,6 +14,8 @@ class Camera : public MovableEntity {
         SDL_FRect m_camera_active_range{};
         float m_border{};
     public:
+        explicit Camera() : MovableEntity("Camera") {}
+
         int Initialize() override;
         void Update(float dt) override;
 

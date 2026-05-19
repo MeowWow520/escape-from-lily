@@ -9,7 +9,8 @@
 
 
 class UserInterface : public TexturedEntity {
-
+    public:
+        explicit UserInterface() : TexturedEntity("UserInterface") {}
 };
 
 

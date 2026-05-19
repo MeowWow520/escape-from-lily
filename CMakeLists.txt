@@ -15,9 +15,9 @@ add_executable(escape-from-lily
         src/core/Def.h
         src/core/Game.cpp
         src/core/Game.h
-        src/core/Object.h
-        src/core/ObjectScreen.h
-        src/core/ObjectWorld.h
+        src/core/Object/Object.h
+        src/core/Object/ObjectScreen.h
+        src/core/Object/ObjectWorld.h
         src/core/Scene.h
         src/core/Entities/Base/TexturedEntity.h
         src/core/Entities/Base/TexturedEntity.cpp
@@ -38,6 +38,10 @@ add_executable(escape-from-lily
         src/core/Entities/Player.h
         src/SceneTitle.cpp
         src/SceneTitle.h
+        src/core/Logger/Log.cpp
+        src/core/Logger/Log.h
+        src/core/Logger/LogCategory.h
+        src/core/Object/Object.cpp
 )
 
 set(ASSETS_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/assets")
