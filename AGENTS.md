@@ -45,8 +45,9 @@ SDL3, SDL3_image, SDL3_mixer, SDL3_ttf, glm, spdlog, fmt.
 - **Each class**: one `.h` + one `.cpp`, filename matches class name. Some base/utility classes are header-only (no `.cpp`).
 - **Comments in Chinese**, Doxygen `/** */` style for public API
 - **File header**: `// Created by MeowWow520 on YYYY/M/D`
+- **Include paths**: files under `src/core/Entities/Base/` reach Object/Def/Scene via `../../` (e.g. `../../Object/ObjectScreen.h`); files under `src/` use `core/` prefix (e.g. `#include "core/Game.h"`); files under `src/core/` use `Object/Object.h` etc.
 - **Pointer safety**: `SDL_Window*`/`SDL_Renderer*` are raw pointers owned by SDL; `SDL_Texture*` uses `std::unique_ptr` with `SDL_DestroyTexture` deleter (aliased as `TexturePtr` in `TexturedEntity`)
-- **Logging**: use `spdlog` — `spdlog::info("message")`, `spdlog::error("message")`. Do NOT use `printf`, `std::cout`, or `SDL_Log`.
+- **Logging**: use `spdlog` — `spdlog::info("message")`, `spdlog::error("message")`. Do NOT use `printf`, `std::cout`, or `SDL_Log`. New code should prefer the `EFL_LOGGER_INFO`/`EFL_LOGGER_ERROR` macros from `Logger/Log.h` (see Logger section below).
 
 NOTE: `docs/CONTRIBUTING.md` claims `camelCase` variables and `_` suffix for members — the **actual codebase** uses `m_` prefix with snake_case. Follow the actual code, not the doc.
 
@@ -65,6 +66,20 @@ NOTE: `docs/CONTRIBUTING.md` claims `camelCase` variables and `_` suffix for mem
 
 `spdlog` is header-only in this project — it is listed in `vcpkg.json` for the headers but does NOT appear in `CMakeLists.txt` `target_link_libraries`. Do not add `find_package(spdlog)` or `spdlog::spdlog` to CMake.
 
+### Logger system (`src/core/Logger/`)
+
+A new categorized logging system runs alongside the old `Def.h` macros (dual-track). Old `EFL_ClassInit`/`EFL_ClassQuit`/`SDL_LibInitChecker` still work unchanged.
+
+**Log categories** (enum `LogCategory` in `LogCategory.h`): `Core`, `Entity`, `Input`, `Scene`, `Renderer`.
+
+**Key macros** (defined in `Log.h`):
+- `EFL_LOGGER_INFO(cat, ...)` / `EFL_LOGGER_ERROR(cat, ...)` — categorized log output
+- `EFL_LOG_ENTITY_CREATED(name)` / `EFL_LOG_ENTITY_DESTROYED(name)` — called automatically by `Object` constructor/destructor (see Object section)
+
+**Setup**: call `EFL::RegisterLogCategory()` early in `Game::Initialize()`; call `EFL::QuitLogger()` in `Game::Quit()`. `LogConfig` struct accepts custom file paths and truncate/append mode.
+
+**spdlog 1.17.0 caveat**: `sinks_init_list` is `initializer_list<sink_ptr>` — it has **no** `push_back`. When conditionally building sink lists, use `std::vector<spdlog::sink_ptr>` and pass `(name, sinks.begin(), sinks.end())` to the `logger` constructor. The console sink uses `wincolor_stdout_sink_mt` (not `stdout_color_sink_mt`) for Windows console compatibility.
+
 ## Architecture
 
 ```
@@ -74,9 +89,10 @@ Game (singleton, main loop)
        ├─ Background (TexturedEntity)
        └─ Camera (MovableEntity — independent camera that follows player)
 
-Object               ← base: holds Game& reference, virtual lifecycle methods
-  ├─ ObjectWorld     ← adds m_world_pos
-  │    └─ ObjectScreen   ← adds m_screen_pos (screen coordinates)
+Object               ← base: holds Game& ref, m_entity_name, lifecycle methods
+  │                    (src/core/Object/Object.h/.cpp — moved from core/ root)
+  ├─ ObjectWorld     ← adds m_world_pos  (src/core/Object/ObjectWorld.h)
+  │    └─ ObjectScreen   ← adds m_screen_pos  (src/core/Object/ObjectScreen.h)
   │         └─ TexturedEntity ← texture, rotation, scale, pivot, blend mode,
   │              │               TransScreenPos() (world→screen conversion)
   │              ├─ Background
@@ -85,14 +101,26 @@ Object               ← base: holds Game& reference, virtual lifecycle methods
   │                   ├─ Camera   ← m_camera_pos, active range, border
   │                   └─ Player   ← player character (WIP)
   └─ Scene           ← adds m_world_size, m_world_scale, virtual GetCamera()
-       └─ SceneMain  ← main gameplay scene
+       ├─ SceneMain  ← main gameplay scene
+       └─ SceneTitle ← title screen (minimal stub)
+```
 
+```
+src/core/Logger/          ← new logging subsystem
+  ├─ LogCategory.h        ← enum: Core, Entity, Input, Scene, Renderer
+  ├─ Log.h                ← EFL_LOGGER_INFO/ERROR macros, LogConfig, RegisterLogCategory
+  └─ Log.cpp              ← RegisterLogCategory / QuitLogger implementation
+```
+
+```
 Input (standalone — does NOT inherit Object)
   ├─ uses Action/ActionState enums (Action: MoveUp/Down/Left/Right/Pause/Quit;
   │   ActionState: Idle/Pressed/Held/Released)
   └─ KeyboardInput    ← m_key_bind, HandleEvents drives press/release,
                          GetMovementNormalizeVec2() returns movement direction
 ```
+
+**TransScreenPos()**: defined on `TexturedEntity`, computes screen pos via `m_world_pos - GetCamera()->GetWorldPos()`, reaching camera through `GetCurrentScene()->GetCamera()`.
 
 **Lifecycle pattern** (all classes follow this):
 1. Constructor — initializes members
@@ -119,15 +147,17 @@ return EFL_ClassInit(m_return_code, loc);  // or EFL_ClassQuit for Quit()
 
 1. Create `.h`/`.cpp` in `src/core/Entities/`
 2. Inherit from `TexturedEntity`, `MovableEntity`, or `ObjectScreen`/`ObjectWorld` if no texture needed
-3. Register the new `.cpp` in `CMakeLists.txt` under `add_executable`
-4. Override lifecycle methods as needed; chain to parent class for default behavior
+3. **Constructor must pass `entity_name` up the chain**: each leaf entity constructor invokes its parent with a string literal (e.g. `Player() : MovableEntity("Player") {}`). Intermediate base classes use default parameter forwarding.
+4. Register the new `.cpp` in `CMakeLists.txt` under `add_executable`
+5. Override lifecycle methods as needed; chain to parent class for default behavior
 
 ## How to add a new scene
 
 1. Create `.h`/`.cpp` in `src/` (not under `core/`)
 2. Inherit from `Scene`
-3. Register in `CMakeLists.txt`
-4. Instantiate in `Game::Initialize()` (replace or add scene switching logic)
+3. **Constructor must pass `entity_name`** (e.g. `SceneMain() : Scene("SceneMain") {}`)
+4. Register in `CMakeLists.txt`
+5. Instantiate in `Game::Initialize()` (replace or add scene switching logic)
 
 ## CI
 

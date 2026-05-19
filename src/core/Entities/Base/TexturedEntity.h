@@ -28,9 +28,12 @@ class TexturedEntity : public ObjectScreen {
         glm::vec2 m_pivot{0.5f, 0.5f}; // 旋转中心 归一化
         glm::vec2 m_entity_hitbox{1.0f, 1.0f}; // 碰撞箱
     public:
-        TexturedEntity();
+        explicit TexturedEntity(const char* m_entity_name = "TexturedEntity")
+            : ObjectScreen(m_entity_name) { }
+
         ~TexturedEntity() override = default;
 
+        int Initialize() override;
         // setter 和 getter
         TexturePtr SetTexture(TexturePtr newtexture) noexcept;
         [[nodiscard]] SDL_Texture* GetTexture() const;

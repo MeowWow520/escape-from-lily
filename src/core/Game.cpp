@@ -11,7 +11,7 @@
 #include "Def.h"
 #include "Scene.h"
 #include "../SceneMain.h"
-
+#include "Logger/Log.h"
 
 
 Game::Game() {
@@ -28,51 +28,31 @@ Game::Game() {
 }
 
 int Game::Initialize() {
+    EFL::RegisterLogCategory();
 
-    if (SDL_LibInitChecker(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO), "SDL_Init")) {
-        m_return_code = -1;
-        goto to_quit;
-    }
-    if (SDL_LibInitChecker(TTF_Init(), "TTF_Init")) {
-        m_return_code = -1;
-        goto to_quit;
-    }
-    if (SDL_LibInitChecker(MIX_Init(), "Mix_Init")) {
-        m_return_code = -1;
-        goto to_quit;
-    }
+    if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO)) return -1;
+    if (!TTF_Init()) return -1;
+    if (!MIX_Init()) return -1;
     if (!SDL_CreateWindowAndRenderer(m_title.c_str(),
             static_cast<int>(m_window_size.x),
             static_cast<int>(m_window_size.y),
-            SDL_WINDOW_RESIZABLE,&m_window, &m_renderer)) {
-        spdlog::error("{} failed to create window and renderer: {}", m_title.c_str(), SDL_GetError());
-        m_return_code = -1;
-        goto to_quit;
-    } spdlog::info("{} successfully to create window and renderer", m_title.c_str());
+            SDL_WINDOW_RESIZABLE,&m_window, &m_renderer)) { return -1; }
     // 设置渲染器 -- 垂直同步
-    if (SDL_LibInitChecker(SDL_SetRenderVSync(m_renderer, 1), "SDL_SetRenderVSync")) {
-        m_return_code = -1;
-        goto to_quit;
-    }
+    if (!SDL_SetRenderVSync(m_renderer, 1)) return -1;
 
     // 设置按键绑定
     m_key_input = new KeyboardInput();
-    if (m_key_input->SetDefaultKeyBind()) {
-        m_return_code = -1;
-        goto to_quit;
-    }
+    if (!m_key_input->SetDefaultKeyBind()) return -1;
 
     // TODO: 使用工厂方法注册对象
     // 创建场景
     m_current_scene = new SceneMain();
     if (m_current_scene->Initialize() != 0) {
         delete m_current_scene;
-        m_return_code = -1;
-        goto to_quit;
+        return -1;
     }
-to_quit:
-    const ssl loc = ssl::current();
-    return EFL_ClassInit(m_return_code, loc);
+
+    return 0;
 }
 
 int Game::Running() {
@@ -91,8 +71,7 @@ int Game::Running() {
             m_delta_time = static_cast<float>(m_frame_delay / 1e9);
         } m_delta_time = static_cast<float>(static_cast<double>(elapsed) / 1e9);
     }
-    const ssl loc = ssl::current();
-    return EFL_ClassQuit(Quit(), loc);
+    return 0;
 }
 
 void Game::HandleEvents() {
@@ -101,7 +80,6 @@ void Game::HandleEvents() {
         m_key_input->HandleEvents(event);
         switch (event.type) {
             case SDL_EVENT_QUIT:
-                spdlog::info("Receive SDL_EVENT_QUIT events, main loop quitting");
                 m_running = false;
                 break;
             default:
@@ -125,21 +103,16 @@ void Game::Render() const {
 
 
 int Game::Quit() {
-    // 释放 SDL 资源
-    SDL_Quit();
-    TTF_Quit();
-    MIX_Quit();
     // 释放游戏资源
     if (m_current_scene != nullptr) {
-        if (const ssl loc = ssl::current(); EFL_ClassQuit(m_current_scene->Quit(), loc) != 0) {
-            m_return_code = -1;
-            goto to_quit;
-        }
+        if (m_current_scene->Quit() != 0) return -1;
     } delete m_current_scene;
-
-to_quit:
-    const ssl loc = ssl::current();
-    return EFL_ClassQuit(m_return_code, loc);
+    // 释放 SDL 资源
+    TTF_Quit();
+    MIX_Quit();
+    SDL_Quit();
+    EFL::QuitLogger();
+    return 0;
 }
 
 glm::vec2 Game::GetWindowSize() const {

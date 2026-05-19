@@ -5,10 +5,12 @@
 #include "MovableEntity.h"
 
 
-MovableEntity::MovableEntity() {
+
+int MovableEntity::Initialize() {
     m_max_speed = DEFAULT_MAX_SPEED;
     if (SWITCHER_ACCELERATION)
         m_acceleration = DEFAULT_ACCELERATION;
+    return 0;
 }
 
 float MovableEntity::GetMaxSpeed() const {
@@ -24,7 +26,7 @@ float MovableEntity::GetAcceleration() const {
     return m_acceleration;
 }
 
-float MovableEntity::SetAcceleration(float newacceleration) {
+float MovableEntity::SetAcceleration(const float newacceleration) {
     m_acceleration = newacceleration;
     return newacceleration;
 }
@@ -33,7 +35,7 @@ glm::vec2 MovableEntity::GetVector() const {
     return m_vector;
 }
 
-glm::vec2 MovableEntity::SetVector(glm::vec2 newvector) {
+glm::vec2 MovableEntity::SetVector(const glm::vec2 newvector) {
     m_vector = newvector;
     return newvector;
 }

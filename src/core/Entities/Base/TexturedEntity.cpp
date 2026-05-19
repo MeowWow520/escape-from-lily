@@ -8,12 +8,17 @@
 #include "../../Scene.h"
 
 
-TexturedEntity::TexturedEntity() = default;
+
 
 using TexturePtr = std::unique_ptr<
                    SDL_Texture,
                    decltype(&SDL_DestroyTexture)
                    >;
+
+int TexturedEntity::Initialize() {
+    return 0;
+}
+
 TexturePtr TexturedEntity::SetTexture(TexturePtr newtexture) noexcept {
     m_texture = std::move(newtexture);
     return newtexture;
@@ -124,8 +129,7 @@ SDL_Rect TexturedEntity::GetRect() const {
 
 bool TexturedEntity::InitializeTextureFromPath() {
     m_visible = true;
-    if (SDL_LibInitChecker(!(!m_path.data() || m_path[0] == '\0'), "TexturedEntity::InitializeTextureFromPath"))
-        return false;
+    if (!m_path.data() || m_path[0] == '\0') return false;
     m_texture.reset();
     if (!SetTextureFromPath())
         return false;
@@ -135,8 +139,7 @@ bool TexturedEntity::InitializeTextureFromPath() {
 bool TexturedEntity::SetTextureFromPath() {
     // 创建新纹理
     SDL_Texture* newTexture = IMG_LoadTexture(m_game_instance.GetSDLRenderer(), m_path.c_str());
-    if (SDL_LibInitChecker(newTexture != nullptr, "IMG_LoadTexture"))
-        return false;
+    if (newTexture == nullptr) return false;
     // 设置新纹理 + 更新变量
     m_texture.reset(newTexture);
     SDL_GetTextureSize(m_texture.get(),&m_texture_size.x,&m_texture_size.y);

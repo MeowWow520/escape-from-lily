@@ -12,6 +12,8 @@ class Player : public MovableEntity {
         // 玩家名称
         std::string m_player_name;
     public:
+        explicit Player() : MovableEntity("Player") {}
+
         int Initialize() override;
         void HandleEvents(SDL_Event event) override;
         void Update(float dt) override;

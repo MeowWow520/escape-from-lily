@@ -13,7 +13,8 @@
 
 class SceneMain : public Scene {
     public:
-        SceneMain() = default;
+        explicit SceneMain() : Scene("SceneMain") {}
+
         ~SceneMain() override = default;
         int Initialize() override;
         void HandleEvents(SDL_Event event) override;

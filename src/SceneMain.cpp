@@ -17,24 +17,17 @@ int SceneMain::Initialize() {
     // TODO: 使用工厂方法重构
 
     m_camera = new Camera();
-    if (m_camera->Initialize()) {
-        m_return_code = -1;
-        goto to_quit;
-    }
+    if (m_camera->Initialize()) return -1;
     m_camera->SetWorldPos((m_world_size - m_game_instance.GetWindowSize()) / glm::vec2(2));
 
 
     // 初始化背景
     m_current_background = new Background();
     m_current_background->SetPath("assets/images/backgrounds/purple.png");
-    if (m_current_background->Initialize()) {
-        m_return_code = -1;
-        goto to_quit;
-    }
+    if (m_current_background->Initialize()) return -1;
     m_current_background->SetWorldPos(glm::vec2{0,0});
-to_quit:
-    const ssl loc = ssl::current();
-    return EFL_ClassInit(m_return_code, loc);
+
+    return 0;
 }
 
 void SceneMain::HandleEvents(SDL_Event event) {
@@ -51,15 +44,11 @@ void SceneMain::Render() {
 }
 
 int SceneMain::Quit() {
-    if (m_current_background->Quit()) {
-        m_return_code = -1;
-        goto to_quit;
-    }
+    if (m_current_background->Quit()) return -1;
     // 删除相机资源
     delete m_camera;
-to_quit:
-    const ssl loc = ssl::current();
-    return EFL_ClassQuit(Scene::Quit(), loc);
+
+    return 0;
 }
 
 Camera* SceneMain::GetCamera() {

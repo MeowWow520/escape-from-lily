@@ -27,7 +27,9 @@ namespace EFL {
                 file_sink->set_pattern("[%Y-%m-%d %T.%e] [%=7n] [%l] %v");
                 sinks.push_back(file_sink);
             }
-            auto logger = std::make_shared<spdlog::logger>(name, sinks.begin(), sinks.end());
+            const auto logger = std::make_shared<spdlog::logger>(name, sinks.begin(), sinks.end());
+            logger->set_level(spdlog::level::trace);
+            spdlog::register_logger(logger);
         }
     }
 
@@ -42,12 +44,18 @@ namespace EFL {
         return "unknow";
     }
     void RegisterLogCategory(const LogConfig& config) {
-        CreateLogger("core", config);
-        CreateLogger("entity", config);
-        CreateLogger("input", config);
-        CreateLogger("scene", config);
-        CreateLogger("renderer", config);
+        CreateLogger("Core", config);
+        CreateLogger("Entity", config);
+        CreateLogger("Input", config);
+        CreateLogger("Scene", config);
+        CreateLogger("Renderer", config);
         spdlog::info("Log system initialized, file: {}", config.file_path);
     }
-    void QuitLogger() { spdlog::drop_all(); }
+    void QuitLogger() {
+        spdlog::drop("Core");
+        spdlog::drop("Entity");
+        spdlog::drop("Input");
+        spdlog::drop("Scene");
+        spdlog::drop("Renderer");
+    }
 } // Escape from lily

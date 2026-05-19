@@ -8,6 +8,8 @@
 
 
 class SceneTitle : public Scene {
+    public:
+        explicit SceneTitle() : Scene("SceneTitle") {}
 };
 
 

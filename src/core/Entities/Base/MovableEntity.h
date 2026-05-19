@@ -11,14 +11,18 @@
 class MovableEntity : public TexturedEntity {
     protected:
         // 实体的最大速度，默认值为：TBD
-        float m_max_speed{};
+        float m_max_speed{DEFAULT_MAX_SPEED};
         // 实体的加速度，默认值为：TBD。// TODO：待实装
         float m_acceleration{};
         // 实体的运动方向
         glm::vec2 m_vector{};
     public:
-        MovableEntity();
+        explicit MovableEntity(const char* m_entity_name = "MovableEntity")
+            : TexturedEntity(m_entity_name) { }
+
         ~MovableEntity() override = default;
+
+        int Initialize() override;
         // getter 和 setter
         [[nodiscard]] float GetMaxSpeed() const;
         float SetMaxSpeed(float newmaxspeed);

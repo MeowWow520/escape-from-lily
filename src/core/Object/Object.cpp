@@ -7,9 +7,8 @@
 #include "../Logger/Log.h"
 
 
-Object::Object(Game &m_game_instance, const char *m_entity_name) noexcept
-    : m_game_instance(m_game_instance),
-      m_entity_name(m_entity_name)
+Object::Object(const char *m_entity_name) noexcept
+    : m_entity_name(m_entity_name)
 {
     EFL_LOG_ENTITY_CREATED(m_entity_name);
 }

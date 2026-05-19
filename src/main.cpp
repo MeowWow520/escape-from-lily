@@ -9,8 +9,6 @@
 
 int main() {
     Game& game_instance = Game::GetInstance();
-    if (const ssl loc = ssl::current();
-        EFL_ClassInit(game_instance.Initialize(), loc) != 0)
-        return -1;
+    if (game_instance.Initialize() != 0) return -1;
     return game_instance.Running();
 }

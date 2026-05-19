@@ -11,7 +11,9 @@ class ObjectWorld : public Object {
     protected:
         glm::vec2 m_world_pos{};
     public:
-        ObjectWorld() = default;
+        explicit ObjectWorld(const char* m_entity_name = "ObjectWorld")
+            : Object(m_entity_name) {}
+
         ~ObjectWorld() override = default;
 
         /**

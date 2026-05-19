@@ -23,8 +23,8 @@ int Camera::Initialize() {
 
     SDL_GetRectIntersectionFloat(&window,&m_camera_active_range, &hitbox_size);
     m_entity_hitbox = {hitbox_size.w, hitbox_size.h};
-    const ssl loc = ssl::current();
-    return EFL_ClassInit(m_return_code, loc);
+
+    return 0;
 }
 
 void Camera::Update(const float dt) {

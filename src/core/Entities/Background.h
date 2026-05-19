@@ -9,6 +9,9 @@
 
 class Background : public TexturedEntity {
     public:
+        explicit Background(const char* m_entity_name = "Background")
+            : TexturedEntity(m_entity_name) {}
+
         /**
          * 初始化 Background，应初始化背景文件的资源地址，调整不可见为可见，设置大小
          *
