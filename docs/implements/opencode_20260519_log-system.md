@@ -11,9 +11,10 @@
 | Sink 目标 | **控制台 + 文件 双 sink** | 开发期看控制台，调试期查日志文件；spdlog 的 `stdout_color_sink_mt` + `basic_file_sink_mt` 开箱即用 |
 | 输出格式 | **spdlog pattern `%^[%T.%e] [%=7n] [%l]%$ %v`** | 替代手动 ANSI 码拼接；`%^...%$` 自动按级别着色；`%=7n` 对齐 logger 名 |
 | 实体生命周期 | **方案 A：Object 构造函数接收 entity_name 参数** | 派生类构造时即可获知类名，无需虚函数 / vtable；派生类仅需在构造函数初始值列表中传入一个字面量 |
-| 便捷宏 | **`EFL_LOG_INFO(cat, ...)` / `EFL_LOG_ERROR(cat, ...)`** | 替换裸 `spdlog::info()`，一行调用带分类，降低迁移摩擦 |
-| EFL_ClassInit 归属 | **归入 `Entity` 类别** | 这两个宏报告的是"实体初始化 / 退出"，语义上属于 entity 生命周期，不算 core |
-| 文件输出路径 | **`logs/escape-from-lily.log`** | 位于工作目录，方便 `.gitignore` 忽略 |
+| 便捷宏 | **`EFL_LOG_INFO(cat, ...)` / `EFL_LOG_ERROR(cat, ...)`** | 一行调用带分类；项目所有新代码统一使用；旧代码的裸 `spdlog::` 调用保留不动 |
+| Def.h 处理 | **完全不修改** | `EFL_ClassInit` / `SDL_LibInitChecker` / `CLR_*` 等保持原样，新旧双轨并行，互不干扰 |
+| 日志配置 | **`LogConfig` 结构体传入 `InitLoggers`** | 文件路径、截断/追加、控制台/文件开关均可自定义，`{}` 为默认值 |
+| 文件输出路径 | **默认 `logs/escape-from-lily.log`，可自定义** | 位于工作目录，方便 `.gitignore` 忽略；调用方可传入任意路径 |
 
 ## 分类体系
 
@@ -28,6 +29,7 @@
 ### 分类枚举 (`LogCategory`)
 
 ```cpp
+/// 日志分类，对应一个命名 logger
 enum class LogCategory {
     Core,
     Entity,
@@ -39,13 +41,36 @@ enum class LogCategory {
 
 辅助函数 `GetCategoryName(LogCategory)` 返回 logger 的实际名称字符串（`"core"`, `"entity"` 等）。
 
+## 与 Def.h 共存
+
+新 Logger 和旧 Def.h 日志体系**双轨并行**，互不干扰：
+
+- Def.h 中的 `SDL_LibInitChecker` / `EFL_ClassInit` / `EFL_ClassQuit` 继续使用裸 `spdlog::info/error` + ANSI 颜色码（`CLR_BLUE` 等），照常输出到控制台
+- `Game.cpp` / `KeyboardInput.cpp` 中的裸 `spdlog::` 调用**保留不动**
+- 新 Logger 通过 `spdlog::register_logger` 注册独立的 `spdlog::logger` 实例，拥有自己的 sink（控制台彩色 + 文件），格式与 Def.h 风格不同
+- 新代码使用 `EFL_LOG_INFO(cat, ...)` 宏，按分类输出到对应的 named logger
+
+两条线路输出到同一个控制台，但格式独立，泾渭分明：
+
+```
+# Def.h 旧风格（保留不变）
+[info] [core\Game.cpp:51] Game::Initialize initialization successfully
+
+# 新 Logger 风格（新增）
+[14:22:35.123] [ entity] [info] Background object constructed
+```
+
 ## 新增文件设计
 
 ### `src/core/Log.h` — 声明层
 
 ```cpp
 #pragma once
+#ifndef ESCAPE_FROM_LILY_LOG_H
+#define ESCAPE_FROM_LILY_LOG_H
+
 #include <spdlog/spdlog.h>
+#include <string>
 
 namespace efl {   // escape-from-lily
 
@@ -58,11 +83,19 @@ enum class LogCategory {
     Render
 };
 
+/// 日志系统配置
+struct LogConfig {
+    std::string file_path = "logs/escape-from-lily.log";   ///< 日志文件路径
+    bool truncate_file = true;                              ///< true = 每次启动截断旧日志，false = 追加
+    bool enable_console = true;                             ///< 是否输出到控制台
+    bool enable_file = true;                                ///< 是否输出到文件
+};
+
 /// 获取分类名称（即 logger 的注册名）
 const char* GetCategoryName(LogCategory cat) noexcept;
 
 /// 注册所有 logger 及其 sink（控制台 + 文件）
-void InitLoggers();
+void InitLoggers(const LogConfig& config = {});
 
 /// 注销所有 logger、flush 日志
 void ShutdownLoggers();
@@ -84,6 +117,8 @@ void ShutdownLoggers();
 /// 便捷宏：实体被析构（在 Object 析构函数中调用）
 #define EFL_LOG_ENTITY_DESTROYED(name) \
     EFL_LOG_INFO(efl::LogCategory::Entity, "{} object destroyed", name)
+
+#endif // ESCAPE_FROM_LILY_LOG_H
 ```
 
 ### `src/core/Log.cpp` — 实现层
@@ -96,20 +131,27 @@ void ShutdownLoggers();
 namespace efl {
 namespace {
 
-/// 创建一个命名 logger，同时挂载控制台 + 文件 sink
-void CreateLogger(const char* name) {
-    auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
-    console_sink->set_pattern("%^[%T.%e] [%=7n] [%l]%$ %v");
+/// 根据配置创建一个命名 logger
+void CreateLogger(const char* name, const LogConfig& config) {
+    spdlog::sinks_init_list sinks;
+    std::shared_ptr<spdlog::sinks::stdout_color_sink_mt> console_sink;
+    std::shared_ptr<spdlog::sinks::basic_file_sink_mt> file_sink;
 
-    auto file_sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>(
-        "logs/escape-from-lily.log", true   // true = 每次启动截断旧日志
-    );
-    file_sink->set_pattern("[%Y-%m-%d %T.%e] [%=7n] [%l] %v");
+    if (config.enable_console) {
+        console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
+        console_sink->set_pattern("%^[%T.%e] [%=7n] [%l]%$ %v");
+        sinks.push_back(console_sink);
+    }
 
-    auto logger = std::make_shared<spdlog::logger>(
-        name,
-        spdlog::sinks_init_list{console_sink, file_sink}
-    );
+    if (config.enable_file) {
+        file_sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>(
+            config.file_path, config.truncate_file
+        );
+        file_sink->set_pattern("[%Y-%m-%d %T.%e] [%=7n] [%l] %v");
+        sinks.push_back(file_sink);
+    }
+
+    auto logger = std::make_shared<spdlog::logger>(name, sinks);
     logger->set_level(spdlog::level::trace);
     spdlog::register_logger(logger);
 }
@@ -127,13 +169,13 @@ const char* GetCategoryName(const LogCategory cat) noexcept {
     return "unknown";
 }
 
-void InitLoggers() {
-    CreateLogger("core");
-    CreateLogger("entity");
-    CreateLogger("input");
-    CreateLogger("scene");
-    CreateLogger("render");
-    spdlog::info("Log system initialized");
+void InitLoggers(const LogConfig& config) {
+    CreateLogger("core",   config);
+    CreateLogger("entity", config);
+    CreateLogger("input",  config);
+    CreateLogger("scene",  config);
+    CreateLogger("render", config);
+    spdlog::info("Log system initialized, file: {}", config.file_path);
 }
 
 void ShutdownLoggers() {
@@ -145,9 +187,9 @@ void ShutdownLoggers() {
 
 **关键注释：**
 
+- `LogConfig` 支持指定日志文件路径（`file_path`）、截断或追加（`truncate_file`）、控制台和文件独立开关（`enable_console` / `enable_file`），默认 `{}` 即所有开关开启、路径为 `logs/escape-from-lily.log`、截断模式
 - 控制台 sink 使用 `%^...%$` 包裹，spdlog 根据级别自动着色（info=白、warn=黄、error=红），不再需要手动拼接 `CLR_RED` 等 ANSI 码
 - 文件 sink 不使用颜色码，但保留完整时间戳（包含日期）
-- `basic_file_sink_mt` 第二个参数 `true` 表示每次启动截断旧日志
 - 所有 logger 在 `Game::Initialize()` 中通过 `efl::InitLoggers()` 统一注册，在 `Game::Quit()` 中 `efl::ShutdownLoggers()` 销毁
 
 ## Object 改造：构造函数接收实体名称
@@ -198,7 +240,7 @@ public:
 
 protected:
     Game& m_game_instance;
-    const char* m_entity_name;   // 实体名称，用于日志
+    const char* m_entity_name;   ///< 实体名称，用于日志
     int m_return_code{};
 };
 ```
@@ -253,9 +295,9 @@ explicit TexturedEntity(Game& game_instance) noexcept;
 explicit TexturedEntity(Game& game_instance, const char* entity_name = "TexturedEntity") noexcept;
 ```
 
-同理 `MovableEntity`、`Scene` 等中间基类也需要加 `entity_name` 默认参数。
+同理 `MovableEntity`、`Scene`、`ObjectWorld`、`ObjectScreen` 等中间基类也需要加 `entity_name` 默认参数并转发给父类。
 
-> **注意**：`KeyboardInput` 和 `Scene` 不属于 `Object` 继承链，不受此改动影响。它们的日志直接通过 `EFL_LOG_INFO` 指定 category 输出。
+> **注意**：`KeyboardInput` 和 `Input` 不继承 `Object`，不受此改动影响。
 
 ### 构造 / 析构日志输出效果
 
@@ -263,164 +305,13 @@ explicit TexturedEntity(Game& game_instance, const char* entity_name = "Textured
 [14:22:35.123] [ entity] [info] Camera object constructed
 [14:22:35.140] [ entity] [info] Background object constructed
 [14:22:35.156] [ entity] [info] SceneMain object constructed
-[14:22:35.170] [ entity] [info] KeyboardInput object constructed
 ...
 [14:23:01.892] [ entity] [info] Background object destroyed
-[14:23:01.895] [ entity] [info] KeyboardInput object destroyed
-[14:23:01.897] [ entity] [info] Camera object destroyed
+[14:23:01.895] [ entity] [info] Camera object destroyed
+[14:23:01.897] [ entity] [info] SceneMain object destroyed
 ```
 
 > 输出格式 `[%=7n]` 保证 `[ entity]` 字段宽度 7，与 `[ core  ]`、`[ input ]`、`[ scene ]`、`[render ]` 对齐。
-
-## 现有代码迁移对照
-
-### `Def.h` 改动
-
-**include 行：** `#include <spdlog/spdlog.h>` → `#include "Log.h"`
-
-**`SDL_LibInitChecker` — 改前：**
-
-```cpp
-inline bool SDL_LibInitChecker(const bool flag, std::string name) {
-    if (!flag) {
-        spdlog::error("{} initialization failed", name);
-        return true;
-    } spdlog::info("{} initialization successfully", name);
-    return false;
-}
-```
-
-**改后：**
-
-```cpp
-inline bool SDL_LibInitChecker(const bool flag, std::string name) {
-    if (!flag) {
-        EFL_LOG_ERROR(efl::LogCategory::Core, "{} initialization failed", name);
-        return true;
-    }
-    EFL_LOG_INFO(efl::LogCategory::Core, "{} initialization successfully", name);
-    return false;
-}
-```
-
-**`EFL_ClassInit` — 改前：**
-
-```cpp
-inline int EFL_ClassInit(const int flag, const ssl &location) {
-    const char* c_file_name = std::strstr(location.file_name(), "src") + 4;
-    const char* c_function_name = location.function_name() + 12;
-    if (flag != 0) {
-        spdlog::error("{}[{}:{}] {}{}{} initialization failed",
-            CLR_BLUE, c_file_name, location.line(), CLR_YELLOW, c_function_name, CLR_RESET);
-        return flag;
-    }
-    spdlog::info("{}[{}:{}] {}{}{} initialization successfully",
-        CLR_BLUE, c_file_name, location.line(), CLR_YELLOW, c_function_name, CLR_RESET);
-    return 0;
-}
-```
-
-**改后：**
-
-```cpp
-inline int EFL_ClassInit(const int flag, const ssl &location) {
-    const char* c_file_name = std::strstr(location.file_name(), "src") + 4;
-    const char* c_function_name = location.function_name() + 12;
-    if (flag != 0) {
-        EFL_LOG_ERROR(efl::LogCategory::Entity, "[{}:{}] {} initialization failed",
-            c_file_name, location.line(), c_function_name);
-        return flag;
-    }
-    EFL_LOG_INFO(efl::LogCategory::Entity, "[{}:{}] {} initialization successfully",
-        c_file_name, location.line(), c_function_name);
-    return 0;
-}
-```
-
-**`EFL_ClassQuit` — 同理迁移**
-
-### `Game.cpp` 裸 spdlog 调用
-
-**改前：**
-
-```cpp
-spdlog::error("{} failed to create window and renderer: {}", m_title.c_str(), SDL_GetError());  // line 48
-spdlog::info("{} successfully to create window and renderer", m_title.c_str());                 // line 51
-spdlog::info("Receive SDL_EVENT_QUIT events, main loop quitting");                              // line 104
-```
-
-**改后：**
-
-```cpp
-EFL_LOG_ERROR(efl::LogCategory::Core, "{} failed to create window and renderer: {}", m_title, SDL_GetError());
-EFL_LOG_INFO(efl::LogCategory::Core, "{} successfully created window and renderer", m_title);
-EFL_LOG_INFO(efl::LogCategory::Core, "SDL_EVENT_QUIT received, main loop quitting");
-```
-
-### `Game::Initialize()` — 新增 logger 初始化
-
-在函数开头调用 `efl::InitLoggers()`，最早初始化，确保后续所有日志调用时 logger 已就绪。
-
-### `Game::Quit()` — 新增 logger 注销
-
-```cpp
-int Game::Quit() {
-    EFL_LOG_INFO(efl::LogCategory::Core, "Game shutting down");
-    // ... 其余清理 ...
-    efl::ShutdownLoggers();
-    return 0;
-}
-```
-
-`efl::ShutdownLoggers()` 调用 `spdlog::drop_all()` 后，所有 logger 从全局注册表中移除，RAII 析构时会自动 flush 文件 sink。
-
-### `KeyboardInput.cpp` 裸 spdlog 调用
-
-**改前：**
-
-```cpp
-if constexpr (SWITCHER_KEYLOGGING)
-    spdlog::info("SDL Key_{} Down", SDL_GetKeyName(event.key.key));       // line 26
-
-if constexpr (SWITCHER_KEYLOGGING)
-    spdlog::info("SDL Key_{} Up", SDL_GetKeyName(event.key.key));         // line 33
-```
-
-**改后：**
-
-```cpp
-if constexpr (SWITCHER_KEYLOGGING)
-    EFL_LOG_INFO(efl::LogCategory::Input, "Key {} down", SDL_GetKeyName(event.key.key));
-
-if constexpr (SWITCHER_KEYLOGGING)
-    EFL_LOG_INFO(efl::LogCategory::Input, "Key {} up", SDL_GetKeyName(event.key.key));
-```
-
-## 与 Def.h 现状的关系
-
-当前 `Def.h` 中有两套日志"风格"：
-
-1. **`SDL_LibInitChecker`**：使用裸 `spdlog::info/error`，无分类
-2. **`EFL_ClassInit` / `EFL_ClassQuit`**：使用裸 `spdlog::info/error` + ANSI 颜色码拼接
-
-改造后统一改为调用分类宏，颜色由 spdlog pattern 的 `%^...%$` 自动处理。原有的 `CLR_RED` / `CLR_BLUE` / `CLR_YELLOW` 等宏可以从日志中移除调用，但宏定义保留在 `Def.h` 中以备其他用途。
-
-> `SWITCHER_ACCELERATION` / `SWITCHER_KEYLOGGING` / `DEFAULT_MAX_SPEED` 等其他宏不受影响。
-
-## 文件变更清单
-
-| 操作 | 文件 | 说明 |
-|------|------|------|
-| **新增** | `src/core/Log.h` | 日志基础设施头文件 |
-| **新增** | `src/core/Log.cpp` | Logger 注册/注销实现 |
-| **新增** | `src/core/Object.cpp` | Object 析构函数实现（原 header-only → 拆分出 cpp） |
-| **修改** | `src/core/Object.h` | 构造参数 `entity_name`；析构改为非默认 |
-| **修改** | `src/core/Def.h` | `#include` 改为 `Log.h`；`EFL_ClassInit`/`EFL_ClassQuit`/`SDL_LibInitChecker` 内部改用分类宏 |
-| **修改** | `src/core/Game.cpp` | 调用 `InitLoggers()`/`ShutdownLoggers()`；裸 spdlog 调用迁移 |
-| **修改** | `src/core/Input/KeyboardInput.cpp` | 裸 spdlog 调用迁移 |
-| **修改** | `CMakeLists.txt` | 新增 `src/core/Log.cpp`、`src/core/Object.cpp` |
-| **修改** | 各实体 `.h`/`.cpp` | 中间基类加 `entity_name` 默认参数；最终实体传入类名实参 |
-| **修改** | `.gitignore` | 新增 `logs/` 目录 |
 
 ## 构造链 `entity_name` 传递示意图
 
@@ -428,34 +319,90 @@ if constexpr (SWITCHER_KEYLOGGING)
 
 ```
 Background("Background")
-  └─ TexturedEntity(game, "Background")    ← 中间基类，原样转发
-       └─ ObjectScreen(game, "Background")     ← header-only，转发
-            └─ ObjectWorld(game, "Background")     ← header-only，转发
-                 └─ Object(game, "Background")        ← 保存到 m_entity_name，打印构造日志
+  └─ TexturedEntity(game_instance, "Background")   ← 中间基类，原样转发
+       └─ ObjectScreen(game_instance, "Background")    ← header-only，转发
+            └─ ObjectWorld(game_instance, "Background")    ← header-only，转发
+                 └─ Object(game_instance, "Background")        ← 保存到 m_entity_name，打印构造日志
 ```
 
 每个中间基类只需要在构造函数签名中加 `const char* entity_name = "默认名"`，并转发给父类。`explicit` 关键字保留。
 
+## Game 集成
+
+### `Game.cpp` — 新增 logger 初始化与注销
+
+仅新增 2 行调用，其余代码**完全不动**：
+
+```cpp
+int Game::Initialize() {
+    efl::InitLoggers();   // ← 新增：最早初始化，确保后续所有日志调用时 logger 已就绪
+
+    if (SDL_LibInitChecker(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO), "SDL_Init")) {
+        m_return_code = -1;
+        goto to_quit;
+    }
+    // ... 其余初始化完全不动 ...
+to_quit:
+    const ssl loc = ssl::current();
+    return EFL_ClassInit(m_return_code, loc);
+}
+
+int Game::Quit() {
+    EFL_LOG_INFO(efl::LogCategory::Core, "Game shutting down");  // ← 新增
+    // ... 其余清理完全不动 ...
+    efl::ShutdownLoggers();  // ← 新增：flush 并注销所有 logger
+    return 0;
+}
+```
+
+> `efl::InitLoggers()` 不传参时使用默认 `LogConfig{}`（路径 `logs/escape-from-lily.log`，截断模式）。如需自定义，改为 `efl::InitLoggers({.file_path = "logs/my.log", .truncate_file = false})`。
+
+## 文件变更清单
+
+| 操作 | 文件 | 说明 |
+|------|------|------|
+| **新增** | `src/core/Log.h` | `LogConfig` + `LogCategory` + 宏 + 函数声明 |
+| **新增** | `src/core/Log.cpp` | `InitLoggers(config)` / `ShutdownLoggers()` 实现 |
+| **新增** | `src/core/Object.cpp` | Object 构造/析构函数实现（从 header-only 拆出） |
+| **修改** | `src/core/Object.h` | 构造参数加 `entity_name`；析构改为非默认；新增 `m_entity_name` 成员 |
+| **修改** | `src/core/ObjectWorld.h` | 构造函数加 `entity_name` 默认参数并转发给 Object |
+| **修改** | `src/core/ObjectScreen.h` | 同上 |
+| **修改** | `src/core/Entities/Base/TexturedEntity.h` | 同上 |
+| **修改** | `src/core/Entities/Base/MovableEntity.h` | 同上 |
+| **修改** | `src/core/Scene.h` | 同上（Scene 继承 Object） |
+| **修改** | `src/core/Game.cpp` | 新增 2 行：`InitLoggers()` + `ShutdownLoggers()` + 1 行 quit 日志 |
+| **修改** | `src/core/Entities/Background.cpp` | 构造传 `"Background"` |
+| **修改** | `src/core/Entities/Camera.cpp` | 构造传 `"Camera"` |
+| **修改** | `src/core/Entities/Player.cpp` | 构造传 `"Player"` |
+| **修改** | `src/core/Entities/UserInterface.cpp` | 构造传 `"UserInterface"` |
+| **修改** | `src/SceneMain.cpp` | 构造传 `"SceneMain"` |
+| **修改** | `src/SceneTitle.cpp` | 构造传 `"SceneTitle"` |
+| **修改** | `CMakeLists.txt` | 新增 `src/core/Log.cpp`、`src/core/Object.cpp` |
+| **修改** | `.gitignore` | 新增 `logs/` 目录 |
+| **不动** | `src/core/Def.h` | 零改动 |
+| **不动** | `src/core/Input/KeyboardInput.cpp` | 零改动 |
+| **不动** | `src/core/Input/Input.cpp` | 零改动 |
+
 ## 实现步骤
 
-1. 创建 `src/core/Log.h` — 枚举、函数声明、便捷宏
-2. 创建 `src/core/Log.cpp` — `InitLoggers()` / `ShutdownLoggers()` / `GetCategoryName()` 实现
-3. 拆分 `Object.h` → `Object.h` + `Object.cpp`，添加 `entity_name` 参数和析构日志
-4. 修改 `Def.h` — include 迁移、内部宏改用分类日志
-5. 修改 `Game.cpp` — 集成 `InitLoggers` / `ShutdownLoggers`，迁移裸 spdlog 调用
-6. 修改 `KeyboardInput.cpp` — 迁移裸 spdlog 调用
-7. 修改各实体 `.cpp` / `.h` — 构造函数传入 entity_name 实参
-8. 修改 `CMakeLists.txt` — 注册新文件
-9. `.gitignore` 添加 `logs/` 目录
-10. 构建验证
+1. 创建 `src/core/Log.h` — `LogConfig`、`LogCategory` 枚举、便捷宏、函数声明
+2. 创建 `src/core/Log.cpp` — `InitLoggers(config)` / `ShutdownLoggers()` / `GetCategoryName()` 实现
+3. 拆分 `Object.h` → `Object.h` + `Object.cpp`，添加 `entity_name` 参数和构造/析构日志
+4. 修改 `Game.cpp` — `Initialize()` 开头加 `efl::InitLoggers()`；`Quit()` 末尾加 `efl::ShutdownLoggers()`
+5. 修改各中间基类 `.h` — 构造函数加 `entity_name` 默认参数并转发父类
+6. 修改各叶子实体 `.cpp` — 构造函数传入具体实体名
+7. 修改 `CMakeLists.txt` — 注册 `Log.cpp` + `Object.cpp`
+8. `.gitignore` 添加 `logs/` 目录
+9. 构建验证
 
 ## 扩展路线（未来）
 
-- **运行时级别控制**：`GetCategoryName` 返回的 logger 可通过 `spdlog::get("core")->set_level(spdlog::level::warn)` 动态调整输出量
-- **日志轮转**：当前用 `basic_file_sink`，后续可替换为 `rotating_file_sink_mt`（按大小轮转）或 `daily_file_sink_mt`（按日期轮转）
-- **条件编译**：Release 构建中可将 `EFL_LOG_INFO` 映射到空操作，仅保留 `EFL_LOG_ERROR`
+- **运行时级别控制**：通过 `spdlog::get("core")->set_level(spdlog::level::warn)` 动态调整各分类输出量
+- **日志轮转**：当前用 `basic_file_sink`，后续可替换为 `rotating_file_sink_mt`（按大小轮转，如 10MB × 3 文件）或 `daily_file_sink_mt`（按日期轮转）
+- **条件编译**：Release 构建中可将 `EFL_LOG_INFO` 宏映射到空操作，仅保留 `EFL_LOG_ERROR`
 - **结构化日志**：需要时添加 `EFL_LOG_TRACE(cat, ...)` / `EFL_LOG_WARN(cat, ...)` / `EFL_LOG_CRITICAL(cat, ...)` 宏
 - **用户自定义类别**：未来如添加 `[audio]` / `[network]` 模块，只需在 `LogCategory` 枚举和 `InitLoggers()` 中各增一行
+- **多文件输出**：可在 `LogConfig` 中扩展为按分类指定不同文件路径，如 core 写 `core.log`、entity 写 `entity.log`
 
 ## 参考
 
