@@ -5,7 +5,6 @@
 #ifndef ESCAPE_FROM_LILY_DEF_H
 #define ESCAPE_FROM_LILY_DEF_H
 #include <string>
-#include <cmath>
 
 #include <source_location>
 #include <glm/vec2.hpp>
@@ -23,12 +22,6 @@ constexpr bool SWITCHER_KEYLOGGING = false;
 // 实体默认最大加速度
 #define DEFAULT_ACCELERATION 50.0f
 
-#define CLR_RESET  "\033[0m"
-#define CLR_RED    "\033[31m"
-#define CLR_GREEN  "\033[32m"
-#define CLR_YELLOW "\033[33m"
-#define CLR_BLUE   "\033[34m"
-#define CLR_CYAN   "\033[36m"
 /**
  * 将 RGBA 颜色值分开转换为 4 位数值
  *
@@ -43,61 +36,6 @@ constexpr bool SWITCHER_KEYLOGGING = false;
 
 
 #define HEX_COLOR_BACKGROUND 0x0096C7FF
-/**
- * SDL_LibInitChecker 检查 bool 形式的标志是否为真，并为其额外配备 log 功能
- *
- * @param flag SDL 库初始化函数
- * @param name SDL 库初始化函数的名字
- * @return 初始化成功返回 false，失败返回 true
- */
-inline bool SDL_LibInitChecker(const bool flag, std::string name) {
-    if (!flag) {
-        spdlog::error("{} initialization failed", name);
-        return true;
-    } spdlog::info("{} initialization successfully", name);
-    return false;
-}
-
-using ssl = std::source_location;
-
-/**
- * EFL_ClassInit 为类内的初始化返回值进行 log 输出。
- *
- * @param flag 返回值
- * @param location 所在源码的定位
- * @return flag
- */
-inline int EFL_ClassInit(const int flag, const ssl &location) {
-    const char* c_file_name = std::strstr(location.file_name(), "src") + 4;
-    const char* c_function_name = location.function_name() + 12;
-    if (flag != 0) {
-        spdlog::error("{}[{}:{}] {}{}{} initialization failed",
-            CLR_BLUE, c_file_name, location.line(), CLR_YELLOW, c_function_name, CLR_RESET);
-        return flag;
-    }
-    spdlog::info("{}[{}:{}] {}{}{} initialization successfully",
-        CLR_BLUE, c_file_name, location.line(), CLR_YELLOW, c_function_name, CLR_RESET);
-    return 0;
-}
-/**
- * EFL_ClassQuit 为类内的清理返回值进行 log 输出。
- *
- * @param flag 返回值
- * @param location 所在源码的定位
- * @return flag
- */
-inline int EFL_ClassQuit(const int flag,  const ssl &location) {
-    const char* c_file_name = std::strstr(location.file_name(), "src") + 4;
-    const char* c_function_name = location.function_name() + 12;
-    if (flag != 0) {
-        spdlog::error("{}[{}:{}] {}{}{} quit failed",
-            CLR_BLUE, c_file_name, location.line(), CLR_YELLOW, c_function_name, CLR_RESET);
-        return flag;
-    }
-    spdlog::info("{}[{}:{}] {}{}{} quit successfully",
-        CLR_BLUE, c_file_name, location.line(), CLR_YELLOW, c_function_name, CLR_RESET);
-    return 0;
-}
 
 /**
  * EFL_Vec2AddToRect 将 a 和 b 合成为一个 SDL_Rect c。c 的前两个分量为 a 的值，后两个为 b 的值。
