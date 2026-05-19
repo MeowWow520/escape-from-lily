@@ -9,9 +9,9 @@
 |------|------|------|
 | 工厂模式 | **简单工厂（参数化创建）** | 实体类型有限（~4 种），无需 GoF Factory Method 的 Creator 继承体系 |
 | 创建流程 | **两阶段：构造 → Initialize** | 遵循项目现有生命周期惯例（见 AGENTS.md / Object.h） |
-| 错误处理 | **返回 nullptr + 清理已分配资源** | 与 Initialize() 返回 0/非0 一致；调用方检查 nullptr |
+| 错误处理 | **返回 nullptr（空 unique_ptr）** | 与 Initialize() 返回 0/非0 一致；调用方检查 `.get()` 或 `operator bool` |
 | 参数传递 | **按类型定义参数结构体** | 每个实体参数不同（Background 需要 path，Player 需要 name），结构体比零散参数更清晰 |
-| 所有权 | **返回 raw pointer，调用方负责 delete** | 与项目现有 new/delete 模式一致（见 SceneMain.cpp） |
+| 所有权 | **返回 `std::unique_ptr<Object>`** | 编译期强制所有权，消除 `delete` 遗漏；项目已有 `TexturePtr` 先例（`unique_ptr + SDL_DestroyTexture` deleter） |
 
 ## 模式概述
 
@@ -23,13 +23,15 @@
   ▼
 EntityFactory::Create(EntityType, Params)
   │
-  ├─ case Player:    → new Player()   → SetName() → Initialize()
-  ├─ case Background → new Background() → SetPath() → Initialize()
-  ├─ case Camera:    → new Camera()   → Initialize()
-  └─ case UI:        → new UserInterface() → Initialize()
+  ├─ case Player:    → make_unique<Player>()   → SetName() → Initialize()
+  ├─ case Background → make_unique<Background>() → SetPath() → Initialize()
+  ├─ case Camera:    → make_unique<Camera>()   → Initialize()
+  └─ case UI:        → make_unique<UserInterface>() → Initialize()
 ```
 
 对比当前 `SceneMain::Initialize()` 中的做法（`new` → 手动调 setter → `Initialize` → 检查返回值 → `goto to_quit`），工厂方法将这一段重复模板内聚，减少出错和代码冗余。
+
+工厂返回 `unique_ptr` 进一步消除裸指针：构造失败时 `unique_ptr` 自动析构，无需手动 `delete`；销毁时 `unique_ptr.reset()` 一步到位，不会漏删。
 
 ## 实体类型枚举
 
@@ -46,7 +48,7 @@ enum class EntityType : uint8_t {
 
 ## 参数结构体
 
-每种实体有自己的参数结构体。工厂通过 `std::variant` 或 `void*` 多态传参——本设计推荐 `std::variant`，类型安全。
+每种实体有自己的参数结构体。工厂通过 `std::variant` 多态传参，类型安全。
 
 ```cpp
 /// Player 创建参数
@@ -82,13 +84,23 @@ using EntityParams = std::variant<
 >;
 ```
 
+## 指针类型别名
+
+```cpp
+/// 实体指针：unique_ptr<Object>（无自定义 deleter，销毁前需手动调 Quit()）
+template <typename T = Object>
+using EntityPtr = std::unique_ptr<T>;
+```
+
+> 注意：不做自定义 deleter（自动 `Quit() + delete`），因为项目需要检查 `Quit()` 的返回值（`goto to_quit` + `EFL_ClassQuit`）。销毁时调用方先显式 `Quit()` 检查返回值，再 `reset()`。
+
 ## 工厂类设计
 
 ### 职责
 
 - 接收 `EntityType` + `EntityParams`，分配对应的实体对象
 - 根据参数结构体设置实体属性（world_pos、texture_path 等）
-- 调用 `Initialize()`，失败时自动清理并返回 `nullptr`
+- 调用 `Initialize()`，失败时返回空 `unique_ptr`（对象自动析构）
 - 记录创建过程的 spdlog 日志
 
 ### API
@@ -103,21 +115,21 @@ public:
     EntityFactory& operator=(const EntityFactory&) = delete;
 
     /**
-     * 创建实体：分配内存 → 设置属性 → Initialize() → 返回实体指针
+     * 创建实体：分配内存 → 设置属性 → Initialize() → 返回 EntityPtr
      *
      * @param type  实体类型
-     * @param params 创建参数（std::variant，类型不匹配时返回 nullptr）
-     * @return 创建成功返回实体指针（调用方负责 delete），失败返回 nullptr
+     * @param params 创建参数（std::variant，类型不匹配时返回空 EntityPtr）
+     * @return 创建成功返回 unique_ptr<Object>，失败返回 nullptr
      */
-    [[nodiscard]] Object* Create(EntityType type, const EntityParams& params) const;
+    [[nodiscard]] EntityPtr<Object> Create(EntityType type, const EntityParams& params) const;
 };
 ```
 
 ### Create() 实现骨架
 
 ```cpp
-Object* EntityFactory::Create(const EntityType type, const EntityParams& params) const {
-    Object* entity = nullptr;
+EntityPtr<Object> EntityFactory::Create(const EntityType type, const EntityParams& params) const {
+    EntityPtr<Object> entity;
 
     switch (type) {
         case EntityType::Player: {
@@ -127,11 +139,11 @@ Object* EntityFactory::Create(const EntityType type, const EntityParams& params)
             }
             const auto& p = std::get<PlayerParams>(params);
 
-            auto* player = new Player();
+            auto player = std::make_unique<Player>();
             // player->SetName(p.name);   // TODO: Player 类实现 SetName 后启用
             player->SetWorldPos(p.world_pos);
 
-            entity = player;
+            entity = std::move(player);
             break;
         }
 
@@ -142,11 +154,11 @@ Object* EntityFactory::Create(const EntityType type, const EntityParams& params)
             }
             const auto& p = std::get<BackgroundParams>(params);
 
-            auto* bg = new Background();
+            auto bg = std::make_unique<Background>();
             bg->SetPath(p.texture_path);
             bg->SetWorldPos(p.world_pos);
 
-            entity = bg;
+            entity = std::move(bg);
             break;
         }
 
@@ -157,10 +169,10 @@ Object* EntityFactory::Create(const EntityType type, const EntityParams& params)
             }
             const auto& p = std::get<CameraParams>(params);
 
-            auto* cam = new Camera();
+            auto cam = std::make_unique<Camera>();
             cam->SetWorldPos(p.world_pos);
 
-            entity = cam;
+            entity = std::move(cam);
             break;
         }
 
@@ -171,11 +183,11 @@ Object* EntityFactory::Create(const EntityType type, const EntityParams& params)
             }
             const auto& p = std::get<UIParams>(params);
 
-            auto* ui = new UserInterface();
+            auto ui = std::make_unique<UserInterface>();
             ui->SetPath(p.texture_path);
             ui->SetScreenPos(p.screen_pos);
 
-            entity = ui;
+            entity = std::move(ui);
             break;
         }
 
@@ -184,10 +196,9 @@ Object* EntityFactory::Create(const EntityType type, const EntityParams& params)
             return nullptr;
     }
 
-    // 统一初始化
+    // 统一初始化 —— 失败时 unique_ptr 自动析构，无需手动 delete
     if (entity->Initialize() != 0) {
-        spdlog::error("[EntityFactory] 实体 Initialize() 失败，已清理");
-        delete entity;
+        spdlog::error("[EntityFactory] 实体 Initialize() 失败，已自动清理");
         return nullptr;
     }
 
@@ -196,27 +207,33 @@ Object* EntityFactory::Create(const EntityType type, const EntityParams& params)
 }
 ```
 
+> 注意：`Initialize()` 失败时直接 `return nullptr`，`entity` 作为局部 `unique_ptr` 离开作用域自动调用析构函数（已构造的对象成员会正常销毁）。**不需要**像裸指针版那样写 `delete entity`。
+
 ### 便捷方法（可选）
 
-对于高频使用的实体类型，可以添加语义化的便捷包装：
+便捷方法返回具体类型的 `unique_ptr`，调用方无需 `static_cast`：
 
 ```cpp
 /// 快捷创建 Background
-[[nodiscard]] Background* CreateBackground(const std::string& path, glm::vec2 pos) {
-    return static_cast<Background*>(Create(
-        EntityType::Background,
-        BackgroundParams{path, pos}
-    ));
+[[nodiscard]] EntityPtr<Background> CreateBackground(const std::string& path, glm::vec2 pos) {
+    auto obj = Create(EntityType::Background, BackgroundParams{path, pos});
+    return EntityPtr<Background>(static_cast<Background*>(obj.release()));
 }
 
 /// 快捷创建 Camera
-[[nodiscard]] Camera* CreateCamera(glm::vec2 pos) {
-    return static_cast<Camera*>(Create(
-        EntityType::Camera,
-        CameraParams{pos}
-    ));
+[[nodiscard]] EntityPtr<Camera> CreateCamera(glm::vec2 pos) {
+    auto obj = Create(EntityType::Camera, CameraParams{pos});
+    return EntityPtr<Camera>(static_cast<Camera*>(obj.release()));
+}
+
+/// 快捷创建 Player
+[[nodiscard]] EntityPtr<Player> CreatePlayer(const std::string& name, glm::vec2 pos) {
+    auto obj = Create(EntityType::Player, PlayerParams{name, pos});
+    return EntityPtr<Player>(static_cast<Player*>(obj.release()));
 }
 ```
+
+`obj.release()` 交出所有权后转为具体类型的 `unique_ptr`，零开销安全转换。
 
 ## SceneMain 改造对比
 
@@ -249,6 +266,19 @@ to_quit:
 
 ### 改造后
 
+**SceneMain.h 成员变更：**
+
+```cpp
+// 裸指针 → unique_ptr
+Camera* m_camera{};                          // 改造前
+EntityPtr<Camera> m_camera;                  // 改造后
+
+Background* m_current_background{};          // 改造前
+EntityPtr<Background> m_current_background;  // 改造后
+```
+
+**Initialize()：**
+
 ```cpp
 int SceneMain::Initialize() {
     m_world_scale = glm::vec2{3, 3};
@@ -275,10 +305,42 @@ to_quit:
 }
 ```
 
+**Quit()：**
+
+```cpp
+int SceneMain::Quit() {
+    // Background —— 先 Quit() 检查返回值，再 reset() 释放
+    if (m_current_background) {
+        if (m_current_background->Quit()) {
+            m_return_code = -1;
+            goto to_quit_early;
+        }
+        m_current_background.reset();
+    }
+
+    // Camera
+    if (m_camera) {
+        if (m_camera->Quit()) {
+            m_return_code = -1;
+            goto to_quit_early;
+        }
+        m_camera.reset();
+    }
+
+to_quit_early:
+    const ssl loc = ssl::current();
+    return EFL_ClassQuit(Scene::Quit(), loc);
+}
+```
+
+> Note: `goto to_quit_early` 保证 `Quit()` 失败时能提前返回错误码。此时尚未 `reset()` 的 `unique_ptr` 在 `Quit()` 返回前仍有效，离开作用域后自动析构（但对应的 SDL 资源可能处于半清理状态——建议 `Quit()` 失败后不再继续使用该实体）。
+
 主要变化：
 - `new` + `Initialize()` 两步合一，嵌套层级减少
-- 错误检查统一为 `if (!ptr)` 判空
+- 错误检查统一为 `if (!ptr)` 判空（`unique_ptr` 支持 `operator bool`）
 - setter 调用内聚到工厂内部
+- `Quit()` 中 `reset()` 自动 `delete`，不再需要写 `delete m_camera`
+- `unique_ptr` 持有期间访问成员方式不变（`m_camera->Update(dt)` 照常）
 
 ## 类的存放与注册
 
@@ -296,32 +358,45 @@ src/core/
 
 ### SceneMain 集成
 
-**SceneMain.h 新增成员：**
+**SceneMain.h 修改：**
 
 ```cpp
 #include "core/EntityFactory.h"
 // ...
 class SceneMain : public Scene {
-private:
-    EntityFactory m_factory;    // 简单工厂实例
+public:
     // ...
+private:
+    EntityFactory m_factory;
+    EntityPtr<Background> m_current_background;  // 原 Background*
+    EntityPtr<Camera> m_camera;                  // 原 Camera*
 };
+```
+
+**GetCamera() 适配：**
+
+由于 `m_camera` 现在是 `unique_ptr<Camera>`，`GetCamera()` 仍可返回裸指针（Scene 拥有 Camera 所有权，返回裸引用指针不转移所有权）：
+
+```cpp
+Camera* SceneMain::GetCamera() {
+    return m_camera.get();   // .get() 返回裸指针，不转移所有权
+}
 ```
 
 ## 实现步骤
 
-1. 创建 `src/core/EntityFactory.h` — 枚举、参数结构体、`EntityParams` variant、`EntityFactory` 类声明
-2. 创建 `src/core/EntityFactory.cpp` — `Create()` 分发实现
+1. 创建 `src/core/EntityFactory.h` — 枚举、参数结构体、`EntityPtr` 别名、`EntityParams` variant、`EntityFactory` 类声明
+2. 创建 `src/core/EntityFactory.cpp` — `Create()` 分发实现（使用 `std::make_unique`）
 3. 将 `EntityFactory.cpp` 加入 `CMakeLists.txt`
-4. 修改 `src/SceneMain.h` — 添加 `#include "core/EntityFactory.h"` 和 `EntityFactory m_factory` 成员
-5. 修改 `src/SceneMain.cpp` — `Initialize()` 改为工厂调用，`Quit()` 无需改动（`delete` 照旧）
+4. 修改 `src/SceneMain.h` — 添加 `#include`，`m_current_background` / `m_camera` 改为 `EntityPtr<T>`，新增 `EntityFactory m_factory` 成员
+5. 修改 `src/SceneMain.cpp` — `Initialize()` 改为工厂调用；`Quit()` 改为 `Quit()` 检查 + `reset()`；`GetCamera()` 改为 `.get()`
 6. 构建验证
 
 ## 扩展路线（未来）
 
 - **Registry 注册表** — 不再 hard-code `switch-case`，每种实体在工厂中注册一个 lambda/函数指针，新增实体只需一行注册调用，无需修改工厂源码
 - **原型模式** — 工厂持有每种实体的"原型对象"，`Create()` 通过 clone 产生新实例，适合需要大量同构实体（如子弹、粒子）的场景
-- **对象池** — 工厂不 delete 而是回收实体到池中，`Create()` 优先复用闲置对象，适合频繁创建/销毁的实体
+- **对象池** — 工厂不销毁而是回收实体到池中，`Create()` 优先复用闲置对象，适合频繁创建/销毁的实体
 - **配置驱动** — 从 JSON/TOML 读取实体类型和参数，实现数据驱动的关卡加载
 
 ## 参考
@@ -330,3 +405,4 @@ private:
 - 生命周期惯例：构造 → `Initialize()` → `Quit()` → 析构（见 `Object.h`）
 - 错误处理模式：`goto to_quit` + `EFL_ClassInit` / `EFL_ClassQuit`（见 `Def.h` 和 `SceneMain.cpp`）
 - `SceneMain.cpp:17` 处已有 `// TODO: 使用工厂方法重构` 标记
+- 项目已有智能指针先例：`TexturedEntity::TexturePtr` = `std::unique_ptr<SDL_Texture, decltype(&SDL_DestroyTexture)>`
