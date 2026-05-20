@@ -24,7 +24,7 @@ enum class EntityType : uint8_t {
 struct PlayerParams {
     std::string name;
     std::string texture_path;
-    glm::vec2 position;
+    glm::vec2 world_pos;
 };
 
 struct CameraParams {

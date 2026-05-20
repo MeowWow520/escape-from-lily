@@ -15,9 +15,8 @@ int SceneMain::Initialize() {
     // m_player_position = m_camera_pos + m_game_instance.GetWindowSize() / glm::vec2(2);
 
     // TODO: 使用工厂方法重构
-
-    m_camera = new Camera();
-    EFL_CHECK(LogCategory::Entity, !m_camera->Initialize(), "Camera Initialize()");
+    CameraParams camera = {{0,0}};
+    m_camera = m_entity_factory->Create(EntityType::Camera, camera);
     m_camera->SetWorldPos((m_world_size - m_game_instance.GetWindowSize()) / glm::vec2(2));
 
 

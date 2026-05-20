@@ -3,3 +3,8 @@
 //
 
 #include "Player.h"
+
+std::string Player::SetName(std::string name) {
+    m_player_name = name;
+    return name;
+}
