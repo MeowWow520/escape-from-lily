@@ -21,13 +21,11 @@ void Background::Update(float dt) {
 
 void Background::Render() {
     const SDL_FRect destination = EFL_Vec2AddToRectFloat(m_screen_pos, m_game_instance.GetCurrentScene()->GetWorldSize());
-    SDL_RenderTexture(m_game_instance.GetSDLRenderer(), m_texture.get(), nullptr, &destination);
+    SDL_RenderTexture(m_game_instance.GetSDLRenderer(), m_texture, nullptr, &destination);
 }
 
 int Background::Quit() {
-    if (m_texture != nullptr) {
-        SDL_DestroyTexture(m_texture.get());
-        m_texture.release();
-    }
+    if (m_texture != nullptr)
+        SDL_DestroyTexture(m_texture);
     return 0;
 }

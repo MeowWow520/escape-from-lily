@@ -4,13 +4,16 @@
 
 #ifndef ESCAPE_FROM_LILY_ENTITYTYPES_H
 #define ESCAPE_FROM_LILY_ENTITYTYPES_H
+#include <memory>
 #include <string>
 #include <variant>
 #include <glm/vec2.hpp>
 #include <SDL3/SDL_render.h>
 
+#include "../Object/Object.h"
 
-enum class EntityTypes : uint8_t {
+
+enum class EntityType : uint8_t {
     Player,
     Camera,
     Background,
@@ -30,6 +33,7 @@ struct CameraParams {
 
 struct BackgroundParams {
     std::string texture_path;
+    glm::vec2 world_pos;
 };
 
 struct UserInterfaceParams {
@@ -44,6 +48,18 @@ using EntityParams = std::variant<
     BackgroundParams,
     UserInterfaceParams
 >;
+
+struct EntityDeleter {
+    void operator()(Object* p) const noexcept {
+        if (p) {
+            p->Quit();
+            delete p;
+        }
+    }
+};
+
+template <typename T = Object>
+using EntityPtr = std::unique_ptr<T, EntityDeleter>;
 
 
 

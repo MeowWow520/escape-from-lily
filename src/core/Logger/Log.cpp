@@ -41,6 +41,7 @@ namespace EFL {
             case LogCategory::Input:    return "Input";
             case LogCategory::Scene:    return "Scene";
             case LogCategory::Renderer: return "Renderer";
+            case LogCategory::Factory:  return "Factory";
         }
         return "unknow";
     }
@@ -71,10 +72,12 @@ namespace EFL {
         spdlog::get("Input")->flush();
         spdlog::get("Scene")->flush();
         spdlog::get("Renderer")->flush();
+        spdlog::get("Factory")->flush();
         spdlog::drop("Core");
         spdlog::drop("Entity");
         spdlog::drop("Input");
         spdlog::drop("Scene");
         spdlog::drop("Renderer");
+        spdlog::drop("Factory");
     }
 } // Escape from lily

@@ -11,11 +11,8 @@
 
 class TexturedEntity : public ObjectScreen {
     protected:
-        using TexturePtr = std::unique_ptr<
-                SDL_Texture,
-                decltype(&SDL_DestroyTexture)>;
 
-        TexturePtr m_texture{nullptr, SDL_DestroyTexture}; // 实体的纹理
+        SDL_Texture *m_texture{};                          // 实体的纹理
         SDL_Color m_color_mod{COLOR(0xFFFFFFFF)};        // 颜色调制 + 透明度
         SDL_BlendMode m_blend_mode{SDL_BLENDMODE_BLEND};   // 像素混合模式
         bool m_texture_dirty{false};                       // 脏标记
@@ -35,7 +32,7 @@ class TexturedEntity : public ObjectScreen {
 
         int Initialize() override;
         // setter 和 getter
-        TexturePtr SetTexture(TexturePtr newtexture) noexcept;
+        SDL_Texture* SetTexture(SDL_Texture* newtexture) noexcept;
         [[nodiscard]] SDL_Texture* GetTexture() const;
         SDL_Color SetColor(SDL_Color newcolor);
         [[nodiscard]] SDL_Color GetColorMod() const;
