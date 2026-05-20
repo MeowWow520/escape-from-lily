@@ -11,7 +11,7 @@
 | 创建流程 | **两阶段：构造 → Initialize** | 遵循项目现有生命周期惯例（见 AGENTS.md / Object.h） |
 | 错误处理 | **返回 nullptr（空 unique_ptr）** | 与 Initialize() 返回 0/非0 一致；调用方检查 `.get()` 或 `operator bool` |
 | 参数传递 | **按类型定义参数结构体** | 每个实体参数不同（Background 需要 path，Player 需要 name），结构体比零散参数更清晰 |
-| 所有权 | **返回 `std::unique_ptr<Object>`** | 编译期强制所有权，消除 `delete` 遗漏；项目已有 `TexturePtr` 先例（`unique_ptr + SDL_DestroyTexture` deleter） |
+| 所有权 | **`EntityPtr<T>`（`unique_ptr<T, EntityDeleter>`）** | 自定义 deleter 一步完成 `Quit() + delete`，`reset()` 即销毁；项目已有 `TexturePtr` 先例 |
 
 ## 模式概述
 
@@ -87,12 +87,22 @@ using EntityParams = std::variant<
 ## 指针类型别名
 
 ```cpp
-/// 实体指针：unique_ptr<Object>（无自定义 deleter，销毁前需手动调 Quit()）
+/// 实体自定义 deleter：自动调用 Quit() → delete
+struct EntityDeleter {
+    void operator()(Object* p) const noexcept {
+        if (p) {
+            p->Quit();
+            delete p;
+        }
+    }
+};
+
+/// 实体指针：unique_ptr + 自定义 deleter，reset() 一步销毁
 template <typename T = Object>
-using EntityPtr = std::unique_ptr<T>;
+using EntityPtr = std::unique_ptr<T, EntityDeleter>;
 ```
 
-> 注意：不做自定义 deleter（自动 `Quit() + delete`），因为项目需要检查 `Quit()` 的返回值（`goto to_quit` + `EFL_ClassQuit`）。销毁时调用方先显式 `Quit()` 检查返回值，再 `reset()`。
+> `EntityPtr` 的 `reset()` 会自动调用 `Quit()` 再 `delete`，调用方无需手动检查 `Quit()` 返回值。销毁时只需 `m_entity.reset()` 一行。
 
 ## 工厂类设计
 
@@ -309,37 +319,21 @@ to_quit:
 
 ```cpp
 int SceneMain::Quit() {
-    // Background —— 先 Quit() 检查返回值，再 reset() 释放
-    if (m_current_background) {
-        if (m_current_background->Quit()) {
-            m_return_code = -1;
-            goto to_quit_early;
-        }
-        m_current_background.reset();
-    }
+    m_current_background.reset();   // EntityDeleter 自动调 Quit() + delete
+    m_camera.reset();
 
-    // Camera
-    if (m_camera) {
-        if (m_camera->Quit()) {
-            m_return_code = -1;
-            goto to_quit_early;
-        }
-        m_camera.reset();
-    }
-
-to_quit_early:
     const ssl loc = ssl::current();
     return EFL_ClassQuit(Scene::Quit(), loc);
 }
 ```
 
-> Note: `goto to_quit_early` 保证 `Quit()` 失败时能提前返回错误码。此时尚未 `reset()` 的 `unique_ptr` 在 `Quit()` 返回前仍有效，离开作用域后自动析构（但对应的 SDL 资源可能处于半清理状态——建议 `Quit()` 失败后不再继续使用该实体）。
+> `reset()` 触发 `EntityDeleter::operator()`，内部依次调用 `Quit()` 再 `delete`，无需手动检查返回值。
 
 主要变化：
 - `new` + `Initialize()` 两步合一，嵌套层级减少
 - 错误检查统一为 `if (!ptr)` 判空（`unique_ptr` 支持 `operator bool`）
 - setter 调用内聚到工厂内部
-- `Quit()` 中 `reset()` 自动 `delete`，不再需要写 `delete m_camera`
+- `Quit()` 中 `reset()` 一步完成清理，自定义 deleter 自动调用 `Quit()` 再 `delete`
 - `unique_ptr` 持有期间访问成员方式不变（`m_camera->Update(dt)` 照常）
 
 ## 类的存放与注册
@@ -389,7 +383,7 @@ Camera* SceneMain::GetCamera() {
 2. 创建 `src/core/EntityFactory.cpp` — `Create()` 分发实现（使用 `std::make_unique`）
 3. 将 `EntityFactory.cpp` 加入 `CMakeLists.txt`
 4. 修改 `src/SceneMain.h` — 添加 `#include`，`m_current_background` / `m_camera` 改为 `EntityPtr<T>`，新增 `EntityFactory m_factory` 成员
-5. 修改 `src/SceneMain.cpp` — `Initialize()` 改为工厂调用；`Quit()` 改为 `Quit()` 检查 + `reset()`；`GetCamera()` 改为 `.get()`
+5. 修改 `src/SceneMain.cpp` — `Initialize()` 改为工厂调用；`Quit()` 只需 `reset()`（deleter 自动处理）；`GetCamera()` 改为 `.get()`
 6. 构建验证
 
 ## 扩展路线（未来）
@@ -403,6 +397,6 @@ Camera* SceneMain::GetCamera() {
 
 - 项目现有实体层次：`Object` → `ObjectWorld` → `ObjectScreen` → `TexturedEntity` → `MovableEntity` → `Player`（见 AGENTS.md）
 - 生命周期惯例：构造 → `Initialize()` → `Quit()` → 析构（见 `Object.h`）
-- 错误处理模式：`goto to_quit` + `EFL_ClassInit` / `EFL_ClassQuit`（见 `Def.h` 和 `SceneMain.cpp`）
+- 错误处理模式：`goto to_quit` + `EFL_ClassInit`（见 `Def.h` 和 `SceneMain.cpp`）。`EFL_ClassQuit` 不再用于实体销毁（由 `EntityDeleter` 接管）
 - `SceneMain.cpp:17` 处已有 `// TODO: 使用工厂方法重构` 标记
 - 项目已有智能指针先例：`TexturedEntity::TexturePtr` = `std::unique_ptr<SDL_Texture, decltype(&SDL_DestroyTexture)>`
