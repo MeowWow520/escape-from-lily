@@ -38,6 +38,11 @@ namespace EFL {
 #define EFL_LOG_ENTITY_DESTROYED(name) \
     EFL_LOGGER_INFO(LogCategory::Entity, "{} object destroyed", name)
 
-
+#define EFL_CHECK(cat, call, msg)                 \
+    if (!(call)) {                                \
+        EFL_LOGGER_ERROR(cat, "{} failed", msg);  \
+        return -1;                                \
+    }                                             \
+    EFL_LOGGER_INFO(cat, "{} successful", msg);
 
 #endif //ESCAPE_FROM_LILY_LOG_H

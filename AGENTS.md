@@ -54,11 +54,8 @@ NOTE: `docs/CONTRIBUTING.md` claims `camelCase` variables and `_` suffix for mem
 ### Def.h key utilities
 
 - `COLOR(0xAABBCCDD)` → expands to `AA, BB, CC, DD` (separated RGBA for `SDL_Color`)
-- `SDL_LibInitChecker(bool flag, string name)` — checks SDL subsystem init, logs result
-- `EFL_ClassInit(int return_code, source_location)` / `EFL_ClassQuit(...)` — logging wrappers for class lifecycle error handling
 - `EFL_Vec2AddToRect(vec2 pos, vec2 size)` / `EFL_Vec2AddToRectFloat` — glm vec2 to SDL_Rect/SDL_FRect
-- `CLR_RED`, `CLR_BLUE` etc. — ANSI color escape codes for log output
-- `using ssl = std::source_location;` alias
+- `HEX_COLOR_BACKGROUND` (0x0096C7FF) — background clear color
 - `SWITCHER_ACCELERATION` / `SWITCHER_KEYLOGGING` — runtime feature toggles (constexpr bool)
 - `DEFAULT_MAX_SPEED` (1500.0f) / `DEFAULT_ACCELERATION` (50.0f) — default movement values
 
@@ -68,17 +65,28 @@ NOTE: `docs/CONTRIBUTING.md` claims `camelCase` variables and `_` suffix for mem
 
 ### Logger system (`src/core/Logger/`)
 
-A new categorized logging system runs alongside the old `Def.h` macros (dual-track). Old `EFL_ClassInit`/`EFL_ClassQuit`/`SDL_LibInitChecker` still work unchanged.
+The sole logging system. Old `Def.h` macros (`EFL_ClassInit`, `SDL_LibInitChecker`, `CLR_*`) have been removed.
 
 **Log categories** (enum `LogCategory` in `LogCategory.h`): `Core`, `Entity`, `Input`, `Scene`, `Renderer`.
 
 **Key macros** (defined in `Log.h`):
 - `EFL_LOGGER_INFO(cat, ...)` / `EFL_LOGGER_ERROR(cat, ...)` — categorized log output
-- `EFL_LOG_ENTITY_CREATED(name)` / `EFL_LOG_ENTITY_DESTROYED(name)` — called automatically by `Object` constructor/destructor (see Object section)
+- `EFL_LOG_ENTITY_CREATED(name)` / `EFL_LOG_ENTITY_DESTROYED(name)` — called automatically by `Object` constructor/destructor
+- `EFL_CHECK(cat, expr, msg)` — if `expr` is falsy, logs error + `return -1`; else logs success. Used in Initialize/Quit for step verification.
 
-**Setup**: call `EFL::RegisterLogCategory()` early in `Game::Initialize()`; call `EFL::QuitLogger()` in `Game::Quit()`. `LogConfig` struct accepts custom file paths and truncate/append mode.
+**`EFL_CHECK` usage note**: Initialize/Quit return `0` on success, `-1` on failure. So use `!call` or `call == 0` as the check expression:
+```cpp
+EFL_CHECK(LogCategory::Entity, !entity->Initialize(), "Init");   // 0=success → !0=true → passes
+EFL_CHECK(LogCategory::Entity, entity->Quit() == 0, "Quit");     // 0=success → true → passes
+```
 
-**spdlog 1.17.0 caveat**: `sinks_init_list` is `initializer_list<sink_ptr>` — it has **no** `push_back`. When conditionally building sink lists, use `std::vector<spdlog::sink_ptr>` and pass `(name, sinks.begin(), sinks.end())` to the `logger` constructor. The console sink uses `wincolor_stdout_sink_mt` (not `stdout_color_sink_mt`) for Windows console compatibility.
+**Setup**: call `EFL::RegisterLogCategory()` early in `Game::Initialize()`; call `EFL::QuitLogger()` in `Game::Quit()`. `LogConfig` struct accepts custom file paths, truncate/append mode, console/file toggles.
+
+**`QuitLogger()` uses individual `spdlog::drop("Core")` etc.** — NOT `spdlog::drop_all()` which would also destroy the default logger and crash subsequent `spdlog::info()` calls.
+
+**File sink requires `logs/` directory** to exist. Call `std::filesystem::create_directories()` before creating loggers, or the file sink silently fails.
+
+**spdlog 1.17.0 caveat**: `sinks_init_list` is `initializer_list<sink_ptr>` — it has **no** `push_back`. When conditionally building sink lists, use `std::vector<spdlog::sink_ptr>` and pass `(name, sinks.begin(), sinks.end())` to the `logger` constructor. The console sink uses `wincolor_stdout_sink_mt` (not `stdout_color_sink_mt`) for Windows console compatibility. Logger name pattern uses `%-7n` (left-aligned), not `%=` (centered).
 
 ## Architecture
 
@@ -123,23 +131,31 @@ Input (standalone — does NOT inherit Object)
 **TransScreenPos()**: defined on `TexturedEntity`, computes screen pos via `m_world_pos - GetCamera()->GetWorldPos()`, reaching camera through `GetCurrentScene()->GetCamera()`.
 
 **Lifecycle pattern** (all classes follow this):
-1. Constructor — initializes members
+1. Constructor — initializes members, logs `"XXX object constructed"`
 2. `Initialize()` — creates SDL resources, returns 0 on success, -1 on failure
 3. `HandleEvents(SDL_Event)` / `Update(float dt)` / `Render()` — per-frame
 4. `Quit()` — cleanup, returns 0 on success
 
 Canonical lifecycle return pattern:
 ```cpp
-const ssl loc = ssl::current();
-return EFL_ClassInit(m_return_code, loc);  // or EFL_ClassQuit for Quit()
+int ClassName::Initialize() {
+    EFL_CHECK(LogCategory::Entity, !SomeInitCall(), "SomeInitCall");
+    // ... more setup ...
+    return 0;  // success
+}
 ```
 
-**Error handling**: `goto to_quit` is used in `Game::Initialize()` and `Game::Quit()` for centralized cleanup. New code that follows the lifecycle pattern should use this convention when multiple failure points share teardown.
+**Error handling**: simple `return -1` on failure. No `goto`, no `m_return_code` (the member still exists in `Object` but is unused). `EFL_CHECK` macro handles both logging and early return.
+
+**Known lifecycle traps**:
+- `Camera::Initialize()` must explicitly call `MovableEntity::Initialize()` to set `m_max_speed` — otherwise speed stays 0 and camera won't move.
+- `Background::Quit()` after `SDL_DestroyTexture(m_texture.get())` must call `m_texture.release()` — otherwise `unique_ptr` destructor calls `SDL_DestroyTexture` again on the freed pointer.
 
 **Game singleton**: `Game::GetInstance()` returns the single instance. Copy/assign deleted. Main loop in `Game::Running()`:
 - Poll events → dispatch to current scene's HandleEvents
 - Call Update with delta time
 - Call Render (clears with `COLOR(0xFF006EFF)`, renders scene, presents)
+- **Must `return Quit()` at end** — skipping this skips scene destruction, SDL shutdown, and logger flush.
 
 **Coordinate systems**: World position (`m_world_pos`) → screen position (`m_screen_pos = world_pos - camera_pos`). Camera defaults to world center.
 

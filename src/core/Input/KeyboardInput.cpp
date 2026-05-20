@@ -7,6 +7,7 @@
 #include <ranges>
 
 #include "../Def.h"
+#include "../Logger/Log.h"
 
 
 KeyboardInput::KeyboardInput() {
@@ -23,14 +24,14 @@ void KeyboardInput::HandleEvents(const SDL_Event event) {
     if (event.type == SDL_EVENT_KEY_DOWN) {
         if (m_current_action_state[it->second] == ActionState::Idle) {
             if (SWITCHER_KEYLOGGING)
-                spdlog::info("SDL Key_{} Down", SDL_GetKeyName(event.key.key));
+                EFL_LOGGER_INFO(LogCategory::Input, "SDLK_{} down", SDL_GetKeyName(event.key.key));
             m_current_action_state[it->second] = ActionState::Pressed;
         }
     }
     if (event.type == SDL_EVENT_KEY_UP) {
         if (m_current_action_state[it->second] == ActionState::Held) {
             if (SWITCHER_KEYLOGGING)
-                spdlog::info("SDL Key_{} Up", SDL_GetKeyName(event.key.key));
+                EFL_LOGGER_INFO(LogCategory::Input, "SDLK_{} up", SDL_GetKeyName(event.key.key));
             m_current_action_state[it->second] = ActionState::Released;
         }
     }

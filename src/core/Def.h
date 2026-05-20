@@ -4,9 +4,6 @@
 
 #ifndef ESCAPE_FROM_LILY_DEF_H
 #define ESCAPE_FROM_LILY_DEF_H
-#include <string>
-
-#include <source_location>
 #include <glm/vec2.hpp>
 #include <SDL3/SDL_rect.h>
 #include <spdlog/spdlog.h>

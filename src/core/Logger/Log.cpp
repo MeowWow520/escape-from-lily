@@ -3,6 +3,8 @@
 //
 
 #include "Log.h"
+
+#include <filesystem>
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/sinks/basic_file_sink.h>
 
@@ -13,18 +15,17 @@ namespace EFL {
          *
          * @param name 注册名
          * @param config 注册的设置
+         * @param file_sink 共享的文件 sink
          */
-        void CreateLogger(const char* name, const LogConfig& config) {
+        void CreateLogger(const char* name, const LogConfig& config,
+                          const std::shared_ptr<spdlog::sinks::basic_file_sink_mt>& file_sink) {
             std::vector<spdlog::sink_ptr> sinks;
             if (config.console_logging) {
                 const auto console_sink = std::make_shared<spdlog::sinks::wincolor_stdout_sink_mt>();
-                console_sink->set_pattern("%^[%T.%e] [%=7n] [%l]%$ %v");
+                console_sink->set_pattern("%^[%T.%e] [%-7n] [%l]%$ %v");
                 sinks.push_back(console_sink);
             }
-            if (config.enable_logging) {
-                const auto file_sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>(
-                    config.file_path, config.truncate_log_file);
-                file_sink->set_pattern("[%Y-%m-%d %T.%e] [%=7n] [%l] %v");
+            if (config.enable_logging && file_sink) {
                 sinks.push_back(file_sink);
             }
             const auto logger = std::make_shared<spdlog::logger>(name, sinks.begin(), sinks.end());
@@ -44,14 +45,32 @@ namespace EFL {
         return "unknow";
     }
     void RegisterLogCategory(const LogConfig& config) {
-        CreateLogger("Core", config);
-        CreateLogger("Entity", config);
-        CreateLogger("Input", config);
-        CreateLogger("Scene", config);
-        CreateLogger("Renderer", config);
+        // 创建日志目录（如果不存在）
+        std::filesystem::create_directories(
+            std::filesystem::path(config.file_path).parent_path()
+        );
+
+        // 文件 sink 只创建一次，所有 logger 共享
+        std::shared_ptr<spdlog::sinks::basic_file_sink_mt> file_sink;
+        if (config.enable_logging) {
+            file_sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>(
+                config.file_path, config.truncate_log_file);
+            file_sink->set_pattern("[%Y-%m-%d %T.%e] [%-7n] [%l] %v");
+        }
+
+        CreateLogger("Core", config, file_sink);
+        CreateLogger("Entity", config, file_sink);
+        CreateLogger("Input", config, file_sink);
+        CreateLogger("Scene", config, file_sink);
+        CreateLogger("Renderer", config, file_sink);
         spdlog::info("Log system initialized, file: {}", config.file_path);
     }
     void QuitLogger() {
+        spdlog::get("Core")->flush();
+        spdlog::get("Entity")->flush();
+        spdlog::get("Input")->flush();
+        spdlog::get("Scene")->flush();
+        spdlog::get("Renderer")->flush();
         spdlog::drop("Core");
         spdlog::drop("Entity");
         spdlog::drop("Input");

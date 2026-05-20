@@ -4,11 +4,14 @@
 
 #include "core/Def.h"
 #include "core/Game.h"
-
+#include "core/Logger/Log.h"
 
 
 int main() {
+    EFL::RegisterLogCategory();
     Game& game_instance = Game::GetInstance();
     if (game_instance.Initialize() != 0) return -1;
-    return game_instance.Running();
+    game_instance.Running();
+    EFL::QuitLogger();
+    return 0;
 }

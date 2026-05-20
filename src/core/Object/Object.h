@@ -23,6 +23,8 @@ class Object {
         virtual void Update([[maybe_unused]] const float dt) { }
         virtual void Render() { }
         virtual int Quit() { return 0; }
+
+        [[nodiscard]] const char* GetName() const { return m_entity_name; }
 };
 
 #endif //ESCAPE_FROM_LILY_OBJECT_H

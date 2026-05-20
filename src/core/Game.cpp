@@ -28,29 +28,24 @@ Game::Game() {
 }
 
 int Game::Initialize() {
-    EFL::RegisterLogCategory();
-
-    if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO)) return -1;
-    if (!TTF_Init()) return -1;
-    if (!MIX_Init()) return -1;
-    if (!SDL_CreateWindowAndRenderer(m_title.c_str(),
-            static_cast<int>(m_window_size.x),
-            static_cast<int>(m_window_size.y),
-            SDL_WINDOW_RESIZABLE,&m_window, &m_renderer)) { return -1; }
-    // 设置渲染器 -- 垂直同步
-    if (!SDL_SetRenderVSync(m_renderer, 1)) return -1;
+    EFL_CHECK(LogCategory::Core, SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO), "SDL_Init");
+    EFL_CHECK(LogCategory::Core, TTF_Init(), "TTF_Init");
+    EFL_CHECK(LogCategory::Core, MIX_Init(), "MIX_Init");
+    const bool SDL_CreateWR = SDL_CreateWindowAndRenderer(m_title.c_str(),
+        static_cast<int>(m_window_size.x),
+        static_cast<int>(m_window_size.y),
+        SDL_WINDOW_RESIZABLE,&m_window, &m_renderer);
+    EFL_CHECK(LogCategory::Core, SDL_CreateWR, "SDL_CreateWindowAndRenderer");
+    EFL_CHECK(LogCategory::Core, SDL_SetRenderVSync(m_renderer, 1), "SDL_SetRenderVSync");
 
     // 设置按键绑定
     m_key_input = new KeyboardInput();
-    if (!m_key_input->SetDefaultKeyBind()) return -1;
+    EFL_CHECK(LogCategory::Input, m_key_input->SetDefaultKeyBind(), "Keyboard SetDefaultKeyBind");
 
     // TODO: 使用工厂方法注册对象
     // 创建场景
     m_current_scene = new SceneMain();
-    if (m_current_scene->Initialize() != 0) {
-        delete m_current_scene;
-        return -1;
-    }
+    EFL_CHECK(LogCategory::Input, m_current_scene->Initialize() == 0, "scene Initialize");
 
     return 0;
 }
@@ -71,6 +66,7 @@ int Game::Running() {
             m_delta_time = static_cast<float>(m_frame_delay / 1e9);
         } m_delta_time = static_cast<float>(static_cast<double>(elapsed) / 1e9);
     }
+    Quit();
     return 0;
 }
 
@@ -80,6 +76,7 @@ void Game::HandleEvents() {
         m_key_input->HandleEvents(event);
         switch (event.type) {
             case SDL_EVENT_QUIT:
+                EFL_LOGGER_INFO(LogCategory::Scene, "Receiving SDL_EVENT_QUIT, main loop quitting");
                 m_running = false;
                 break;
             default:
@@ -105,13 +102,13 @@ void Game::Render() const {
 int Game::Quit() {
     // 释放游戏资源
     if (m_current_scene != nullptr) {
-        if (m_current_scene->Quit() != 0) return -1;
-    } delete m_current_scene;
+        EFL_CHECK(LogCategory::Core, m_current_scene->Quit() == 0, "scene Quit")
+    }
+    delete m_current_scene;
     // 释放 SDL 资源
     TTF_Quit();
     MIX_Quit();
     SDL_Quit();
-    EFL::QuitLogger();
     return 0;
 }
 
