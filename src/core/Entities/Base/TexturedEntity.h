@@ -58,26 +58,10 @@ class TexturedEntity : public ObjectScreen {
         [[nodiscard]] glm::vec2 GetHitbox() const;
 
         /**
-         * InitializeTextureFromPath 读取成员 m_path 的值，将 m_path 指向的文件作为纹理渲染，将该文件进行初始化。并将是否显示设为允许
-         *
-         * @return 初始化成功返回 true，失败返回 false
-         */
-        bool InitializeTextureFromPath();
-
-        /**
-         * SetTextureFromPath 读取成员 m_path 的值，将 m_path 指向的文件作为纹理赋值到 m_texture
-         *
-         * @return 初始化成功返回 true，失败返回 false
-         */
-        bool SetTextureFromPath();
-
-        /**
          * TranScreenPos是将世界坐标转化为屏幕坐标的函数
          * @return 屏幕坐标
          */
         [[nodiscard]] glm::vec2 TransScreenPos() const;
-        // FIXME: 无用的函数？
-        [[nodiscard]] bool IsInCameraRange() const;
 };
 
 #endif //ESCAPE_FROM_LILY_TEXTUREDENTITY_H

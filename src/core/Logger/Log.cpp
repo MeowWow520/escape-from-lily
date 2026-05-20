@@ -64,6 +64,7 @@ namespace EFL {
         CreateLogger("Input", config, file_sink);
         CreateLogger("Scene", config, file_sink);
         CreateLogger("Renderer", config, file_sink);
+        CreateLogger("Factory", config, file_sink);
         spdlog::info("Log system initialized, file: {}", config.file_path);
     }
     void QuitLogger() {

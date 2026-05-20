@@ -11,7 +11,7 @@
 | 创建流程 | **两阶段：构造 → Initialize** | 遵循项目现有生命周期惯例（见 AGENTS.md / Object.h） |
 | 错误处理 | **返回 nullptr（空 unique_ptr）** | 与 Initialize() 返回 0/非0 一致；调用方检查 `.get()` 或 `operator bool` |
 | 参数传递 | **按类型定义参数结构体** | 每个实体参数不同（Background 需要 path，Player 需要 name），结构体比零散参数更清晰 |
-| 所有权 | **`EntityPtr<T>`（`unique_ptr<T, EntityDeleter>`）** | 自定义 deleter 一步完成 `Quit() + delete`，`reset()` 即销毁；项目已有 `TexturePtr` 先例 |
+| 所有权 | **`EntityPtr<T>`（`unique_ptr<T, EntityDeleter>`）** | 自定义 deleter 一步完成 `Quit() + delete`，`reset()` 即销毁 |
 
 ## 模式概述
 
@@ -29,7 +29,7 @@ EntityFactory::Create(EntityType, Params)
   └─ case UI:        → make_unique<UserInterface>() → Initialize()
 ```
 
-对比当前 `SceneMain::Initialize()` 中的做法（`new` → 手动调 setter → `Initialize` → 检查返回值 → `goto to_quit`），工厂方法将这一段重复模板内聚，减少出错和代码冗余。
+对比当前 `SceneMain::Initialize()` 中的做法（`new` → 手动调 setter → `EFL_CHECK` 包装 `Initialize`），工厂方法将这一段重复模板内聚，减少出错和代码冗余。
 
 工厂返回 `unique_ptr` 进一步消除裸指针：构造失败时 `unique_ptr` 自动析构，无需手动 `delete`；销毁时 `unique_ptr.reset()` 一步到位，不会漏删。
 
@@ -144,7 +144,7 @@ EntityPtr<Object> EntityFactory::Create(const EntityType type, const EntityParam
     switch (type) {
         case EntityType::Player: {
             if (!std::holds_alternative<PlayerParams>(params)) {
-                spdlog::error("[EntityFactory] 参数类型不匹配: 期望 PlayerParams");
+                EFL_LOGGER_ERROR(LogCategory::Factory, "参数类型不匹配: 期望 PlayerParams");
                 return nullptr;
             }
             const auto& p = std::get<PlayerParams>(params);
@@ -159,7 +159,7 @@ EntityPtr<Object> EntityFactory::Create(const EntityType type, const EntityParam
 
         case EntityType::Background: {
             if (!std::holds_alternative<BackgroundParams>(params)) {
-                spdlog::error("[EntityFactory] 参数类型不匹配: 期望 BackgroundParams");
+                EFL_LOGGER_ERROR(LogCategory::Factory, "参数类型不匹配: 期望 BackgroundParams");
                 return nullptr;
             }
             const auto& p = std::get<BackgroundParams>(params);
@@ -174,7 +174,7 @@ EntityPtr<Object> EntityFactory::Create(const EntityType type, const EntityParam
 
         case EntityType::Camera: {
             if (!std::holds_alternative<CameraParams>(params)) {
-                spdlog::error("[EntityFactory] 参数类型不匹配: 期望 CameraParams");
+                EFL_LOGGER_ERROR(LogCategory::Factory, "参数类型不匹配: 期望 CameraParams");
                 return nullptr;
             }
             const auto& p = std::get<CameraParams>(params);
@@ -188,7 +188,7 @@ EntityPtr<Object> EntityFactory::Create(const EntityType type, const EntityParam
 
         case EntityType::UserInterface: {
             if (!std::holds_alternative<UIParams>(params)) {
-                spdlog::error("[EntityFactory] 参数类型不匹配: 期望 UIParams");
+                EFL_LOGGER_ERROR(LogCategory::Factory, "参数类型不匹配: 期望 UIParams");
                 return nullptr;
             }
             const auto& p = std::get<UIParams>(params);
@@ -202,17 +202,17 @@ EntityPtr<Object> EntityFactory::Create(const EntityType type, const EntityParam
         }
 
         default:
-            spdlog::error("[EntityFactory] 未知实体类型: {}", static_cast<int>(type));
+            EFL_LOGGER_ERROR(LogCategory::Factory, "未知实体类型: {}", static_cast<int>(type));
             return nullptr;
     }
 
     // 统一初始化 —— 失败时 unique_ptr 自动析构，无需手动 delete
     if (entity->Initialize() != 0) {
-        spdlog::error("[EntityFactory] 实体 Initialize() 失败，已自动清理");
+        EFL_LOGGER_ERROR(LogCategory::Factory, "实体 Initialize() 失败，已自动清理");
         return nullptr;
     }
 
-    spdlog::info("[EntityFactory] 创建实体成功: type={}", static_cast<int>(type));
+    EFL_LOGGER_INFO(LogCategory::Factory, "创建实体成功: type={}", static_cast<int>(type));
     return entity;
 }
 ```
@@ -247,30 +247,29 @@ EntityPtr<Object> EntityFactory::Create(const EntityType type, const EntityParam
 
 ## SceneMain 改造对比
 
-### 改造前（当前代码：`src/SceneMain.cpp:8-38`）
+### 改造前（当前代码：`src/SceneMain.cpp:10-29`）
 
 ```cpp
 int SceneMain::Initialize() {
+    // 设置世界缩放 和 世界大小
     m_world_scale = glm::vec2{3, 3};
     m_world_size = m_game_instance.GetWindowSize() * m_world_scale;
+    // TODO: 玩家在世界的中间
+    // m_player_position = m_camera_pos + m_game_instance.GetWindowSize() / glm::vec2(2);
+
+    // TODO: 使用工厂方法重构
 
     m_camera = new Camera();
-    if (m_camera->Initialize()) {
-        m_return_code = -1;
-        goto to_quit;
-    }
+    EFL_CHECK(LogCategory::Entity, !m_camera->Initialize(), "Camera Initialize()");
     m_camera->SetWorldPos((m_world_size - m_game_instance.GetWindowSize()) / glm::vec2(2));
 
+
+    // 初始化背景
     m_current_background = new Background();
     m_current_background->SetPath("assets/images/backgrounds/purple.png");
-    if (m_current_background->Initialize()) {
-        m_return_code = -1;
-        goto to_quit;
-    }
+    EFL_CHECK(LogCategory::Entity, !m_current_background->Initialize(), "Background Initialize()");
     m_current_background->SetWorldPos(glm::vec2{0,0});
-to_quit:
-    const ssl loc = ssl::current();
-    return EFL_ClassInit(m_return_code, loc);
+    return 0;
 }
 ```
 
@@ -296,45 +295,38 @@ int SceneMain::Initialize() {
 
     auto cam_pos = (m_world_size - m_game_instance.GetWindowSize()) / glm::vec2(2);
     m_camera = m_factory.CreateCamera(cam_pos);
-    if (!m_camera) {
-        m_return_code = -1;
-        goto to_quit;
-    }
+    EFL_CHECK(LogCategory::Factory, m_camera != nullptr, "Create Camera");
 
     m_current_background = m_factory.CreateBackground(
         "assets/images/backgrounds/purple.png",
         glm::vec2{0, 0}
     );
-    if (!m_current_background) {
-        m_return_code = -1;
-        goto to_quit;
-    }
-to_quit:
-    const ssl loc = ssl::current();
-    return EFL_ClassInit(m_return_code, loc);
+    EFL_CHECK(LogCategory::Factory, m_current_background != nullptr, "Create Background");
+    return 0;
 }
 ```
+
+> `EFL_CHECK` 检测 `unique_ptr != nullptr`：非空（创建成功）→ 通过；空（失败）→ log error + `return -1`。与现有 `EFL_CHECK` 模式完全一致，无需额外 `goto` 或 `m_return_code`。
 
 **Quit()：**
 
 ```cpp
 int SceneMain::Quit() {
     m_current_background.reset();   // EntityDeleter 自动调 Quit() + delete
-    m_camera.reset();
-
-    const ssl loc = ssl::current();
-    return EFL_ClassQuit(Scene::Quit(), loc);
+    m_camera.reset();               // EntityDeleter 自动调 Quit() + delete
+    return 0;
 }
 ```
 
 > `reset()` 触发 `EntityDeleter::operator()`，内部依次调用 `Quit()` 再 `delete`，无需手动检查返回值。
 
 主要变化：
-- `new` + `Initialize()` 两步合一，嵌套层级减少
-- 错误检查统一为 `if (!ptr)` 判空（`unique_ptr` 支持 `operator bool`）
-- setter 调用内聚到工厂内部
-- `Quit()` 中 `reset()` 一步完成清理，自定义 deleter 自动调用 `Quit()` 再 `delete`
-- `unique_ptr` 持有期间访问成员方式不变（`m_camera->Update(dt)` 照常）
+- `new` + 手动 `Initialize()` 两步合一为工厂 `Create()`，嵌套层级减少
+- 错误检查统一为 `EFL_CHECK(cat, ptr != nullptr, ...)`，与项目现有模式一致
+- setter 调用（`SetPath`、`SetWorldPos`）内聚到工厂内部
+- `Quit()` 中 `reset()` 一步完成清理，`EntityDeleter` 自动调用 `Quit()` + `delete`
+- `GetCamera()` 返回 `m_camera.get()`，不转移所有权
+- 不再使用 `goto to_quit`、`m_return_code`、`ssl`（均已废弃）
 
 ## 类的存放与注册
 
@@ -379,12 +371,13 @@ Camera* SceneMain::GetCamera() {
 
 ## 实现步骤
 
-1. 创建 `src/core/EntityFactory.h` — 枚举、参数结构体、`EntityPtr` 别名、`EntityParams` variant、`EntityFactory` 类声明
-2. 创建 `src/core/EntityFactory.cpp` — `Create()` 分发实现（使用 `std::make_unique`）
-3. 将 `EntityFactory.cpp` 加入 `CMakeLists.txt`
-4. 修改 `src/SceneMain.h` — 添加 `#include`，`m_current_background` / `m_camera` 改为 `EntityPtr<T>`，新增 `EntityFactory m_factory` 成员
-5. 修改 `src/SceneMain.cpp` — `Initialize()` 改为工厂调用；`Quit()` 只需 `reset()`（deleter 自动处理）；`GetCamera()` 改为 `.get()`
-6. 构建验证
+1. 确保 `LogCategory::Factory` 已在 `RegisterLogCategory()` 中注册（当前缺失，需在 `Log.cpp` 中增加一行 `CreateLogger("Factory", config, file_sink);`）
+2. 创建 `src/core/EntityFactory.h` — 枚举、参数结构体、`EntityDeleter`、`EntityPtr` 别名、`EntityParams` variant、`EntityFactory` 类声明
+3. 创建 `src/core/EntityFactory.cpp` — `Create()` 分发实现（使用 `std::make_unique` + `EFL_LOGGER_ERROR/INFO`）
+4. 将 `EntityFactory.cpp` 加入 `CMakeLists.txt`
+5. 修改 `src/SceneMain.h` — 添加 `#include "core/EntityFactory.h"`，`m_current_background` / `m_camera` 改为 `EntityPtr<T>`，新增 `EntityFactory m_factory` 成员
+6. 修改 `src/SceneMain.cpp` — `Initialize()` 改为工厂 + `EFL_CHECK`；`Quit()` 改为 `reset()`；`GetCamera()` 改为 `.get()`
+7. 构建验证
 
 ## 扩展路线（未来）
 
@@ -396,7 +389,8 @@ Camera* SceneMain::GetCamera() {
 ## 参考
 
 - 项目现有实体层次：`Object` → `ObjectWorld` → `ObjectScreen` → `TexturedEntity` → `MovableEntity` → `Player`（见 AGENTS.md）
-- 生命周期惯例：构造 → `Initialize()` → `Quit()` → 析构（见 `Object.h`）
-- 错误处理模式：`goto to_quit` + `EFL_ClassInit`（见 `Def.h` 和 `SceneMain.cpp`）。`EFL_ClassQuit` 不再用于实体销毁（由 `EntityDeleter` 接管）
+- 生命周期惯例：构造 → `Initialize()` → `Quit()` → 析构（见 `Object.h` / `Object.cpp`）
+- 错误处理模式：`EFL_CHECK(cat, expr, msg)` —— 检查 expr 为真，失败则 log error + `return -1`（见 `src/core/Logger/Log.h`）
+- 日志系统：`EFL_LOGGER_INFO/ERROR(cat, ...)` 分类输出，`LogCategory::Factory` 已预留（见 `src/core/Logger/`）
 - `SceneMain.cpp:17` 处已有 `// TODO: 使用工厂方法重构` 标记
-- 项目已有智能指针先例：`TexturedEntity::TexturePtr` = `std::unique_ptr<SDL_Texture, decltype(&SDL_DestroyTexture)>`
+- `Object` 构造/析构自动调用 `EFL_LOG_ENTITY_CREATED/DESTROYED`，工厂无需额外日志

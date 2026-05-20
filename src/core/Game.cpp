@@ -100,12 +100,23 @@ void Game::Render() const {
 
 
 int Game::Quit() {
-    // 释放游戏资源
     if (m_current_scene != nullptr) {
-        EFL_CHECK(LogCategory::Core, m_current_scene->Quit() == 0, "scene Quit")
+        if (m_current_scene->Quit() != 0) {
+            EFL_LOGGER_ERROR(LogCategory::Core, "scene Quit failed");
+        }
     }
     delete m_current_scene;
-    // 释放 SDL 资源
+    m_current_scene = nullptr;
+    delete m_key_input;
+    m_key_input = nullptr;
+    if (m_renderer != nullptr) {
+        SDL_DestroyRenderer(m_renderer);
+        m_renderer = nullptr;
+    }
+    if (m_window != nullptr) {
+        SDL_DestroyWindow(m_window);
+        m_window = nullptr;
+    }
     TTF_Quit();
     MIX_Quit();
     SDL_Quit();

@@ -25,7 +25,6 @@ int SceneMain::Initialize() {
     m_current_background = new Background();
     m_current_background->SetPath("assets/images/backgrounds/purple.png");
     EFL_CHECK(LogCategory::Entity, !m_current_background->Initialize(), "Background Initialize()");
-    m_current_background->SetWorldPos(glm::vec2{0,0});
     return 0;
 }
 
