@@ -3,7 +3,8 @@
 > [!TIP]
 > 本仓库由初学者维护，可能存在大量错误
 
-[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/MeowWow520/escape-from-lily)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/MeowWow520/escape-from-lily) | ![GitHub License](https://img.shields.io/github/license/MeowWow520/escape-from-lily)
+
 ### 介绍
 **这是什么？**
 这是一款基于 `C++` 和 `SDL3` 的逃离游戏
