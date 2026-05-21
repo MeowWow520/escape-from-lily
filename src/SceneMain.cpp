@@ -4,6 +4,7 @@
 
 #include "SceneMain.h"
 
+#include "core/Factory/EntityFactory.h"
 #include "core/Logger/Log.h"
 
 
@@ -14,7 +15,10 @@ int SceneMain::Initialize() {
     // TODO: 玩家在世界的中间
     // m_player_position = m_camera_pos + m_game_instance.GetWindowSize() / glm::vec2(2);
 
-    CameraParams camera = {(m_world_size - m_game_instance.GetWindowSize()) / glm::vec2(2)};
+    CameraParams camera = {
+        (m_world_size - m_game_instance.GetWindowSize()) / glm::vec2(2),
+        100.0f
+    };
     m_camera = EntityFactory::CreateCamera(camera);
 
     BackgroundParams background = {

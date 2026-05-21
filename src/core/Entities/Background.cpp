@@ -36,5 +36,6 @@ void Background::Render() {
 int Background::Quit() {
     if (m_texture != nullptr)
         SDL_DestroyTexture(m_texture);
+    m_texture = nullptr;
     return 0;
 }

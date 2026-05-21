@@ -66,6 +66,8 @@ find_package(SDL3_mixer CONFIG REQUIRED)
 find_package(SDL3_ttf CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
 find_package(fmt CONFIG REQUIRED)
+find_package(spdlog CONFIG REQUIRED)
+
 
 target_link_libraries(escape-from-lily PRIVATE
         SDL3::SDL3
@@ -74,4 +76,5 @@ target_link_libraries(escape-from-lily PRIVATE
         SDL3_ttf::SDL3_ttf
         glm::glm
         fmt::fmt
+        spdlog::spdlog
 )

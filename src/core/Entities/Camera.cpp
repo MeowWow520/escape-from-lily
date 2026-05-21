@@ -4,6 +4,7 @@
 
 #include "Camera.h"
 #include "../Scene.h"
+#include <algorithm>
 
 
 int Camera::Initialize() {

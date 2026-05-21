@@ -7,7 +7,6 @@
 #include "core/Scene.h"
 #include "core/Entities/Background.h"
 #include "core/Entities/Camera.h"
-#include "core/Factory/EntityFactory.h"
 #include "core/Factory/EntityTypes.h"
 
 

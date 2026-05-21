@@ -19,8 +19,8 @@ Game::Game() {
     m_window_size = {1920, 1080};
     m_running = true;
     m_delta_time = 0.0f;
-    m_frame_delay = 0.0f;
     m_FPS = 120;
+    m_frame_delay = static_cast<Uint32>(1e9) / m_FPS;
     m_window = nullptr;
     m_renderer = nullptr;
     m_current_scene = nullptr;
@@ -60,11 +60,12 @@ int Game::Running() {
         Render();
 
         const Uint64 end = SDL_GetTicksNS();
-        const Uint64 elapsed = end - start;
-        if (elapsed < m_frame_delay) {
+        if (const Uint64 elapsed = end - start; elapsed < m_frame_delay) {
             SDL_DelayNS(m_frame_delay - elapsed);
             m_delta_time = static_cast<float>(m_frame_delay / 1e9);
-        } m_delta_time = static_cast<float>(static_cast<double>(elapsed) / 1e9);
+        } else {
+            m_delta_time = static_cast<float>(static_cast<double>(elapsed) / 1e9);
+        }
     }
     Quit();
     return 0;
