@@ -3,11 +3,11 @@
 ; Non-commercial use only
 
 #define MyAppName "escape-from-lily"
-#define MyAppVersion "1.00.0"
+#define MyAppVersion "1.01.0"
 #define MyAppPublisher "MeowWow520"
 #define MyAppURL "https://meowwow520.cn/"
 #define MyAppExeName "escape-from-lily.exe"
-#define MyAppAssocName MyAppName + "-release-1.00.0"
+#define MyAppAssocName MyAppName + "-release-1.01.0"
 #define MyAppAssocExt ".myp"
 #define MyAppAssocKey StringChange(MyAppAssocName, " ", "") + MyAppAssocExt
 
@@ -22,7 +22,7 @@ AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
-DefaultDirName={autopf}\escape-from-lily-release-1.00.0
+DefaultDirName={autopf}\escape-from-lily-release-1.01.0
 UninstallDisplayIcon={app}\{#MyAppExeName}
 ; "ArchitecturesAllowed=x64compatible" specifies that Setup cannot run
 ; on anything but x64 and Windows 11 on Arm.
@@ -35,8 +35,8 @@ ArchitecturesInstallIn64BitMode=x64compatible
 ChangesAssociations=yes
 DisableProgramGroupPage=yes
 LicenseFile=G:\Programming\CLion\escape-from-lily\LICENSE
-InfoBeforeFile=G:\Programming\CLion\escape-from-lily\innosetup\info-before-v1.00.0.txt
-InfoAfterFile=G:\Programming\CLion\escape-from-lily\innosetup\info-after-v1.00.0.txt
+InfoBeforeFile=G:\Programming\CLion\escape-from-lily\innosetup\informations\info-before-v1.01.0.txt
+InfoAfterFile=G:\Programming\CLion\escape-from-lily\innosetup\informations\info-after-v1.01.0.txt
 ; Uncomment the following line to run in non administrative install mode (install for current user only).
 ;PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=dialog
