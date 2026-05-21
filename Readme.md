@@ -3,7 +3,7 @@
 > [!TIP]
 > 本仓库由初学者维护，可能存在大量错误
 
-[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/MeowWow520/escape-from-lily) | ![GitHub License](https://img.shields.io/github/license/MeowWow520/escape-from-lily)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/MeowWow520/escape-from-lily) | ![Static Badge](https://img.shields.io/badge/CI%2FCD-Ongoing-blue)
 
 ### 介绍
 **这是什么？**
