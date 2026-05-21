@@ -9,23 +9,18 @@
 
 
 
-
-using TexturePtr = std::unique_ptr<
-                   SDL_Texture,
-                   decltype(&SDL_DestroyTexture)
-                   >;
-
 int TexturedEntity::Initialize() {
     return 0;
 }
 
-TexturePtr TexturedEntity::SetTexture(TexturePtr newtexture) noexcept {
-    m_texture = std::move(newtexture);
+SDL_Texture * TexturedEntity::SetTexture(SDL_Texture *newtexture) noexcept {
+    m_texture = newtexture;
     return newtexture;
 }
 
+
 [[nodiscard]] SDL_Texture* TexturedEntity::GetTexture() const {
-    return m_texture.get();
+    return m_texture;
 }
 
 SDL_Color TexturedEntity::SetColor(const SDL_Color newcolor) {
@@ -127,35 +122,6 @@ SDL_Rect TexturedEntity::GetRect() const {
     return m_rect;
 }
 
-bool TexturedEntity::InitializeTextureFromPath() {
-    m_visible = true;
-    if (!m_path.data() || m_path[0] == '\0') return false;
-    m_texture.reset();
-    if (!SetTextureFromPath())
-        return false;
-    return true;
-}
-
-bool TexturedEntity::SetTextureFromPath() {
-    // 创建新纹理
-    SDL_Texture* newTexture = IMG_LoadTexture(m_game_instance.GetSDLRenderer(), m_path.c_str());
-    if (newTexture == nullptr) return false;
-    // 设置新纹理 + 更新变量
-    m_texture.reset(newTexture);
-    SDL_GetTextureSize(m_texture.get(),&m_texture_size.x,&m_texture_size.y);
-    return true;
-}
-// FIXME: 疑似无效？
 glm::vec2 TexturedEntity::TransScreenPos() const {
     return m_world_pos - m_game_instance.GetCurrentScene()->GetCamera()->GetWorldPos();
-}
-
-// FIXME: 疑似逻辑错误？
-bool TexturedEntity::IsInCameraRange() const {
-    if (m_world_pos.x < 0 ||
-        m_world_pos.y < 0 ||
-        m_world_pos.x > m_game_instance.GetWindowSize().x ||
-        m_world_pos.y > m_game_instance.GetWindowSize().y) {
-        return false;
-    } return true;
 }

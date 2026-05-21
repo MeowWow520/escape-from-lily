@@ -6,9 +6,9 @@
 #define ESCAPE_FROM_LILY_SCENEMAIN_H
 #include "core/Scene.h"
 #include "core/Entities/Background.h"
-#include "core/Input/KeyboardInput.h"
 #include "core/Entities/Camera.h"
-
+#include "core/Factory/EntityFactory.h"
+#include "core/Factory/EntityTypes.h"
 
 
 class SceneMain : public Scene {
@@ -26,8 +26,8 @@ class SceneMain : public Scene {
 
     private:
         // TODO: 添加背景转换
-        Background *m_current_background{};
-        Camera *m_camera{};
+        EntityPtr<Background> m_current_background{};
+        EntityPtr<Camera> m_camera{};
 };
 
 #endif //ESCAPE_FROM_LILY_SCENEMAIN_H

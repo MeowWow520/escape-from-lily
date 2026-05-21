@@ -19,6 +19,8 @@ class Player : public MovableEntity {
         void Update(float dt) override;
         void Render() override;
         int Quit() override;
+
+        std::string SetName(std::string name);
 };
 
 

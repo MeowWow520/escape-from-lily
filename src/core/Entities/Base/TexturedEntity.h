@@ -11,11 +11,8 @@
 
 class TexturedEntity : public ObjectScreen {
     protected:
-        using TexturePtr = std::unique_ptr<
-                SDL_Texture,
-                decltype(&SDL_DestroyTexture)>;
 
-        TexturePtr m_texture{nullptr, SDL_DestroyTexture}; // 实体的纹理
+        SDL_Texture *m_texture{};                          // 实体的纹理
         SDL_Color m_color_mod{COLOR(0xFFFFFFFF)};        // 颜色调制 + 透明度
         SDL_BlendMode m_blend_mode{SDL_BLENDMODE_BLEND};   // 像素混合模式
         bool m_texture_dirty{false};                       // 脏标记
@@ -35,7 +32,7 @@ class TexturedEntity : public ObjectScreen {
 
         int Initialize() override;
         // setter 和 getter
-        TexturePtr SetTexture(TexturePtr newtexture) noexcept;
+        SDL_Texture* SetTexture(SDL_Texture* newtexture) noexcept;
         [[nodiscard]] SDL_Texture* GetTexture() const;
         SDL_Color SetColor(SDL_Color newcolor);
         [[nodiscard]] SDL_Color GetColorMod() const;
@@ -61,26 +58,10 @@ class TexturedEntity : public ObjectScreen {
         [[nodiscard]] glm::vec2 GetHitbox() const;
 
         /**
-         * InitializeTextureFromPath 读取成员 m_path 的值，将 m_path 指向的文件作为纹理渲染，将该文件进行初始化。并将是否显示设为允许
-         *
-         * @return 初始化成功返回 true，失败返回 false
-         */
-        bool InitializeTextureFromPath();
-
-        /**
-         * SetTextureFromPath 读取成员 m_path 的值，将 m_path 指向的文件作为纹理赋值到 m_texture
-         *
-         * @return 初始化成功返回 true，失败返回 false
-         */
-        bool SetTextureFromPath();
-
-        /**
          * TranScreenPos是将世界坐标转化为屏幕坐标的函数
          * @return 屏幕坐标
          */
         [[nodiscard]] glm::vec2 TransScreenPos() const;
-        // FIXME: 无用的函数？
-        [[nodiscard]] bool IsInCameraRange() const;
 };
 
 #endif //ESCAPE_FROM_LILY_TEXTUREDENTITY_H

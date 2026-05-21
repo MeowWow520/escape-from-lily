@@ -7,20 +7,20 @@
 
 
 int Camera::Initialize() {
+    m_visible = false;
     m_border = 100.0f * m_game_instance.GetCurrentScene()->GetWorldScale().x;
     m_camera_active_range= { 0, 0,
         m_game_instance.GetCurrentScene()->GetWorldSize().x - m_game_instance.GetWindowSize().x,
         m_game_instance.GetCurrentScene()->GetWorldSize().y - m_game_instance.GetWindowSize().y
     };
-    m_visible = false;
 
     // 设置碰撞箱
     const SDL_FRect window = {0, 0,
         m_game_instance.GetWindowSize().x,
         m_game_instance.GetWindowSize().y
     };
+    // FIXME: 无用的变量？
     SDL_FRect hitbox_size = {0, 0, 0, 0};
-
     SDL_GetRectIntersectionFloat(&window,&m_camera_active_range, &hitbox_size);
     m_entity_hitbox = {hitbox_size.w, hitbox_size.h};
 
