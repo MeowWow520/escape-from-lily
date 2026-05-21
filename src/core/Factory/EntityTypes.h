@@ -8,8 +8,6 @@
 #include <string>
 #include <variant>
 #include <glm/vec2.hpp>
-#include <SDL3/SDL_render.h>
-
 #include "../Object/Object.h"
 
 
@@ -24,7 +22,6 @@ enum class EntityType : uint8_t {
 struct PlayerParams {
     std::string m_player_name;
     std::string texture_path;
-    glm::vec2 world_pos;
 };
 
 struct CameraParams {

@@ -7,6 +7,7 @@
 #include "core/Scene.h"
 #include "core/Entities/Background.h"
 #include "core/Entities/Camera.h"
+#include "core/Entities/Player.h"
 #include "core/Factory/EntityTypes.h"
 
 
@@ -22,11 +23,13 @@ class SceneMain : public Scene {
         int Quit() override;
 
         [[nodiscard]] Camera* GetCamera() override;
+        [[nodiscard]] Player* GetPlayer() override;
 
     private:
         // TODO: 添加背景转换
         EntityPtr<Background> m_current_background{};
         EntityPtr<Camera> m_camera{};
+        EntityPtr<Player> m_player{};
 };
 
 #endif //ESCAPE_FROM_LILY_SCENEMAIN_H

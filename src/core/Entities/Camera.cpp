@@ -9,7 +9,6 @@
 
 int Camera::Initialize() {
     m_visible = false;
-    m_border = 100.0f * m_game_instance.GetCurrentScene()->GetWorldScale().x;
     m_camera_active_range= { 0, 0,
         m_game_instance.GetCurrentScene()->GetWorldSize().x - m_game_instance.GetWindowSize().x,
         m_game_instance.GetCurrentScene()->GetWorldSize().y - m_game_instance.GetWindowSize().y
@@ -29,10 +28,21 @@ int Camera::Initialize() {
 }
 
 void Camera::Update(const float dt) {
-    m_world_pos += m_game_instance.GetKeyboardInput()->GetMovementNormalizeVec2() * m_max_speed * dt;
-    // 钳制到有效范围，确保相机始终在边界内且可以往回移动
-    m_world_pos.x = std::clamp(m_world_pos.x, m_camera_active_range.x, m_camera_active_range.x + m_camera_active_range.w);
-    m_world_pos.y = std::clamp(m_world_pos.y, m_camera_active_range.y, m_camera_active_range.y + m_camera_active_range.h);
+    // 计算理想相机位置：玩家中心对齐屏幕中心
+    const Player* player = m_game_instance.GetCurrentScene()->GetPlayer();
+    glm::vec2 target = {
+        player->GetWorldPos().x + player->GetTextureSize().x / 2.0f - m_game_instance.GetWindowSize().x / 2.0f,
+        player->GetWorldPos().y + player->GetTextureSize().y / 2.0f - m_game_instance.GetWindowSize().y / 2.0f
+    };
+    // 限制相机在合法范围
+    target.x = std::clamp(target.x,
+        m_camera_active_range.x,
+        m_camera_active_range.x + m_camera_active_range.w);
+    target.y = std::clamp(target.y,
+        m_camera_active_range.y,
+        m_camera_active_range.y + m_camera_active_range.h);
+    // 更新相机位置
+    m_world_pos = target;
 }
 
 
@@ -47,13 +57,4 @@ float Camera::SetBorder(const float newborder) {
 
 float Camera::GetBorder() const {
     return m_border;
-}
-
-bool Camera::CanCameraActive() const {
-    if (m_world_pos.x < m_camera_active_range.x ||
-        m_world_pos.y < m_camera_active_range.y ||
-        m_world_pos.x > m_camera_active_range.w + m_camera_active_range.x ||
-        m_world_pos.y > m_camera_active_range.h + m_camera_active_range.y)
-        return false;
-    return true;
 }

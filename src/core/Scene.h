@@ -6,6 +6,7 @@
 #define ESCAPE_FROM_LILY_SCENE_H
 #include "Object/Object.h"
 #include "Entities/Camera.h"
+#include "Entities/Player.h"
 
 
 class Scene : public Object {
@@ -22,6 +23,7 @@ class Scene : public Object {
         void Render() override { }
         int Quit() override { return 0; }
         [[nodiscard]] virtual Camera* GetCamera() { return nullptr; }
+        [[nodiscard]] virtual Player* GetPlayer() { return nullptr; }
 
         // setter 和 getter
         [[nodiscard]] glm::vec2 GetWorldSize() const {

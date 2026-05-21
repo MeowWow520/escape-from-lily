@@ -4,6 +4,8 @@
 
 .idea/
 .opencode/
+# 暂时忽略音乐文件
+assets/music/
 build/
 cmake-build-*/
 draft/

@@ -58,12 +58,11 @@ EntityPtr<Player> EntityFactory::CreatePlayer(const EntityParams &params) {
         return nullptr;
     }
     // 创建实体
-    const auto&[m_player_name, texture_path, world_pos] = std::get<PlayerParams>(params);
+    const auto&[m_player_name, texture_path] = std::get<PlayerParams>(params);
     EntityPtr<Player> bg(new Player());
     // 设置初始参数
     bg->SetName(m_player_name);
     bg->SetPath(texture_path);
-    bg->SetWorldPos(world_pos);
     EntityPtr<Player> entity = std::move(bg);
     // 初始化
     if (entity->Initialize() != 0) {

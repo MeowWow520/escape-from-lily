@@ -23,10 +23,6 @@ class Camera : public MovableEntity {
         [[nodiscard]] SDL_FRect GetCameraActiveRange() const;
         float SetBorder(float newborder);
         [[nodiscard]] float GetBorder() const;
-
-
-    private:
-        [[nodiscard]] bool CanCameraActive() const;
 };
 
 

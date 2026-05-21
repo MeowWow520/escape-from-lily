@@ -15,7 +15,7 @@ constexpr bool SWITCHER_ACCELERATION = false;
 constexpr bool SWITCHER_KEYLOGGING = false;
 
 // 实体默认最大速度
-#define DEFAULT_MAX_SPEED    1500.0f
+#define DEFAULT_MAX_SPEED    750.0f
 // 实体默认最大加速度
 #define DEFAULT_ACCELERATION 50.0f
 
