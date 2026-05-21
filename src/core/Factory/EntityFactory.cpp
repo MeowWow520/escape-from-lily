@@ -3,65 +3,73 @@
 //
 
 #include "EntityFactory.h"
-
 #include "../Logger/Log.h"
-#include "../Entities/Background.h"
-#include "../Entities/Camera.h"
-#include "../Entities/Player.h"
 
 
-EntityPtr<Object> EntityFactory::Create(const EntityType type, const EntityParams &params) const {
-    EntityPtr<Object> entity;
 
-    switch (type) {
-        case EntityType::Background: {
-            if (!std::holds_alternative<BackgroundParams>(params)) {
-                EFL_LOGGER_ERROR(LogCategory::Factory, "Wrong params pass to EntityType::Background");
-                return nullptr;
-            }
-            const auto&[texture_path, world_pos] = std::get<BackgroundParams>(params);
-            EntityPtr<Background> bg(new Background());
-            bg->SetPath(texture_path);
-            bg->SetWorldPos(world_pos);
-            entity = std::move(bg);
-            break;
-        }
-        case EntityType::Camera: {
-            if (!std::holds_alternative<CameraParams>(params)) {
-                EFL_LOGGER_ERROR(LogCategory::Factory, "Wrong params pass to EntityType::Camera");
-                return nullptr;
-            }
-            const auto&[world_pos] = std::get<CameraParams>(params);
-            EntityPtr<Camera> ca(new Camera());
-            ca->SetWorldPos(world_pos);
-            entity = std::move(ca);
-            break;
-        }
-        case EntityType::Player: {
-            if (!std::holds_alternative<PlayerParams>(params)) {
-                EFL_LOGGER_ERROR(LogCategory::Factory, "Wrong params pass to EntityType::Player");
-                return nullptr;
-            }
-            const auto&[name, texture_path, world_pos] = std::get<PlayerParams>(params);
-            EntityPtr<Player> pl(new Player());
-            pl->SetPath(texture_path);
-            pl->SetWorldPos(world_pos);
-            pl->SetName(name);
-            entity = std::move(pl);
-            break;
-        }
-        case EntityType::UserInterface: {
-            break;
-        }
-            default: {
-            EFL_LOGGER_ERROR(LogCategory::Factory, "Unknow entity");
-            break;
-        }
+EntityPtr<Camera> EntityFactory::CreateCamera(const EntityParams &params) {
+    // 检查是否符合条件
+    if (!std::holds_alternative<CameraParams>(params)) {
+        EFL_LOGGER_ERROR(LogCategory::Factory, "Wrong params pass to EntityType::CameraParams");
+        return nullptr;
     }
+    // 创建实体
+    const auto&[world_pos, m_border] = std::get<CameraParams>(params);
+    EntityPtr<Camera> bg(new Camera());
+    // 设置初始参数
+    bg->SetWorldPos(world_pos);
+    bg->SetBorder(m_border);
+    EntityPtr<Camera> entity = std::move(bg);
+    // 初始化
     if (entity->Initialize() != 0) {
         EFL_LOGGER_ERROR(LogCategory::Factory, "Initialize entity failed");
         return nullptr;
     }
-    EFL_LOGGER_INFO(LogCategory::Factory, "Entity initialized: Type = {}", entity->GetName());
+    EFL_LOGGER_INFO(LogCategory::Factory, "Entity initialized: Type = EntityType::Camera");
+    return entity;
+}
+
+EntityPtr<Background> EntityFactory::CreateBackground(const EntityParams &params) {
+    // 检查是否符合条件
+    if (!std::holds_alternative<BackgroundParams>(params)) {
+        EFL_LOGGER_ERROR(LogCategory::Factory, "Wrong params pass to EntityType::BackgroundParams");
+        return nullptr;
+    }
+    // 创建实体
+    const auto&[texture_path, world_pos] = std::get<BackgroundParams>(params);
+    EntityPtr<Background> bg(new Background());
+    // 设置初始参数
+    bg->SetPath(texture_path);
+    bg->SetWorldPos(world_pos);
+    EntityPtr<Background> entity = std::move(bg);
+    // 初始化
+    if (entity->Initialize() != 0) {
+        EFL_LOGGER_ERROR(LogCategory::Factory, "Initialize entity failed");
+        return nullptr;
+    }
+    EFL_LOGGER_INFO(LogCategory::Factory, "Entity initialized: Type = EntityType::Background");
+    return entity;
+}
+
+EntityPtr<Player> EntityFactory::CreatePlayer(const EntityParams &params) {
+    // 检查是否符合条件
+    if (!std::holds_alternative<PlayerParams>(params)) {
+        EFL_LOGGER_ERROR(LogCategory::Factory, "Wrong params pass to EntityType::PlayerParams");
+        return nullptr;
+    }
+    // 创建实体
+    const auto&[m_player_name, texture_path, world_pos] = std::get<PlayerParams>(params);
+    EntityPtr<Player> bg(new Player());
+    // 设置初始参数
+    bg->SetName(m_player_name);
+    bg->SetPath(texture_path);
+    bg->SetWorldPos(world_pos);
+    EntityPtr<Player> entity = std::move(bg);
+    // 初始化
+    if (entity->Initialize() != 0) {
+        EFL_LOGGER_ERROR(LogCategory::Factory, "Initialize entity failed");
+        return nullptr;
+    }
+    EFL_LOGGER_INFO(LogCategory::Factory, "Entity initialized: Type = EntityType::Player");
     return entity;
 }

@@ -28,7 +28,6 @@ class SceneMain : public Scene {
         // TODO: 添加背景转换
         EntityPtr<Background> m_current_background{};
         EntityPtr<Camera> m_camera{};
-        EntityFactory* m_entity_factory{};
 };
 
 #endif //ESCAPE_FROM_LILY_SCENEMAIN_H

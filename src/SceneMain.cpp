@@ -14,16 +14,14 @@ int SceneMain::Initialize() {
     // TODO: 玩家在世界的中间
     // m_player_position = m_camera_pos + m_game_instance.GetWindowSize() / glm::vec2(2);
 
-    // TODO: 使用工厂方法重构
-    CameraParams camera = {{0,0}};
-    m_camera = m_entity_factory->Create(EntityType::Camera, camera);
-    m_camera->SetWorldPos((m_world_size - m_game_instance.GetWindowSize()) / glm::vec2(2));
+    CameraParams camera = {(m_world_size - m_game_instance.GetWindowSize()) / glm::vec2(2)};
+    m_camera = EntityFactory::CreateCamera(camera);
 
-
-    // 初始化背景
-    m_current_background = new Background();
-    m_current_background->SetPath("assets/images/backgrounds/purple.png");
-    EFL_CHECK(LogCategory::Entity, !m_current_background->Initialize(), "Background Initialize()");
+    BackgroundParams background = {
+        "assets/images/backgrounds/purple.png",
+        {0,0}
+    };
+    m_current_background = EntityFactory::CreateBackground(background);
     return 0;
 }
 
@@ -41,15 +39,11 @@ void SceneMain::Render() {
 }
 
 int SceneMain::Quit() {
-    // 删除背景资源
-    EFL_CHECK(LogCategory::Core, m_current_background->Quit() == 0, "Background Quit()");
-    delete m_current_background;
-    // 删除相机资源
-    delete m_camera;
-
+    m_camera.reset();
+    m_current_background.reset();
     return 0;
 }
 
 Camera* SceneMain::GetCamera() {
-    return m_camera;
+    return m_camera.get();
 }
