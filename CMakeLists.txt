@@ -45,6 +45,8 @@ add_executable(escape-from-lily
         src/core/Factory/EntityFactory.cpp
         src/core/Factory/EntityFactory.h
         src/core/Factory/EntityTypes.h
+        src/core/Entities/Enemies/EnemyRose.cpp
+        src/core/Entities/Enemies/EnemyRose.h
 )
 
 set(ASSETS_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/assets")

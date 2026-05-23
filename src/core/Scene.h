@@ -11,8 +11,8 @@
 
 class Scene : public Object {
     protected:
-        glm::vec2 m_world_size{};       // 世界的大小
-        glm::vec2 m_world_scale{};
+        glm::vec2 m_world_size{};  // 世界的大小
+        glm::vec2 m_world_scale{}; // 世界的缩放
     public:
         explicit Scene(const char* m_entity_name = "Scene") : Object(m_entity_name) {}
 
