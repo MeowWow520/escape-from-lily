@@ -689,6 +689,225 @@ int SceneMain::Quit() {
 }
 ```
 
+## RichTextBase 基类设计（未来扩展）
+
+### 设计动机
+
+当需要**每个字独立样式**（如彩虹色标题、逐字飞入动画、部分文字加粗/变色）时，不能简单地存储一个纯字符串。但也不应退化为 N 个独立 `TextLabel`——那样会失去 Text Engine 的合批优势（单次 `DrawRendererText`）和字距排版。
+
+`RichTextBase` 的核心理念：**字符串存一份，样式按段叠加，渲染时智能合并**。
+
+### 类定义
+
+```cpp
+// RichTextBase.h
+#ifndef ESCAPE_FROM_LILY_RICHTEXTBASE_H
+#define ESCAPE_FROM_LILY_RICHTEXTBASE_H
+
+#include <string>
+#include <vector>
+#include <SDL3/SDL.h>
+#include <SDL3_ttf/SDL_ttf.h>
+#include "../Object/ObjectScreen.h"
+
+class FontManager;
+
+/// 单个字符的样式覆盖
+struct CharStyle {
+    SDL_Color color{255, 255, 255, 255};
+    TTF_Font* font{nullptr};       // nullptr = 使用默认字体
+};
+
+/// 连续区间的样式定义
+struct TextStyleSpan {
+    size_t start{};
+    size_t length{};               // 0 表示「直到末尾」
+    CharStyle style;
+};
+
+class RichTextBase : public ObjectScreen {
+public:
+    explicit RichTextBase(const char* entity_name = "RichTextBase")
+        : ObjectScreen(entity_name) {}
+
+    ~RichTextBase() override = default;
+
+    int Initialize() override;
+    void Render() override;
+    int Quit() override;
+
+    /// 设置完整文字内容
+    void SetText(const std::string& text);
+
+    /// 设置某段文字的样式（追加到 m_spans）
+    void AddStyleSpan(size_t start, size_t length, CharStyle style);
+
+    /// 清除所有样式覆盖
+    void ClearStyleSpans();
+
+    /// 标记脏，下次 Render 前重建 TTF_Text 分段
+    void MarkDirty() { m_dirty = true; }
+
+private:
+    /// 根据 string + spans 生成若干连续 TTF_Text 分段
+    void Rebuild();
+
+    FontManager* m_font_manager{};
+    TTF_Font*    m_default_font{};              // 默认字体
+    std::string  m_text;                         // 完整文字内容
+    std::vector<TextStyleSpan> m_spans;          // 样式覆盖（通常 1~5 个）
+    std::vector<TTF_Text*> m_segments;           // 重建后的渲染分段
+    bool m_dirty{true};                          // 需要重建
+};
+
+#endif //ESCAPE_FROM_LILY_RICHTEXTBASE_H
+```
+
+### 渲染决策树
+
+```
+Rebuild() 内部逻辑：
+
+m_spans 为空
+  └─ m_segments = { 1 个 TTF_Text } → 1 次 Draw
+
+m_spans 非空，合并相邻同样式区间后：
+  └─ m_segments 数量 = M（M ≤ 样式变化次数 + 1）
+  └─ 例："Hello[红色]World[蓝色]!"
+      → 3 个 TTF_Text → 3 次 Draw
+
+m_spans 密集，每个 pos 都有独立样式
+  └─ m_segments 数量 ≈ N（逐字，用于动画特效）
+```
+
+### Rebuild 实现核心
+
+```cpp
+void RichTextBase::Rebuild() {
+    if (!m_dirty) return;
+
+    // 清除旧分段
+    for (auto* seg : m_segments) {
+        m_font_manager->DestroyText(seg);
+    }
+    m_segments.clear();
+
+    if (m_spans.empty()) {
+        // 无样式覆盖 → 1 个 TTF_Text，最高效
+        TTF_Text* text = m_font_manager->CreateText(
+            m_default_font, m_text, {255, 255, 255, 255});
+        if (text) m_segments.push_back(text);
+        m_dirty = false;
+        return;
+    }
+
+    // 构建「字符下标 → CharStyle」映射
+    std::vector<CharStyle> char_styles(m_text.length());
+    for (auto& style : char_styles) {
+        style.color = {255, 255, 255, 255};
+        style.font = m_default_font;
+    }
+    for (const auto& span : m_spans) {
+        size_t end = span.length == 0 ? m_text.length()
+                                      : span.start + span.length;
+        for (size_t i = span.start; i < end && i < m_text.length(); i++) {
+            char_styles[i] = span.style;
+        }
+    }
+
+    // 合并相邻同样式字符为分段
+    size_t seg_start = 0;
+    CharStyle current = char_styles[0];
+
+    for (size_t i = 1; i <= m_text.length(); i++) {
+        if (i == m_text.length() ||
+            char_styles[i].color.r != current.color.r ||
+            char_styles[i].color.g != current.color.g ||
+            char_styles[i].color.b != current.color.b ||
+            char_styles[i].color.a != current.color.a ||
+            char_styles[i].font != current.font) {
+
+            // [seg_start, i) 是连续同样式区间
+            std::string segment = m_text.substr(seg_start, i - seg_start);
+            TTF_Text* seg_text = m_font_manager->CreateText(
+                current.font ? current.font : m_default_font,
+                segment, current.color);
+            if (seg_text) m_segments.push_back(seg_text);
+
+            if (i < m_text.length()) {
+                seg_start = i;
+                current = char_styles[i];
+            }
+        }
+    }
+
+    m_dirty = false;
+}
+```
+
+### Render 实现
+
+```cpp
+void RichTextBase::Render() {
+    if (!m_visible) return;
+
+    if (m_dirty) Rebuild();
+
+    SDL_Renderer* renderer = m_game_instance.GetSDLRenderer();
+    float cursor_x = m_screen_pos.x;
+
+    for (auto* seg : m_segments) {
+        m_font_manager->DrawText(renderer, seg, cursor_x, m_screen_pos.y);
+        glm::ivec2 size = m_font_manager->GetTextSize(seg);
+        cursor_x += static_cast<float>(size.x);  // 手动拼接 x 偏移
+    }
+}
+```
+
+> **注意**：分段后字距 (Kerning) 和文字整形丢失。跨段的 `AV` 不会自动缩紧，`ﬁ` 合字不会跨越段边界。对于中文（无 kerning 需求）影响很小；对于英文，建议仅在需要视觉特效的场景使用分段。
+
+### 使用示例
+
+```cpp
+// 彩虹标题：每个字符不同颜色
+const SDL_Color rainbow[] = {
+    {255, 0, 0, 255},     // 红
+    {255, 165, 0, 255},   // 橙
+    {255, 255, 0, 255},   // 黄
+    {0,   255, 0, 255},   // 绿
+    {0,   0,   255, 255}, // 蓝
+    {128, 0,   128, 255}  // 紫
+};
+
+auto title = std::make_unique<RichTextBase>();
+title->SetFontManager(&m_font_manager);
+title->SetFont(default_font);
+title->SetText("ESCAPE");
+for (size_t i = 0; i < 6; i++) {
+    title->AddStyleSpan(i, 1, {rainbow[i], nullptr});
+}
+title->SetScreenPos({100, 100});
+title->Initialize();
+
+// 渲染时自动合并 → 6 个 TTF_Text → 6 次 Draw
+// 虽然比纯字符串多，但仅限于标题区域，开销可接受
+
+// 清除样式后回到 1 次 Draw
+title->ClearStyleSpans();
+title->MarkDirty();
+```
+
+### 与 TextLabel 的关系
+
+| | TextLabel | RichTextBase |
+|---|---|---|
+| 适合场景 | 按钮、标签、对话、FPS | 标题动画、特效文字、部分变色 |
+| 性能 | 1 个 TTF_Text / 1 次 Draw | M 个 TTF_Text / M 次 Draw |
+| Kerning | 自动保留 | 分界线丢失 |
+| 使用复杂度 | 低 | 中 |
+
+`RichTextBase` 继承自 `ObjectScreen`，与 `TextLabel` 平级，而非继承自 `TextLabel`。两者共用 `FontManager` 服务。
+
 ## 运行时文字更新示例
 
 ```cpp
@@ -758,7 +977,7 @@ assets/fonts/NotoSansSC-Bold.ttf
 - **TextFPS** — 在场景中实时显示 FPS（每帧调用 `SetText`）
 - **多行排版** — 手动拆分 `\n` 创建多个 TextLabel，或用经典路径的 `_Wrapped` 变体
 - **文字动画** — 经典路径 + TexturedEntity 实现旋转/缩放/淡入淡出的标题效果
-- **富文本** — 解析标记（如 `[color=red]...[/color]`），拆分为多个 TTF_Text 对象拼接渲染
+- **RichTextBase 落地** — 实现完整的 `RichTextBase` 类（设计见上文），支持 `AddStyleSpan` 的富文本标记解析器（如 `[color=red]...[/color]` 语法）
 - **字体回退（Fallback）** — `TTF_AddFallbackFont` 实现中文字体 → 日文字体 → emoji 字体逐级回退
 - **SDF 字体** — `TTF_SetFontSDF(font, true)` 开启 SDF（Signed Distance Field）渲染，支持任意缩放不失真
 - **配置驱动** — 从 JSON 读取字体路径和字号，运行时动态加载
