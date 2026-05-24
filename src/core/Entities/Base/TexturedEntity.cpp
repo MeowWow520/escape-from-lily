@@ -13,7 +13,7 @@ int TexturedEntity::Initialize() {
     return 0;
 }
 
-SDL_Texture * TexturedEntity::SetTexture(SDL_Texture *newtexture) noexcept {
+SDL_Texture * TexturedEntity::SetTexture(SDL_Texture *newtexture) {
     m_texture = newtexture;
     return newtexture;
 }

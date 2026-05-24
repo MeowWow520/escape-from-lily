@@ -20,7 +20,7 @@ class TextBase : public ObjectScreen {
 
         ~TextBase() override = default;
         // setter 和 getter
-        std::string SetText(std::string newtext);
+        std::string SetText(const std::string& newtext);
         [[nodiscard]] std::string GetText() const;
         char SetCurrentChar(char newchar);
         [[nodiscard]] char GetCurrentChar() const;

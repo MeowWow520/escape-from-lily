@@ -20,5 +20,7 @@ struct TextParam {
     SDL_Color color;             // 文本颜色
     float line_spacing;          // 行间距
     std::string font_path;       // 使用的字体
+    bool display_backgrd;
+    SDL_Color back_color;
 };
 #endif //ESCAPE_FROM_LILY_TEXTSTYPES_H

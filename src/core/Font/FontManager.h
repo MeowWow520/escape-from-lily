@@ -4,22 +4,33 @@
 
 #ifndef ESCAPE_FROM_LILY_FONTMANAGER_H
 #define ESCAPE_FROM_LILY_FONTMANAGER_H
+#include "SDL3_ttf/SDL_textengine.h"
 #include "../Game.h"
-/**
- * FontManager 负责接收来自 Scene 场景的消息，对应更新相应的文本。设置文本渲染的位置、样式等。
- */
+
+
 class FontManager {
     public:
-        // FIXME: 单例存疑
         static FontManager& GetInstance() {
             static FontManager instance;
             return instance;
         }
         FontManager(const FontManager&) = delete;
         FontManager& operator=(const FontManager&) = delete;
+
+
+        int Initialize();
+        void HandleEvents(SDL_Event event);
+        void Update(float dt);
+        void Render();
+        int Quit();
+
+        [[nodiscard]] TTF_TextEngine* GetTTFEngine() const;
+
     private:
-        FontManager();
+        FontManager() = default;
         Game& m_game_instance = Game::GetInstance();
+        TTF_TextEngine* m_text_engine{};
+
 };
 
 

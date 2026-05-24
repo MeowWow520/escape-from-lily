@@ -11,10 +11,13 @@
 #include "Def.h"
 #include "Scene.h"
 #include "../SceneMain.h"
+#include "Font/FontManager.h"
 #include "Logger/Log.h"
 
 
-Game::Game() {
+Game::Game()
+    : font_manager(FontManager::GetInstance())
+{
     m_title = "escape-from-lily";
     m_window_size = {1920, 1080};
     m_running = true;
@@ -28,6 +31,8 @@ Game::Game() {
 }
 
 int Game::Initialize() {
+    // 初始化字体管理
+    if (font_manager.Initialize() != 0) return -1;
     EFL_CHECK(LogCategory::Core, SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO), "SDL_Init");
     EFL_CHECK(LogCategory::Core, TTF_Init(), "TTF_Init");
     EFL_CHECK(LogCategory::Core, MIX_Init(), "MIX_Init");
@@ -119,6 +124,7 @@ int Game::Quit() {
         m_window = nullptr;
     }
     TTF_Quit();
+    EFL_CHECK(LogCategory::Core, font_manager.Quit(), "font_manager quit");
     MIX_Quit();
     SDL_Quit();
     return 0;

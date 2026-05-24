@@ -6,7 +6,7 @@
 
 #include "../Def.h"
 
-std::string TextBase::SetText(const std::string newtext) {
+std::string TextBase::SetText(const std::string& newtext) {
     m_text = newtext;
     return m_text;
 }
@@ -39,7 +39,7 @@ int TextBase::InitializeDefaultTextParam() {
     m_text_params.font_size = 14;
     m_text_params.text_each_line_width = DEFAULT_TEXT_EACH_LINE_WIDTH;
     m_text_params.color = {DEFAULT_TEXT_COLOR};
-    m_text_params.font_path = "assets/fonts/Noto_Sans_SC/static/NotoSansSC-ExtraBold.ttf";       // 使用的字体
+    m_text_params.font_path = DEFAULT_FONT_PATH;
+    m_text_params.display_backgrd = false;
     return 0;
 }
-
