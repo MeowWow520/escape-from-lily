@@ -4,7 +4,7 @@
 
 #ifndef ESCAPE_FROM_LILY_FONTMANAGER_H
 #define ESCAPE_FROM_LILY_FONTMANAGER_H
-
+#include "../Game.h"
 /**
  * FontManager 负责接收来自 Scene 场景的消息，对应更新相应的文本。设置文本渲染的位置、样式等。
  */
@@ -19,6 +19,7 @@ class FontManager {
         FontManager& operator=(const FontManager&) = delete;
     private:
         FontManager();
+        Game& m_game_instance = Game::GetInstance();
 };
 
 

@@ -51,7 +51,6 @@ add_executable(escape-from-lily
         src/core/Font/FontManager.h
         src/core/Font/TextBase.cpp
         src/core/Font/TextBase.h
-        src/core/Font/TextStypes.cpp
         src/core/Font/TextStypes.h
 )
 

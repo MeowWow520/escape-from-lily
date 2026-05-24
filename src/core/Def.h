@@ -18,6 +18,9 @@ constexpr bool SWITCHER_KEYLOGGING = false;
 #define DEFAULT_MAX_SPEED    750.0f
 // 实体默认最大加速度
 #define DEFAULT_ACCELERATION 50.0f
+// 默认每行最长的文本数
+#define DEFAULT_TEXT_EACH_LINE_WIDTH 20
+#define DEFAULT_TEXT_COLOR COLOR(0xff4d6dff)
 
 /**
  * 将 RGBA 颜色值分开转换为 4 位数值

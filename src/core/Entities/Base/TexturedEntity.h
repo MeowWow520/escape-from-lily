@@ -32,7 +32,7 @@ class TexturedEntity : public ObjectScreen {
 
         int Initialize() override;
         // setter 和 getter
-        SDL_Texture* SetTexture(SDL_Texture* newtexture) noexcept;
+        SDL_Texture* SetTexture(SDL_Texture* newtexture);
         [[nodiscard]] SDL_Texture* GetTexture() const;
         SDL_Color SetColor(SDL_Color newcolor);
         [[nodiscard]] SDL_Color GetColorMod() const;
