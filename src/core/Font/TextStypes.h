@@ -8,7 +8,8 @@
 
 
 enum class TextStype : uint8_t {
-    Static // 静态显示
+    Static,  // 静态显示
+    Dynamic  // 动态
 };
 
 struct TextParam {
@@ -20,7 +21,7 @@ struct TextParam {
     SDL_Color color;             // 文本颜色
     float line_spacing;          // 行间距
     std::string font_path;       // 使用的字体
-    bool display_backgrd;
-    SDL_Color back_color;
+    bool display_backgrd;        // 是否启用背景色？
+    SDL_Color back_color;        // 背景色
 };
 #endif //ESCAPE_FROM_LILY_TEXTSTYPES_H
