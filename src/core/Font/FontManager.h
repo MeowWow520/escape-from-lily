@@ -4,8 +4,10 @@
 
 #ifndef ESCAPE_FROM_LILY_FONTMANAGER_H
 #define ESCAPE_FROM_LILY_FONTMANAGER_H
+#include "TextBase.h"
 #include "SDL3_ttf/SDL_textengine.h"
 #include "../Game.h"
+#include "../Factory/EntityFactory.h"
 
 
 class FontManager {
@@ -30,7 +32,7 @@ class FontManager {
         FontManager() = default;
         Game& m_game_instance = Game::GetInstance();
         TTF_TextEngine* m_text_engine{};
-
+        std::unordered_map<std::string, TextBase> m_text_uo_map;
 };
 
 

@@ -31,7 +31,7 @@ class TextBase : public ObjectScreen {
         [[nodiscard]] float GetTextParam_rotation() const;
         glm::vec2 SetTextParam_scale(glm::vec2 scale);
         [[nodiscard]] glm::vec2 GetTextParam_scale() const;
-
+        int SetTextParam_text_display_time(int time);
 
 
 

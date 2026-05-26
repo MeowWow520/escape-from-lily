@@ -72,3 +72,25 @@ EntityPtr<Player> EntityFactory::CreatePlayer(const EntityParams &params) {
     EFL_LOGGER_INFO(LogCategory::Factory, "Entity initialized: Type = EntityType::Player");
     return entity;
 }
+
+EntityPtr<TextBase> EntityFactory::CreateText(const EntityParams& params) {
+    // 检查是否符合条件
+    if (!std::holds_alternative<TextBaseParams>(params)) {
+        EFL_LOGGER_ERROR(LogCategory::Factory, "Wrong params pass to EntityType::TextBaseParams");
+        return nullptr;
+    }
+    const auto&[m_screen_pos, text, text_display_time] = std::get<TextBaseParams>(params);
+    EntityPtr<TextBase> bg(new TextBase());
+    // 设置初始参数
+    bg->SetScreenPos(m_screen_pos);
+    bg->SetStringParam_text(text);
+    bg->SetTextParam_text_display_time(text_display_time);
+    EntityPtr<TextBase> entity = std::move(bg);
+    // 初始化
+    if (entity->Initialize() != 0) {
+        EFL_LOGGER_ERROR(LogCategory::Factory, "Initialize entity failed");
+        return nullptr;
+    }
+    EFL_LOGGER_INFO(LogCategory::Factory, "Entity initialized: Type = EntityType::TextBaseParams");
+    return entity;
+}

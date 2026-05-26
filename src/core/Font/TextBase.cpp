@@ -67,6 +67,11 @@ glm::vec2 TextBase::GetTextParam_scale() const {
     return m_string.text_param.scale;
 }
 
+int TextBase::SetTextParam_text_display_time(const int time) {
+    m_string.text_param.text_display_time = time;
+    return time;
+}
+
 int TextBase::InitializeDefaultTextParam(const TextStype stype) {
     switch (stype) {
         case TextStype::Static: {
