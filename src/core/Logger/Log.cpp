@@ -42,6 +42,7 @@ namespace EFL {
             case LogCategory::Scene:    return "Scene";
             case LogCategory::Renderer: return "Renderer";
             case LogCategory::Factory:  return "Factory";
+            case LogCategory::Font:     return "Font";
         }
         return "unknow";
     }
@@ -65,6 +66,7 @@ namespace EFL {
         CreateLogger("Scene", config, file_sink);
         CreateLogger("Renderer", config, file_sink);
         CreateLogger("Factory", config, file_sink);
+        CreateLogger("Font", config, file_sink);
         spdlog::info("Log system initialized, file: {}", config.file_path);
     }
     void QuitLogger() {
@@ -74,11 +76,13 @@ namespace EFL {
         spdlog::get("Scene")->flush();
         spdlog::get("Renderer")->flush();
         spdlog::get("Factory")->flush();
+        spdlog::get("Font")->flush();
         spdlog::drop("Core");
         spdlog::drop("Entity");
         spdlog::drop("Input");
         spdlog::drop("Scene");
         spdlog::drop("Renderer");
         spdlog::drop("Factory");
+        spdlog::drop("Font");
     }
 } // Escape from lily

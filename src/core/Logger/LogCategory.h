@@ -12,7 +12,8 @@ enum class LogCategory {
     Input,    // 键盘/鼠标的输入事件
     Scene,    // 场景切换，状态改变
     Renderer, // 纹理加载，渲染
-    Factory   // 工厂方法
+    Factory,  // 工厂方法
+    Font      // 字体
 };
 
 #endif //ESCAPE_FROM_LILY_LOGCATEGORY_H
