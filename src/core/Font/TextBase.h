@@ -17,6 +17,10 @@ class TextBase : public ObjectScreen {
             : ObjectScreen(m_entity_name) { }
 
         ~TextBase() override = default;
+        int Initialize() override;
+        int Quit() override;
+
+
         // setter 和 getter
         std::string SetStringParam_text(std::string text);
         [[nodiscard]] std::string GetStringParam_text() const;

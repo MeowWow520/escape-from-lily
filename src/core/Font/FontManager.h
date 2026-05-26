@@ -32,7 +32,7 @@ class FontManager {
         FontManager() = default;
         Game& m_game_instance = Game::GetInstance();
         TTF_TextEngine* m_text_engine{};
-        std::unordered_map<std::string, TextBase> m_text_uo_map;
+        std::unordered_map<std::string, TextBase> m_text_uo_map{};
 };
 
 

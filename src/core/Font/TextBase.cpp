@@ -8,6 +8,19 @@
 #include "../Logger/Log.h"
 
 
+int TextBase::Initialize() {
+    EFL_CHECK(LogCategory::Font,
+        InitializeDefaultTextParam(TextStype::Static) == 0,
+        "InitializeDefaultTextParam");
+
+    return 0;
+}
+
+int TextBase::Quit() {
+
+    return 0;
+}
+
 std::string TextBase::SetStringParam_text(std::string text) {
     m_string.text = text;
     return text;
