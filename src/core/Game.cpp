@@ -32,16 +32,16 @@ Game::Game()
 
 int Game::Initialize() {
     // 初始化字体管理
-    if (font_manager.Initialize() != 0) return -1;
-    EFL_CHECK(LogCategory::Core, SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO), "SDL_Init");
-    EFL_CHECK(LogCategory::Core, TTF_Init(), "TTF_Init");
-    EFL_CHECK(LogCategory::Core, MIX_Init(), "MIX_Init");
+    EFL_CHACK_WITH_GET_ERROR(LogCategory::Core, SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO), "SDL_Init");
+    EFL_CHACK_WITH_GET_ERROR(LogCategory::Core, TTF_Init(), "TTF_Init");
+    EFL_CHACK_WITH_GET_ERROR(LogCategory::Core, MIX_Init(), "MIX_Init");
     const bool SDL_CreateWR = SDL_CreateWindowAndRenderer(m_title.c_str(),
         static_cast<int>(m_window_size.x),
         static_cast<int>(m_window_size.y),
         SDL_WINDOW_RESIZABLE,&m_window, &m_renderer);
-    EFL_CHECK(LogCategory::Core, SDL_CreateWR, "SDL_CreateWindowAndRenderer");
-    EFL_CHECK(LogCategory::Core, SDL_SetRenderVSync(m_renderer, 1), "SDL_SetRenderVSync");
+    EFL_CHACK_WITH_GET_ERROR(LogCategory::Core, SDL_CreateWR, "SDL_CreateWindowAndRenderer");
+    EFL_CHACK_WITH_GET_ERROR(LogCategory::Core, SDL_SetRenderVSync(m_renderer, 1), "SDL_SetRenderVSync");
+    if (font_manager.Initialize(*this) != 0) return -1;
 
     // 设置按键绑定
     m_key_input = new KeyboardInput();

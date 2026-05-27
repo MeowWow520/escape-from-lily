@@ -58,6 +58,7 @@ NOTE: `docs/CONTRIBUTING.md` claims `camelCase` variables and `_` suffix for mem
 - `HEX_COLOR_BACKGROUND` (0x0096C7FF) — background clear color
 - `SWITCHER_ACCELERATION` / `SWITCHER_KEYLOGGING` — runtime feature toggles (constexpr bool)
 - `DEFAULT_MAX_SPEED` (1500.0f) / `DEFAULT_ACCELERATION` (50.0f) — default movement values
+- `DEFAULT_FONT_SIZE` (14.0f) / `DEFAULT_FONT_PATH` / `DEFAULT_TEXT_COLOR` / `DEFAULT_TEXT_EACH_LINE_WIDTH` / `DEFAULT_TEXT_LINE_SPACING` — text rendering defaults
 
 ### spdlog
 
@@ -69,12 +70,13 @@ NOTE: `docs/CONTRIBUTING.md` claims `camelCase` variables and `_` suffix for mem
 
 The sole logging system. Old `Def.h` macros (`EFL_ClassInit`, `SDL_LibInitChecker`, `CLR_*`) have been removed.
 
-**Log categories** (enum `LogCategory` in `LogCategory.h`): `Core`, `Entity`, `Input`, `Scene`, `Renderer`, `Factory`.
+**Log categories** (enum `LogCategory` in `LogCategory.h`): `Core`, `Entity`, `Input`, `Scene`, `Renderer`, `Factory`, `Font`.
 
 **Key macros** (defined in `Log.h`):
 - `EFL_LOGGER_INFO(cat, ...)` / `EFL_LOGGER_ERROR(cat, ...)` — categorized log output
 - `EFL_LOG_ENTITY_CREATED(name)` / `EFL_LOG_ENTITY_DESTROYED(name)` — called automatically by `Object` constructor/destructor
 - `EFL_CHECK(cat, expr, msg)` — if `expr` is falsy, logs error + `return -1`; else logs success. Used in Initialize/Quit for step verification.
+- `EFL_CHACK_WITH_GET_ERROR(cat, expr, msg)` — same logic as `EFL_CHECK` but on failure also appends `SDL_GetError()` output to the error log. Prefer this for SDL/TTF/SDL_image API calls; use plain `EFL_CHECK` for non-SDL calls.
 
 **`EFL_CHECK` usage note**: Initialize/Quit return `0` on success, `-1` on failure. So use `!call` or `call == 0` as the check expression:
 ```cpp
@@ -138,6 +140,17 @@ Input (standalone — does NOT inherit Object)
                          GetMovementNormalizeVec2() returns movement direction
 ```
 
+```
+Font (singleton manager + entity base class)
+  ├─ FontManager (singleton) ← holds TTF_TextEngine*, font lifecycle
+  │   src/core/Font/FontManager.h/.cpp
+  ├─ TextStypes.h            ← TextStype enum (Static/Colorful), BaseString struct
+  └─ TextBase                ← base class (src/core/Font/TextBase.h/.cpp)
+       │                        inherits ObjectScreen, holds BaseString + TTF_Text* + TTF_Font*
+       │                        setters/getters inline in header
+       └─ (future: TextLabel, RichTextBase derived classes)
+```
+
 **TransScreenPos()**: defined on `TexturedEntity`, computes screen pos via `m_world_pos - GetCamera()->GetWorldPos()`, reaching camera through `GetCurrentScene()->GetCamera()`.
 
 **Lifecycle pattern** (all classes follow this):
@@ -160,6 +173,8 @@ int ClassName::Initialize() {
 **Known lifecycle traps**:
 - `Camera::Initialize()` must explicitly set `m_max_speed` — the class inherits from `MovableEntity` which now sets `m_max_speed{DEFAULT_MAX_SPEED}` inline, but if you override without chaining, speed stays default.
 - `Background::Quit()` must manually `SDL_DestroyTexture(m_texture)` then set `m_texture = nullptr` — `m_texture` is a raw pointer.
+- **`FontManager::Initialize()` ordering**: MUST be called AFTER `TTF_Init()` AND `SDL_CreateWindowAndRenderer()`. If called before, `GetSDLRenderer()` returns nullptr and `TTF_CreateRendererTextEngine(nullptr)` crashes or fails silently.
+- **`FontManager::Initialize()` engine assignment**: MUST assign to `m_text_engine`, NOT a local variable. Correct: `m_text_engine = TTF_CreateRendererTextEngine(...);`. Using `TTF_TextEngine* engine = ...` (local) leaks the engine and makes `GetTTFEngine()` return nullptr.
 
 **Game singleton**: `Game::GetInstance()` returns the single instance. Copy/assign deleted. Main loop in `Game::Running()`:
 - Poll events → dispatch to current scene's HandleEvents

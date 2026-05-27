@@ -4,17 +4,15 @@
 
 #include "FontManager.h"
 
+#include "../Game.h"
 #include "../Logger/Log.h"
 
 
 
-int FontManager::Initialize() {
-    TTF_TextEngine* engine = TTF_CreateRendererTextEngine(m_game_instance.GetSDLRenderer());
-    if (!engine) {
-        EFL_LOGGER_ERROR(LogCategory::Core,
-            "TTF_CreateRendererTextEngine failed : {}", SDL_GetError());
-        return -1;
-    }
+int FontManager::Initialize(Game& game) {
+    m_game_instance = &game;
+    m_text_engine = TTF_CreateRendererTextEngine(m_game_instance->GetSDLRenderer());
+    EFL_CHACK_WITH_GET_ERROR(LogCategory::Font, m_text_engine, "TTF_CreateRendererTextEngine failed");
     return 0;
 }
 
@@ -28,7 +26,11 @@ void FontManager::Render() {
 }
 
 int FontManager::Quit() {
-    TTF_DestroyRendererTextEngine(m_text_engine);
+    if (m_text_engine != nullptr) {
+        TTF_DestroyRendererTextEngine(m_text_engine);
+        m_text_engine = nullptr;
+    }
+    EFL_LOGGER_INFO(LogCategory::Font, "TTF_DestroyRendererTextEngine successful");
     return 0;
 }
 

@@ -9,6 +9,7 @@
 #include "core/Entities/Camera.h"
 #include "core/Entities/Player.h"
 #include "core/Factory/EntityTypes.h"
+#include "core/Font/TextStatic.h"
 
 
 class SceneMain : public Scene {
@@ -30,6 +31,7 @@ class SceneMain : public Scene {
         EntityPtr<Background> m_current_background{};
         EntityPtr<Camera> m_camera{};
         EntityPtr<Player> m_player{};
+        EntityPtr<TextStatic> m_text_static{};
 };
 
 #endif //ESCAPE_FROM_LILY_SCENEMAIN_H
