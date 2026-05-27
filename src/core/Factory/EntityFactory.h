@@ -8,7 +8,6 @@
 #include "../Entities/Background.h"
 #include "../Entities/Camera.h"
 #include "../Entities/Player.h"
-#include "../Font/TextBase.h"
 
 
 class EntityFactory {
@@ -22,7 +21,6 @@ class EntityFactory {
         static EntityPtr<Camera> CreateCamera(const EntityParams& params);
         static EntityPtr<Background> CreateBackground(const EntityParams& params);
         static EntityPtr<Player> CreatePlayer(const EntityParams& params);
-        static EntityPtr<TextBase> CreateText(const EntityParams& params);
 };
 
 

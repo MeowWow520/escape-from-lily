@@ -23,8 +23,8 @@ constexpr bool SWITCHER_KEYLOGGING = false;
 #define DEFAULT_TEXT_COLOR COLOR(0xff4d6dff)
 #define DEFAULT_TEXT_BACKGROUND_COLOR COLOR(0x90e0efff)
 #define DEFAULT_FONT_PATH "assets/fonts/Noto_Sans_SC/static/NotoSansSC-ExtraBold.ttf"
-#define DEFAULT_FONT_SIZE 14.0F;
-#define DEFAULT_TEXT_LINE_SPACING 10;
+#define DEFAULT_FONT_SIZE 14.0F
+#define DEFAULT_TEXT_LINE_SPACING 10
 /**
  * 将 RGBA 颜色值分开转换为 4 位数值
  *

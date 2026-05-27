@@ -11,7 +11,6 @@
 
 #include "../Object/Object.h"
 
-
 enum class EntityType : uint8_t {
     Player,
     Camera,
@@ -39,19 +38,15 @@ struct UserInterfaceParams {
     std::string texture_path;
     glm::vec2 screen_position;
 };
-struct TextBaseParams {
-    glm::vec2 screen_pos;
-    std::string text;
-    int text_display_time;
-};
+
+
 
 using EntityParams = std::variant<
     std::monostate,
     PlayerParams,
     CameraParams,
     BackgroundParams,
-    UserInterfaceParams,
-    TextBaseParams
+    UserInterfaceParams
 >;
 
 struct EntityDeleter {

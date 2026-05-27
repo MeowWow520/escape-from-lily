@@ -49,9 +49,6 @@ add_executable(escape-from-lily
         src/core/Entities/Enemies/EnemyRose.h
         src/core/Font/FontManager.cpp
         src/core/Font/FontManager.h
-        src/core/Font/TextBase.cpp
-        src/core/Font/TextBase.h
-        src/core/Font/TextStypes.h
 )
 
 set(ASSETS_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/assets")
