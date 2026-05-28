@@ -124,7 +124,7 @@ int Game::Quit() {
         m_window = nullptr;
     }
     TTF_Quit();
-    EFL_CHECK(LogCategory::Core, font_manager.Quit(), "font_manager quit");
+    EFL_CHECK(LogCategory::Core, font_manager.Quit() == 0, "font_manager quit");
     MIX_Quit();
     SDL_Quit();
     return 0;

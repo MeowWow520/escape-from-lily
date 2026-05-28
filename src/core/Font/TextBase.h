@@ -68,7 +68,7 @@ class TextBase : public ObjectScreen {
         }
         [[nodiscard]] float GetText_display_time() const { return m_text.display_time; }
         bool SetText_is_display_time_out(const bool new_is_display_time) {
-            m_text.display_time = new_is_display_time;
+            m_text.is_display_time_out = new_is_display_time;
             return new_is_display_time;
         }
 };

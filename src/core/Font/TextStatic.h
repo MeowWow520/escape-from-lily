@@ -9,7 +9,7 @@
 
 class TextStatic : public TextBase {
     public:
-        explicit TextStatic(const char* m_entity_name = "ObjectScreen")
+        explicit TextStatic(const char* m_entity_name = "TextStatic")
             : TextBase(m_entity_name) {}
         ~TextStatic() override = default;
 

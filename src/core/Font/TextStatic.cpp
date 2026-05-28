@@ -34,10 +34,11 @@ void TextStatic::HandleEvents(SDL_Event event) {
 }
 
 void TextStatic::Update(const float dt) {
-    if (m_text.display_time != -1.0f)
+    if (m_text.display_time > 0.0f) {
         m_text.display_time -= dt;
-    if (m_text.display_time < 0)
-        m_text.is_display_time_out = true;
+        if (m_text.display_time <= 0.0f)
+            m_text.is_display_time_out = true;
+    }
 }
 
 void TextStatic::Render() {
