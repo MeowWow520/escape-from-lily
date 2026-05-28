@@ -43,72 +43,32 @@ cd vcpkg
 
 ```
 📁 escape-from-lily          # 项目根目录
-├── 📁 .github               # GitHub Actions 配置
-│   └── 📁 workflows         # CI 工作流
-│       └── ci-windows.yml
 ├── 📁 assets                # 资源目录
 │   ├── 📁 fonts             # 字体资源
 │   ├── 📁 images            # 图片资源
-│   │   ├── draft_Background_final.png
-│   │   └── test.jpg
 │   └── 📁 music             # 音乐/音效资源
 ├── 📁 docs                  # 文档目录
-│   ├── Build.md
-│   ├── Class.docs.md
-│   ├── CONTRIBUTING.md
-│   ├── CONTRIBUTORS.md
-│   ├── FileStructure.md
-│   ├── implement.md
 │   ├── 📁 implements        # 实现参考
-│   └── TODO.md
 ├── 📁 draft                 # 草稿/原型资源
 ├── 📁 src                   # 源代码目录
 │   ├── 📁 core              # 核心代码
 │   │   ├── 📁 Entities      # 实体类
 │   │   │   ├── 📁 Base      # 实体基类
-│   │   │   │   ├── MovableEntity.h / .cpp
-│   │   │   │   └── TexturedEntity.h / .cpp
-│   │   │   ├── Background.h / .cpp
-│   │   │   ├── Camera.h / .cpp
 │   │   │   ├── 📁 Enemies   # 敌人类
-│   │   │   │   └── EnemyRose.h / .cpp
-│   │   │   ├── Player.h / .cpp
-│   │   │   └── UserInterface.h / .cpp
 │   │   ├── 📁 Factory       # 实体工厂
-│   │   │   ├── EntityFactory.h / .cpp
-│   │   │   └── EntityTypes.h
 │   │   ├── 📁 Font          # 字体渲染
-│   │   │   ├── EFL_FontDef.h
-│   │   │   ├── FontManager.h / .cpp
-│   │   │   ├── TextBase.h
-│   │   │   ├── TextStatic.h / .cpp
-│   │   │   └── TextStypes.h
 │   │   ├── 📁 Input         # 输入处理
-│   │   │   ├── Action.h
-│   │   │   ├── Input.h / .cpp
-│   │   │   └── KeyboardInput.h / .cpp
 │   │   ├── 📁 Logger        # 日志系统
-│   │   │   ├── Log.h / .cpp
-│   │   │   └── LogCategory.h
 │   │   ├── 📁 Object        # 对象基类
-│   │   │   ├── Object.h / .cpp
-│   │   │   ├── ObjectScreen.h
-│   │   │   └── ObjectWorld.h
-│   │   ├── Def.h
 │   │   ├── Game.h / .cpp
 │   │   └── Scene.h
 │   ├── main.cpp             # 程序入口
 │   ├── SceneMain.h / .cpp   # 主场景
 │   └── SceneTitle.h / .cpp  # 标题场景
-├── .gitignore
-├── AGENTS.md
 ├── CMakeLists.txt           # CMake 构建配置
 ├── CMakePresets.json        # CMake 预设
-├── CODE_OF_CONDUCT.md
-├── icon.ico
 ├── 📁 innosetup              # Inno Setup 安装程序
 ├── LICENSE                  # 许可证文件
-├── qodana.yaml
 ├── Readme.md                # 项目说明
 └── vcpkg.json               # vcpkg 依赖清单
 ```
