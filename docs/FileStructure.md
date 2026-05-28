@@ -6,9 +6,18 @@
 │   └── 📁 workflows         # CI 工作流目录
 │       └── ci-windows.yml   # Windows CI 工作流
 ├── 📁 assets                # 资源目录
-│   └── 📁 images            # 图片资源
-│       ├── draft_Background_final.png
-│       └── test.jpg
+│   ├── 📁 fonts             # 字体资源
+│   │   ├── 📁 JetBrainsMono-2.304
+│   │   └── 📁 Noto_Sans_SC
+│   ├── 📁 images            # 图片资源
+│   │   ├── draft_Background_final.png
+│   │   └── test.jpg
+│   └── 📁 music             # 音乐/音效资源
+│       ├── 📁 Essential_Game_Design_and_Animation
+│       ├── License.txt
+│       ├── 📁 Tones_&_Notes
+│       ├── 📁 Walking_&_Steps
+│       └── website.html
 ├── 📁 docs                  # 文档目录
 │   ├── Build.md             # 构建指南
 │   ├── Class.docs.md        # 类文档
@@ -32,8 +41,19 @@
 │   │   │   │   └── TexturedEntity.h / .cpp  # 带纹理实体
 │   │   │   ├── Background.h / .cpp          # 背景
 │   │   │   ├── Camera.h / .cpp              # 相机
+│   │   │   ├── 📁 Enemies   # 敌人类
+│   │   │   │   └── EnemyRose.h / .cpp       # 玫瑰敌人
 │   │   │   ├── Player.h / .cpp              # 玩家
 │   │   │   └── UserInterface.h / .cpp       # 用户界面
+│   │   ├── 📁 Factory       # 实体工厂
+│   │   │   ├── EntityFactory.h / .cpp       # 工厂类
+│   │   │   └── EntityTypes.h                # 类型定义/参数结构体
+│   │   ├── 📁 Font          # 字体渲染
+│   │   │   ├── EFL_FontDef.h                # 字体默认常量
+│   │   │   ├── FontManager.h / .cpp         # 字体管理器单例
+│   │   │   ├── TextBase.h                   # 文本基类
+│   │   │   ├── TextStatic.h / .cpp          # 静态文本实体
+│   │   │   └── TextStypes.h                 # 文本样式/结构体
 │   │   ├── 📁 Input         # 输入处理
 │   │   │   ├── Action.h                      # 动作/状态枚举
 │   │   │   ├── Input.h / .cpp               # 输入抽象
@@ -60,6 +80,10 @@
 ├── 📁 innosetup              # Inno Setup 安装程序
 │   ├── 1.00.0.iss
 │   └── 📁 informations
+│       ├── info-after-v1.00.0.txt
+│       ├── info-after-v1.01.0.txt
+│       ├── info-before-v1.00.0.txt
+│       └── info-before-v1.01.0.txt
 ├── LICENSE                  # 许可证文件
 ├── qodana.yaml              # Qodana 配置
 ├── Readme.md                # 项目说明

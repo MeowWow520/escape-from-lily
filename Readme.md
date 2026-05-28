@@ -47,9 +47,11 @@ cd vcpkg
 │   └── 📁 workflows         # CI 工作流
 │       └── ci-windows.yml
 ├── 📁 assets                # 资源目录
-│   └── 📁 images            # 图片资源
-│       ├── draft_Background_final.png
-│       └── test.jpg
+│   ├── 📁 fonts             # 字体资源
+│   ├── 📁 images            # 图片资源
+│   │   ├── draft_Background_final.png
+│   │   └── test.jpg
+│   └── 📁 music             # 音乐/音效资源
 ├── 📁 docs                  # 文档目录
 │   ├── Build.md
 │   ├── Class.docs.md
@@ -68,8 +70,19 @@ cd vcpkg
 │   │   │   │   └── TexturedEntity.h / .cpp
 │   │   │   ├── Background.h / .cpp
 │   │   │   ├── Camera.h / .cpp
+│   │   │   ├── 📁 Enemies   # 敌人类
+│   │   │   │   └── EnemyRose.h / .cpp
 │   │   │   ├── Player.h / .cpp
 │   │   │   └── UserInterface.h / .cpp
+│   │   ├── 📁 Factory       # 实体工厂
+│   │   │   ├── EntityFactory.h / .cpp
+│   │   │   └── EntityTypes.h
+│   │   ├── 📁 Font          # 字体渲染
+│   │   │   ├── EFL_FontDef.h
+│   │   │   ├── FontManager.h / .cpp
+│   │   │   ├── TextBase.h
+│   │   │   ├── TextStatic.h / .cpp
+│   │   │   └── TextStypes.h
 │   │   ├── 📁 Input         # 输入处理
 │   │   │   ├── Action.h
 │   │   │   ├── Input.h / .cpp
