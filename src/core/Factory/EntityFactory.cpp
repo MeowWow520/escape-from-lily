@@ -72,3 +72,28 @@ EntityPtr<Player> EntityFactory::CreatePlayer(const EntityParams &params) {
     EFL_LOGGER_INFO(LogCategory::Factory, "Entity initialized: Type = EntityType::Player");
     return entity;
 }
+
+EntityPtr<TextStatic> EntityFactory::CreateTextStatic(const EntityParams &params) {
+    // 检查是否符合条件
+    if (!std::holds_alternative<TextStaticParams>(params)) {
+        EFL_LOGGER_ERROR(LogCategory::Factory, "Wrong params pass to EntityType::TextStaticParams");
+        return nullptr;
+    }
+    // 创建实体
+    const auto&[text, font_size, color, screen_pos, display_time] = std::get<TextStaticParams>(params);
+    EntityPtr<TextStatic> bg(new TextStatic());
+    // 设置初始参数
+    bg->SetText(text);
+    bg->SetText_font_size(font_size);
+    bg->SetText_color(color);
+    bg->SetScreenPos(screen_pos);
+    bg->SetText_display_time(display_time);
+    EntityPtr<TextStatic> entity = std::move(bg);
+    // 初始化
+    if (entity->Initialize() != 0) {
+        EFL_LOGGER_ERROR(LogCategory::Factory, "Initialize entity failed");
+        return nullptr;
+    }
+    EFL_LOGGER_INFO(LogCategory::Factory, "Entity initialized: Type = EntityType::TextStatic");
+    return entity;
+}

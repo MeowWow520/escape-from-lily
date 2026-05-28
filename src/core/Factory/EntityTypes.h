@@ -8,14 +8,16 @@
 #include <string>
 #include <variant>
 #include <glm/vec2.hpp>
-#include "../Object/Object.h"
 
+#include "../Font/TextStypes.h"
+#include "../Object/Object.h"
 
 enum class EntityType : uint8_t {
     Player,
     Camera,
     Background,
-    UserInterface
+    UserInterface,
+    TextStatic
     // upcoming
 };
 
@@ -38,13 +40,22 @@ struct UserInterfaceParams {
     std::string texture_path;
     glm::vec2 screen_position;
 };
+struct TextStaticParams {
+    std::string text;
+    float font_size;
+    SDL_Color color;
+    glm::vec2 screen_pos;
+    float display_time;
+};
+
 
 using EntityParams = std::variant<
     std::monostate,
     PlayerParams,
     CameraParams,
     BackgroundParams,
-    UserInterfaceParams
+    UserInterfaceParams,
+    TextStaticParams
 >;
 
 struct EntityDeleter {

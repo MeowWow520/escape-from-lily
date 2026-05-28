@@ -13,6 +13,7 @@
 
 
 class Scene;
+class FontManager;
 
 class Game {
     public:
@@ -58,6 +59,7 @@ class Game {
         [[nodiscard]] KeyboardInput* GetKeyboardInput() const;
 
     private:
+        FontManager& font_manager;
         Game();
 
         std::string m_title{};

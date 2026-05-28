@@ -6,7 +6,7 @@
 
 #include "core/Factory/EntityFactory.h"
 #include "core/Logger/Log.h"
-
+#include "core/Font/EFL_FontDef.h"
 
 int SceneMain::Initialize() {
     // 设置世界缩放 和 世界大小
@@ -33,6 +33,16 @@ int SceneMain::Initialize() {
         "assets/images/Entity/Player/Kawaii_Ghost_Sprite/Default.png",
     };
     m_player = EntityFactory::CreatePlayer(player);
+
+    TextStaticParams text_static_params = {
+        "Hello World!",
+        DEFAULT_FONT_SIZE,
+         DEFAULT_TEXT_COLOR,
+        {50.00, 50.00},
+        -1,
+    };
+    m_text_static = EntityFactory::CreateTextStatic(text_static_params);
+
     return 0;
 }
 
@@ -45,17 +55,20 @@ void SceneMain::Update(const float dt) {
     m_camera->Update(dt);
     m_current_background->Update(dt);
     m_player->Update(dt);
+    m_text_static->Update(dt);
 }
 
 void SceneMain::Render() {
     m_current_background->Render();
     m_player->Render();
+    m_text_static->Render();
 }
 
 int SceneMain::Quit() {
     m_camera.reset();
     m_current_background.reset();
     m_player.reset();
+    m_text_static.reset();
     return 0;
 }
 

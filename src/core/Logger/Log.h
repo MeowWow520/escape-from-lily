@@ -45,4 +45,12 @@ namespace EFL {
     }                                             \
     EFL_LOGGER_INFO(cat, "{} successful", msg);
 
+#define EFL_CHACK_WITH_GET_ERROR(cat, call, msg)                     \
+    if (!(call)) {                                                   \
+        EFL_LOGGER_ERROR(cat, "{} failed: {}", msg, SDL_GetError()); \
+        return -1;                                                   \
+    }                                                                \
+    EFL_LOGGER_INFO(cat, "{} successful", msg);
+
+
 #endif //ESCAPE_FROM_LILY_LOG_H

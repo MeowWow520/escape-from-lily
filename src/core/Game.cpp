@@ -11,10 +11,13 @@
 #include "Def.h"
 #include "Scene.h"
 #include "../SceneMain.h"
+#include "Font/FontManager.h"
 #include "Logger/Log.h"
 
 
-Game::Game() {
+Game::Game()
+    : font_manager(FontManager::GetInstance())
+{
     m_title = "escape-from-lily";
     m_window_size = {1920, 1080};
     m_running = true;
@@ -28,15 +31,17 @@ Game::Game() {
 }
 
 int Game::Initialize() {
-    EFL_CHECK(LogCategory::Core, SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO), "SDL_Init");
-    EFL_CHECK(LogCategory::Core, TTF_Init(), "TTF_Init");
-    EFL_CHECK(LogCategory::Core, MIX_Init(), "MIX_Init");
+    // 初始化字体管理
+    EFL_CHACK_WITH_GET_ERROR(LogCategory::Core, SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO), "SDL_Init");
+    EFL_CHACK_WITH_GET_ERROR(LogCategory::Core, TTF_Init(), "TTF_Init");
+    EFL_CHACK_WITH_GET_ERROR(LogCategory::Core, MIX_Init(), "MIX_Init");
     const bool SDL_CreateWR = SDL_CreateWindowAndRenderer(m_title.c_str(),
         static_cast<int>(m_window_size.x),
         static_cast<int>(m_window_size.y),
         SDL_WINDOW_RESIZABLE,&m_window, &m_renderer);
-    EFL_CHECK(LogCategory::Core, SDL_CreateWR, "SDL_CreateWindowAndRenderer");
-    EFL_CHECK(LogCategory::Core, SDL_SetRenderVSync(m_renderer, 1), "SDL_SetRenderVSync");
+    EFL_CHACK_WITH_GET_ERROR(LogCategory::Core, SDL_CreateWR, "SDL_CreateWindowAndRenderer");
+    EFL_CHACK_WITH_GET_ERROR(LogCategory::Core, SDL_SetRenderVSync(m_renderer, 1), "SDL_SetRenderVSync");
+    if (font_manager.Initialize(*this) != 0) return -1;
 
     // 设置按键绑定
     m_key_input = new KeyboardInput();
@@ -119,6 +124,7 @@ int Game::Quit() {
         m_window = nullptr;
     }
     TTF_Quit();
+    EFL_CHECK(LogCategory::Core, font_manager.Quit() == 0, "font_manager quit");
     MIX_Quit();
     SDL_Quit();
     return 0;

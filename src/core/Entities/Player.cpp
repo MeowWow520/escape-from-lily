@@ -18,7 +18,7 @@ int Player::Initialize() {
         return -1;
     }
     m_texture = IMG_LoadTexture(m_game_instance.GetSDLRenderer(), m_path.c_str());
-    EFL_CHECK(LogCategory::Entity, m_texture != nullptr, "Player IMG_LoadTexture");
+    EFL_CHECK(LogCategory::Entity, m_texture, "Player IMG_LoadTexture");
     SDL_GetTextureSize(m_texture, &m_texture_size.x, &m_texture_size.y);
     m_world_pos = (m_game_instance.GetCurrentScene()->GetWorldSize() - m_texture_size ) / glm::vec2(2.0f);
     EFL_LOGGER_INFO(LogCategory::Entity, "Play's m_world_pos be set in ({}, {})", m_world_pos.x, m_world_pos.y);
