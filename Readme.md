@@ -49,7 +49,6 @@ cd vcpkg
 │   └── 📁 music             # 音乐/音效资源
 ├── 📁 docs                  # 文档目录
 │   ├── 📁 implements        # 实现参考
-├── 📁 draft                 # 草稿/原型资源
 ├── 📁 src                   # 源代码目录
 │   ├── 📁 core              # 核心代码
 │   │   ├── 📁 Entities      # 实体类
@@ -61,15 +60,9 @@ cd vcpkg
 │   │   ├── 📁 Logger        # 日志系统
 │   │   ├── 📁 Object        # 对象基类
 │   │   ├── Game.h / .cpp
-│   │   └── Scene.h
 │   ├── main.cpp             # 程序入口
-│   ├── SceneMain.h / .cpp   # 主场景
-│   └── SceneTitle.h / .cpp  # 标题场景
-├── CMakeLists.txt           # CMake 构建配置
-├── CMakePresets.json        # CMake 预设
 ├── 📁 innosetup              # Inno Setup 安装程序
-├── LICENSE                  # 许可证文件
-├── Readme.md                # 项目说明
+├── CMakeLists.txt           # CMake 构建配置
 └── vcpkg.json               # vcpkg 依赖清单
 ```
 
