@@ -35,7 +35,7 @@ int SceneMain::Initialize() {
     m_player = EntityFactory::CreatePlayer(player);
 
     TextStaticParams text_static_params = {
-        "Hello World!",
+        "Hello, World!",
         DEFAULT_FONT_SIZE,
          DEFAULT_TEXT_COLOR,
         {50.00, 50.00},
