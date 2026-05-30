@@ -47,7 +47,6 @@ int Game::Initialize() {
     m_key_input = new KeyboardInput();
     EFL_CHECK(LogCategory::Input, m_key_input->SetDefaultKeyBind(), "Keyboard SetDefaultKeyBind");
 
-    // TODO: 使用工厂方法注册对象
     // 创建场景
     m_current_scene = new SceneMain();
     EFL_CHECK(LogCategory::Input, m_current_scene->Initialize() == 0, "scene Initialize");

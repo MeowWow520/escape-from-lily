@@ -36,8 +36,6 @@ add_executable(escape-from-lily
         src/core/Entities/Camera.h
         src/core/Entities/Player.cpp
         src/core/Entities/Player.h
-        src/SceneTitle.cpp
-        src/SceneTitle.h
         src/core/Logger/Log.cpp
         src/core/Logger/Log.h
         src/core/Logger/LogCategory.h

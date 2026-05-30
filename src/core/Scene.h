@@ -23,8 +23,9 @@ class Scene : public Object {
         void Update(float dt) override { }
         void Render() override { }
         int Quit() override { return 0; }
-        [[nodiscard]] virtual Camera* GetCamera() { return nullptr; }
-        [[nodiscard]] virtual Player* GetPlayer() { return nullptr; }
+
+        [[nodiscard]] virtual Camera* GetCamera() { return nullptr; };
+        [[nodiscard]] virtual Player* GetPlayer() { return nullptr; };
 
         // setter 和 getter
         [[nodiscard]] glm::vec2 GetWorldSize() const {
