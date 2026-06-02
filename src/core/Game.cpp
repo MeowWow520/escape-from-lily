@@ -146,11 +146,11 @@ Uint32 Game::GetFPS() const {
     return m_FPS;
 }
 
-SDL_Window * Game::GetSDLWindow() const {
+SDL_Window* Game::GetSDLWindow() const {
     return m_window;
 }
 
-SDL_Renderer * Game::GetSDLRenderer() const {
+SDL_Renderer* Game::GetSDLRenderer() const {
     return m_renderer;
 }
 
@@ -158,6 +158,6 @@ Scene * Game::GetCurrentScene() const {
     return m_current_scene;
 }
 
-KeyboardInput * Game::GetKeyboardInput() const {
+KeyboardInput* Game::GetKeyboardInput() const {
     return m_key_input;
 }

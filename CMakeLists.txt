@@ -56,8 +56,9 @@ add_executable(escape-from-lily
         src/core/Entities/Base/HealthyPointEntity.h
         src/core/Input/MouseInput.cpp
         src/core/Input/MouseInput.h
-        src/core/Config/Config.cpp
-        src/core/Config/Config.h
+        src/core/Config/ConfigManager.cpp
+        src/core/Config/ConfigManager.h
+        src/core/Config/ConfigCategory.h
 )
 
 set(ASSETS_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/assets")

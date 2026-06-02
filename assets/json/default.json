@@ -1,0 +1,18 @@
+{
+  "display": {
+    "color": "0096C7FF",
+    "fps": 120,
+    "window": {
+      "size": [1920, 1080],
+      "title": "escape-from-lily"
+    }
+  },
+  "feature": {
+    "acceleration": false,
+    "key-logging": false
+  },
+  "font": {
+    "color": "ff4d6dff",
+    "NotoSanSc": "assets/fonts/Noto_Sans_SC/static/NotoSansSC-ExtraBold.ttf"
+  }
+}
