@@ -8,7 +8,8 @@
     "sdl3-ttf",
     "glm",
     "spdlog",
-    "fmt"
+    "fmt",
+    "nlohmann-json"
   ],
   "builtin-baseline": "d09977e63111355bf0239592f47062b1ec3f767f"
 }
