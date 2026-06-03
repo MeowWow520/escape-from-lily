@@ -8,6 +8,7 @@
 #include <string>
 #include <unordered_map>
 
+#include "ConfigCategory.h"
 
 
 class ConfigManager {
@@ -25,7 +26,7 @@ class ConfigManager {
         int LoadFile(const std::string& category, const std::string& path);
         int LoadAllFiles();
         int CleanFiles();
-
+        const Display& GetDisplay();
 
 
     private:

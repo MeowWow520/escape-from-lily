@@ -16,7 +16,6 @@ struct Display_Window {
 };
 
 struct Display {
-    SDL_Color color;
     float fps;
     Display_Window window;
 };

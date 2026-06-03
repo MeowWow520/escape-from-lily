@@ -6,6 +6,7 @@
 
 #include <fstream>
 
+
 #include "nlohmann/json.hpp"
 #include "../Logger/Log.h"
 
@@ -46,4 +47,19 @@ int ConfigManager::CleanFiles() {
     for (auto it = m_files.begin(); it != m_files.end(); ++it)
         m_files.erase(it);
     return 0;
+}
+
+const Display & ConfigManager::GetDisplay() {
+    const auto it = m_files.find("default");
+    if (it == m_files.end())
+        EFL_LOGGER_ERROR(LogCategory::Core, "Couldn't find m_file: default");
+    json config = json::parse(it->second);
+    Display ret = {
+        config["display"]["fps"],
+        {
+            glm::vec2(config["display"]["window"]["size"]),
+            config["display"]["window"]["title"]
+        }
+    };
+    return ret;
 }
