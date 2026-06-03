@@ -22,8 +22,12 @@ class ConfigManager {
         int Initialize();
         int Quit();
 
-        bool LoadFile(std::string category, const std::string& path);
-        bool LoadAllFiles(std::string& path);
+        int LoadFile(const std::string& category, const std::string& path);
+        int LoadAllFiles();
+        int CleanFiles();
+
+
+
     private:
         ConfigManager() = default;
 

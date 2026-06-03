@@ -13,28 +13,37 @@ using json = nlohmann::json;
 
 
 int ConfigManager::Initialize() {
+    if (LoadAllFiles() == -1)
+        return -1;
     return 0;
 }
 
 int ConfigManager::Quit() {
+    EFL_CHECK(LogCategory::Core, CleanFiles() == 0, "ConfigManager::CleanFiles");
     return 0;
 }
 
-bool ConfigManager::LoadFile(std::string category, const std::string &path) {
-    if (path == "" || path.empty())
-        return false;
+int ConfigManager::LoadFile(const std::string& category, const std::string &path) {
+    if (path.empty() || path[0] == '\0')
+        return -1;
     std::ifstream ifs(path);
     m_files.insert({category, std::move(ifs)});
 
-    return true;
+    return 0;
 }
 
-bool ConfigManager::LoadAllFiles(std::string &path) {
+int ConfigManager::LoadAllFiles() {
     EFL_CHECK(LogCategory::Core,
         LoadFile("default", "assets/json/default.json"),
         "Load default.json");
     EFL_CHECK(LogCategory::Core,
         LoadFile("player", "assets/json/player.json"),
         "Load player.json")
-    return true;
+    return 0;
+}
+
+int ConfigManager::CleanFiles() {
+    for (auto it = m_files.begin(); it != m_files.end(); ++it)
+        m_files.erase(it);
+    return 0;
 }

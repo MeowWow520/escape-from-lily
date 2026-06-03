@@ -11,12 +11,14 @@
 #include "Def.h"
 #include "Scene.h"
 #include "../SceneMain.h"
+#include "Config/ConfigManager.h"
 #include "Font/FontManager.h"
 #include "Logger/Log.h"
 
 
-Game::Game()
-    : font_manager(FontManager::GetInstance())
+Game::Game() :
+    font_manager(FontManager::GetInstance()),
+    config_manager(ConfigManager::GetInstance())
 {
     m_title = "escape-from-lily";
     m_window_size = {1920, 1080};

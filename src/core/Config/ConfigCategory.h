@@ -9,12 +9,6 @@
 #include <SDL3/SDL_pixels.h>
 
 
-enum class ConfigCategory {
-    Display,
-    Feature,
-    Font,
-    Texture
-};
 
 struct Display_Window {
     glm::vec2 size;
