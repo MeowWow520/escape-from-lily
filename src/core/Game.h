@@ -8,12 +8,15 @@
 #include <glm/glm.hpp>
 #include <SDL3/SDL.h>
 
+#include "Config/ConfigManager.h"
 #include "Input/KeyboardInput.h"
 
 
 
 class Scene;
 class FontManager;
+class ConfigManager;
+
 
 class Game {
     public:
@@ -60,6 +63,7 @@ class Game {
 
     private:
         FontManager& font_manager;
+        ConfigManager& config_manager;
         Game();
 
         std::string m_title{};

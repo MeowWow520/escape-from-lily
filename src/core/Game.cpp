@@ -11,26 +11,27 @@
 #include "Def.h"
 #include "Scene.h"
 #include "../SceneMain.h"
+#include "Config/ConfigManager.h"
 #include "Font/FontManager.h"
 #include "Logger/Log.h"
 
 
-Game::Game()
-    : font_manager(FontManager::GetInstance())
-{
-    m_title = "escape-from-lily";
-    m_window_size = {1920, 1080};
+Game::Game() :
+    font_manager(FontManager::GetInstance()),
+    config_manager(ConfigManager::GetInstance())
+{ }
+
+int Game::Initialize() {
+    const auto [fps, window] = config_manager.GetDisplay();
+    m_title = window.title;
+    m_window_size = window.size;
     m_running = true;
     m_delta_time = 0.0f;
-    m_FPS = 120;
+    m_FPS = static_cast<Uint32>(fps);
     m_frame_delay = static_cast<Uint32>(1e9) / m_FPS;
     m_window = nullptr;
     m_renderer = nullptr;
     m_current_scene = nullptr;
-    m_return_code = 0;
-}
-
-int Game::Initialize() {
     // 初始化字体管理
     EFL_CHACK_WITH_GET_ERROR(LogCategory::Core, SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO), "SDL_Init");
     EFL_CHACK_WITH_GET_ERROR(LogCategory::Core, TTF_Init(), "TTF_Init");
@@ -146,11 +147,11 @@ Uint32 Game::GetFPS() const {
     return m_FPS;
 }
 
-SDL_Window * Game::GetSDLWindow() const {
+SDL_Window* Game::GetSDLWindow() const {
     return m_window;
 }
 
-SDL_Renderer * Game::GetSDLRenderer() const {
+SDL_Renderer* Game::GetSDLRenderer() const {
     return m_renderer;
 }
 
@@ -158,6 +159,6 @@ Scene * Game::GetCurrentScene() const {
     return m_current_scene;
 }
 
-KeyboardInput * Game::GetKeyboardInput() const {
+KeyboardInput* Game::GetKeyboardInput() const {
     return m_key_input;
 }
