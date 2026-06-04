@@ -28,38 +28,45 @@ int ConfigManager::LoadFile(const std::string& category, const std::string &path
     if (path.empty() || path[0] == '\0')
         return -1;
     std::ifstream ifs(path);
+    if (!ifs.is_open())
+        return -1;
     m_files.insert({category, std::move(ifs)});
-
     return 0;
 }
 
 int ConfigManager::LoadAllFiles() {
     EFL_CHECK(LogCategory::Core,
-        LoadFile("default", "assets/json/default.json"),
+        !LoadFile("default", "assets/json/default.json"),
         "Load default.json");
     EFL_CHECK(LogCategory::Core,
-        LoadFile("player", "assets/json/player.json"),
+        !LoadFile("player", "assets/json/player.json"),
         "Load player.json")
     return 0;
 }
 
 int ConfigManager::CleanFiles() {
-    for (auto it = m_files.begin(); it != m_files.end(); ++it)
-        m_files.erase(it);
+    m_files.clear();
     return 0;
 }
 
-const Display & ConfigManager::GetDisplay() {
+Display ConfigManager::GetDisplay() {
     const auto it = m_files.find("default");
-    if (it == m_files.end())
+    if (it == m_files.end() || !it->second.is_open()) {
         EFL_LOGGER_ERROR(LogCategory::Core, "Couldn't find m_file: default");
+        return Display{};
+    }
+    // FIXME: Clangd
+    // Clangd: In template: constexpr variable '_Is_pointer_address_convertible<nlohmann::basic_json<>, nlohmann::basic_json<>>'
+    // must be initialized by a constant expression
+
     json config = json::parse(it->second);
-    Display ret = {
+    const Display ret = {
         config["display"]["fps"],
         {
-            glm::vec2(config["display"]["window"]["size"]),
+            glm::vec2(config["display"]["window"]["size"][0], config["display"]["window"]["size"][1]),
             config["display"]["window"]["title"]
         }
     };
+    // FIXME: warning C4172: returning address of local variable or temporary : ret
     return ret;
 }

@@ -26,7 +26,7 @@ class ConfigManager {
         int LoadFile(const std::string& category, const std::string& path);
         int LoadAllFiles();
         int CleanFiles();
-        const Display& GetDisplay();
+        Display GetDisplay();
 
 
     private:
