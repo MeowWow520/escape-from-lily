@@ -15,7 +15,6 @@
 
 class Scene;
 class FontManager;
-class ConfigManager;
 
 
 class Game {
@@ -63,7 +62,7 @@ class Game {
 
     private:
         FontManager& font_manager;
-        ConfigManager& config_manager;
+
         Game();
 
         std::string m_title{};

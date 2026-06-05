@@ -9,16 +9,10 @@
 
 int main() {
     EFL::RegisterLogCategory();
-    // 创建 Config 单例
-    ConfigManager& config_manager = ConfigManager::GetInstance();
-    if (config_manager.Initialize() != 0) return -1;
     // 创建 Game 单例
     Game& game_instance = Game::GetInstance();
     if (game_instance.Initialize() != 0) return -1;
-
     game_instance.Running();
-    if (config_manager.Quit() != 0) return -1;
     EFL::QuitLogger();
-
     return 0;
 }

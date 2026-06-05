@@ -17,21 +17,10 @@
 
 
 Game::Game() :
-    font_manager(FontManager::GetInstance()),
-    config_manager(ConfigManager::GetInstance())
+    font_manager(FontManager::GetInstance())
 { }
 
 int Game::Initialize() {
-    const auto [fps, window] = config_manager.GetDisplay();
-    m_title = window.title;
-    m_window_size = window.size;
-    m_running = true;
-    m_delta_time = 0.0f;
-    m_FPS = static_cast<Uint32>(fps);
-    m_frame_delay = static_cast<Uint32>(1e9) / m_FPS;
-    m_window = nullptr;
-    m_renderer = nullptr;
-    m_current_scene = nullptr;
     // 初始化字体管理
     EFL_CHACK_WITH_GET_ERROR(LogCategory::Core, SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO), "SDL_Init");
     EFL_CHACK_WITH_GET_ERROR(LogCategory::Core, TTF_Init(), "TTF_Init");

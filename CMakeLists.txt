@@ -5,6 +5,7 @@ set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
 if(MSVC)
     add_compile_options("/utf-8")
+    add_compile_options("/Zc:preprocessor" "/Zc:__cplusplus")
 endif()
 
 
