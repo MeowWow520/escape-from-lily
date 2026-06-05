@@ -21,6 +21,18 @@ Game::Game() :
 { }
 
 int Game::Initialize() {
+
+    m_title = ConfigManager::GetDisplay().window.title;
+    m_window_size = ConfigManager::GetDisplay().window.size;
+    m_running = true;
+    m_delta_time = 0.0f;
+    m_FPS = static_cast<Uint32>(ConfigManager::GetDisplay().fps);
+    m_frame_delay = static_cast<Uint32>(1e9) / m_FPS;
+    m_window = nullptr;
+    m_renderer = nullptr;
+    m_current_scene = nullptr;
+
+
     // 初始化字体管理
     EFL_CHACK_WITH_GET_ERROR(LogCategory::Core, SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO), "SDL_Init");
     EFL_CHACK_WITH_GET_ERROR(LogCategory::Core, TTF_Init(), "TTF_Init");

@@ -4,8 +4,7 @@
 
 #ifndef ESCAPE_FROM_LILY_CONFIGMANAGER_H
 #define ESCAPE_FROM_LILY_CONFIGMANAGER_H
-#include <fstream>
-#include <string>
+
 
 #include "ConfigCategory.h"
 
@@ -18,7 +17,8 @@ class ConfigManager {
         ConfigManager(const ConfigManager&) = delete;
         ConfigManager& operator=(const ConfigManager&) = delete;
 
-        static Display GetDisplay();
+        static DisplayJson GetDisplay();
+        static PlayerJson GetPlayer();
 };
 
 

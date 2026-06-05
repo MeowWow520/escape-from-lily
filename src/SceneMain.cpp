@@ -29,8 +29,8 @@ int SceneMain::Initialize() {
 
     // 创建玩家
     PlayerParams player = {
-        "MeowWow520",
-        "assets/images/Entity/Player/Kawaii_Ghost_Sprite/Default.png",
+        ConfigManager::GetPlayer().name,
+        ConfigManager::GetPlayer().texture_path
     };
     m_player = EntityFactory::CreatePlayer(player);
 

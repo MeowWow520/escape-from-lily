@@ -9,29 +9,12 @@
 #include <SDL3/SDL_pixels.h>
 
 
+struct DefaultJson {
 
-struct Display_Window {
-    glm::vec2 size;
-    std::string title;
 };
-
-struct Display {
-    float fps;
-    Display_Window window;
+struct PlayerJson {
+    std::string name;
+    std::string texture_path;
 };
-
-struct Feature {
-    bool acceleration;
-    bool keylogging;
-};
-
-// FIXME: 在 FontManager 中实现
-struct Font {
-    SDL_Color color;
-    std::string default_font_path;
-    float font_size;
-};
-
-
 
 #endif //ESCAPE_FROM_LILY_CONFIGCATEGORY_H

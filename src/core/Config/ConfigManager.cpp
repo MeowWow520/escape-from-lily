@@ -5,29 +5,24 @@
 #include "ConfigManager.h"
 
 #include <fstream>
-
 #include "nlohmann/json.hpp"
 #include "../Logger/Log.h"
 
 using json = nlohmann::json;
 
 
-Display ConfigManager::GetDisplay() {
-    std::fstream ifs("assets/json/default.json");
+
+PlayerJson ConfigManager::GetPlayer() {
+    std::ifstream ifs("assets/json/player.json");
     if (!ifs.is_open()) {
-        EFL_LOGGER_ERROR(LogCategory::Core, "Open assets/json/default.json");
-        return Display{};
+        EFL_LOGGER_ERROR(LogCategory::Core, "Open assets/json/player.json");
+        return PlayerJson{};
     }
-    EFL_LOGGER_INFO(LogCategory::Core, "Open assets/json/default.json");
-    json config;
-    // FIXME:
-    ifs >> config;
-    const Display ret = {
-        config["display"]["fps"],
-        {
-            glm::vec2(config["display"]["window"]["size"][0], config["display"]["window"]["size"][1]),
-            config["display"]["window"]["title"]
-        }
+    EFL_LOGGER_INFO(LogCategory::Core, "Open assets/json/player.json");
+    json config = json::parse(ifs.get());
+    const PlayerJson ret = {
+        config["default_name"],
+        config["texture_path"]
     };
     ifs.close();
     config.clear();
