@@ -17,7 +17,6 @@ int main() {
     if (game_instance.Initialize() != 0) return -1;
 
     game_instance.Running();
-
     if (config_manager.Quit() != 0) return -1;
     EFL::QuitLogger();
 
