@@ -20,5 +20,6 @@ int main() {
 
     if (config_manager.Quit() != 0) return -1;
     EFL::QuitLogger();
+
     return 0;
 }
