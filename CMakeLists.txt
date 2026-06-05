@@ -59,7 +59,9 @@ add_executable(escape-from-lily
         src/core/Input/MouseInput.h
         src/core/Config/ConfigManager.cpp
         src/core/Config/ConfigManager.h
-        src/core/Config/ConfigCategory.h
+        src/core/Config/Structs/DefaultStruct.h
+        src/core/Config/Structs/PlayerStruct.h
+        src/core/Config/Structs/BaseJson.h
 )
 
 set(ASSETS_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/assets")

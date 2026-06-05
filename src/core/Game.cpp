@@ -22,7 +22,7 @@ Game::Game() :
 
 int Game::Initialize() {
 
-    m_title = ConfigManager::GetDisplay().window.title;
+    m_title = ConfigManager::GetDefaultJson().display.window.title;
     m_window_size = ConfigManager::GetDisplay().window.size;
     m_running = true;
     m_delta_time = 0.0f;

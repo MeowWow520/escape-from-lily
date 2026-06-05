@@ -5,8 +5,7 @@
 #ifndef ESCAPE_FROM_LILY_CONFIGMANAGER_H
 #define ESCAPE_FROM_LILY_CONFIGMANAGER_H
 
-
-#include "ConfigCategory.h"
+#include "Structs/BaseJson.h"
 
 
 class ConfigManager {
@@ -14,11 +13,19 @@ class ConfigManager {
         ConfigManager() = default;
         ~ConfigManager() = default;
 
-        ConfigManager(const ConfigManager&) = delete;
-        ConfigManager& operator=(const ConfigManager&) = delete;
+        int InitDefaultJsonFile(const std::string& filePath);
+        int InitPlayerJsonFile(const std::string& filePath);
 
-        static DisplayJson GetDisplay();
-        static PlayerJson GetPlayer();
+        int Initialize();
+
+
+        DefaultJson GetDefaultJson();
+        PlayerJson GetPlayerJson();
+
+
+    private:
+        DefaultJson m_defaultJson{};
+        PlayerJson m_playerJson{};
 };
 
 
