@@ -11,6 +11,7 @@
 struct PlayerJson {
     std::string default_name;
     std::string texture_path;
+    float max_speed;
 };
 
 

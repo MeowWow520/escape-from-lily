@@ -9,7 +9,7 @@
 #include <variant>
 #include <glm/vec2.hpp>
 
-#include "../Font/TextStypes.h"
+#include "../Font/Base/TextStypes.h"
 #include "../Object/Object.h"
 
 enum class EntityType : uint8_t {

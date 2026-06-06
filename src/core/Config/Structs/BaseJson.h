@@ -13,7 +13,8 @@
 using JsonStruct = std::variant<
     std::monostate,
     DefaultJson,
-    PlayerJson
+    PlayerJson,
+
 >;
 
 #endif //ESCAPE_FROM_LILY_BASEJSON_H

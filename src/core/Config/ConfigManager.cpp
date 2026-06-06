@@ -62,10 +62,11 @@ int ConfigManager::InitPlayerJsonFile(const std::string &filePath) {
 
     const std::string default_name = config["default_name"];
     const std::string texture_path = config["texture_path"];
-
+    const float max_speed =  config["max_speed"];
     m_playerJson = {
         default_name,
         texture_path,
+        max_speed
     };
 
     ifs.close();
@@ -74,8 +75,14 @@ int ConfigManager::InitPlayerJsonFile(const std::string &filePath) {
 }
 
 int ConfigManager::Initialize() {
-    EFL_CHECK(LogCategory::Core, InitDefaultJsonFile("assets/json/default.json"), "InitDefaultJsonFile");
-    EFL_CHECK(LogCategory::Core, InitPlayerJsonFile("assets/json/player.json"),   "InitPlayerJsonFile" );
+    EFL_CHECK(LogCategory::Core, !InitDefaultJsonFile("assets/json/default.json"), "InitDefaultJsonFile");
+    EFL_CHECK(LogCategory::Core, !InitPlayerJsonFile("assets/json/player.json"),   "InitPlayerJsonFile" );
+    return 0;
+}
+
+int ConfigManager::Quit() {
+    m_defaultJson = {};
+    m_playerJson = {};
     return 0;
 }
 

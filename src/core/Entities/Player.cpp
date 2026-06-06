@@ -12,6 +12,9 @@
 
 
 int Player::Initialize() {
+
+    m_max_speed = m_config_manager.GetPlayerJson().max_speed;
+
     m_visible = true;
     if (!m_path.data() || m_path[0] == '\0') {
         EFL_LOGGER_ERROR(LogCategory::Entity, "Player Initialize() failed: m_path is NULL");

@@ -3,23 +3,25 @@
 //
 
 #include "TextStatic.h"
-#include "EFL_FontDef.h"
-#include "../Logger/Log.h"
+#include "../EFL_FontDef.h"
+#include "../../Logger/Log.h"
 
 
 int TextStatic::Initialize() {
+
     m_text.text_stype = TextStype::Static;
     m_text.font_path = DEFAULT_FONT_PATH;
     m_text.rotation = 0.0f;
     m_text.pivot = glm::vec2(0.5f, 0.5f);
     m_text.scale = glm::vec2(1.0f);
     m_text.is_display_time_out = false;
-    // FIXME: 性能浪费
+
+
     m_ttf_font = TTF_OpenFont(m_text.font_path.c_str(), m_text.font_size);
     EFL_CHACK_WITH_GET_ERROR(LogCategory::Font, m_ttf_font, "TTF_OpenFont");
     m_ttf_text = TTF_CreateText(m_font_manager.GetTTFEngine(),
         m_ttf_font, m_text.text.c_str(),
-        static_cast<size_t>(m_text.text.length()));
+        m_text.text.length());
     EFL_CHACK_WITH_GET_ERROR(LogCategory::Font, m_ttf_text, "TTF_CreateText");
     EFL_CHACK_WITH_GET_ERROR(LogCategory::Font,
         TTF_SetTextColor(m_ttf_text,

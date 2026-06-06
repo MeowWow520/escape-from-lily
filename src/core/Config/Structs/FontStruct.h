@@ -1,26 +1,20 @@
 //
-// Created by MeowWow520 on 2026/5/27.
+// Created by MeowWow520 on 2026/6/6.
 //
 
-#ifndef ESCAPE_FROM_LILY_TEXTSTYPES_H
-#define ESCAPE_FROM_LILY_TEXTSTYPES_H
+#ifndef ESCAPE_FROM_LILY_FONTSTRUCT_H
+#define ESCAPE_FROM_LILY_FONTSTRUCT_H
 #include <string>
-#include <SDL3/SDL_pixels.h>
-#include "../Def.h"
+#include <glm/vec2.hpp>
+#include <glm/vec4.hpp>
 
 
-
-enum class TextStype : uint8_t {
-    Static,
-    Colorful
-};
-
-struct BaseString {
+struct FontJson {
     std::string text;      // 文本
-    TextStype text_stype;  // 样式
+    std::string stype;     // 样式
     float     font_size;   // 字体大小
     std::string font_path; // 字体资源
-    SDL_Color color;       // 颜色
+    glm::vec4 color;       // 颜色
     float     rotation;    // 旋转
     glm::vec2 pivot;       // 旋转中心
     glm::vec2 scale;       // 缩放 支持上下和左右
@@ -29,4 +23,4 @@ struct BaseString {
 };
 
 
-#endif //ESCAPE_FROM_LILY_TEXTSTYPES_H
+#endif //ESCAPE_FROM_LILY_FONTSTRUCT_H

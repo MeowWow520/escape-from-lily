@@ -10,8 +10,8 @@
 
 class MovableEntity : public TexturedEntity {
     protected:
-        // 实体的最大速度，默认值为：TBD
-        float m_max_speed{DEFAULT_MAX_SPEED};
+        // 实体的最大速度
+        float m_max_speed{};
         // 实体的加速度，默认值为：TBD。// TODO：待实装
         float m_acceleration{};
         // 实体的运动方向
