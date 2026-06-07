@@ -23,14 +23,14 @@ void KeyboardInput::HandleEvents(const SDL_Event event) {
     if (it == m_key_bind.end()) return;
     if (event.type == SDL_EVENT_KEY_DOWN) {
         if (m_current_action_state[it->second] == ActionState::Idle) {
-            if (SWITCHER_KEYLOGGING)
+            if (m_config_manager.GetDefaultJson().feature.key_logging)
                 EFL_LOGGER_INFO(LogCategory::Input, "SDLK_{} down", SDL_GetKeyName(event.key.key));
             m_current_action_state[it->second] = ActionState::Pressed;
         }
     }
     if (event.type == SDL_EVENT_KEY_UP) {
         if (m_current_action_state[it->second] == ActionState::Held) {
-            if (SWITCHER_KEYLOGGING)
+            if (m_config_manager.GetDefaultJson().feature.key_logging)
                 EFL_LOGGER_INFO(LogCategory::Input, "SDLK_{} up", SDL_GetKeyName(event.key.key));
             m_current_action_state[it->second] = ActionState::Released;
         }
@@ -57,14 +57,14 @@ glm::vec2 KeyboardInput::GetMovementNormalizeVec2() {
     return ret;
 }
 
-bool KeyboardInput::SetDefaultKeyBind() {
-    if (!BindAction(SDLK_W, Action::MoveUp))    return false;
-    if (!BindAction(SDLK_S, Action::MoveDown))  return false;
-    if (!BindAction(SDLK_D, Action::MoveRight)) return false;
-    if (!BindAction(SDLK_A, Action::MoveLeft))  return false;
-    if (!BindAction(SDLK_ESCAPE, Action::Quit)) return false;
+int KeyboardInput::SetDefaultKeyBind() {
+    EFL_CHECK(LogCategory::Input, BindAction(SDLK_W, Action::MoveUp),    "Bind SDLK_W to Action::MoveUp");
+    EFL_CHECK(LogCategory::Input, BindAction(SDLK_S, Action::MoveDown),  "Bind SDLK_S to Action::MoveDown");
+    EFL_CHECK(LogCategory::Input, BindAction(SDLK_D, Action::MoveRight), "Bind SDLK_D to Action::MoveRight");
+    EFL_CHECK(LogCategory::Input, BindAction(SDLK_A, Action::MoveLeft),  "Bind SDLK_A to Action::MoveLeft");
+    EFL_CHECK(LogCategory::Input, BindAction(SDLK_ESCAPE, Action::Quit), "Bind SDLK_ESCAPE to Action::Quit");
     // 初始化两个哈希表
     for (auto it = m_key_bind.begin(); it != m_key_bind.end(); ++it)
         m_current_action_state[it->second]  = ActionState::Idle;
-    return true;
+    return 0;
 }

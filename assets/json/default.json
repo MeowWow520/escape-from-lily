@@ -11,7 +11,7 @@
     "key-logging": false
   },
   "font": {
-    "color": "ff4d6dff",
+    "default_color": "ff4d6dff",
     "NotoSanSc": "assets/fonts/Noto_Sans_SC/static/NotoSansSC-ExtraBold.ttf"
   }
 }

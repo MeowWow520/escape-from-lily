@@ -62,7 +62,7 @@ class Game {
 
     private:
         FontManager& font_manager;
-
+        ConfigManager& config_manager;
         Game();
 
         std::string m_title{};
@@ -74,7 +74,6 @@ class Game {
         SDL_Window* m_window{};
         SDL_Renderer* m_renderer{};
         Scene* m_current_scene{};
-        int m_return_code{};
         KeyboardInput *m_key_input{};
 };
 

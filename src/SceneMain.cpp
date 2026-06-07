@@ -29,10 +29,11 @@ int SceneMain::Initialize() {
 
     // 创建玩家
     PlayerParams player = {
-        ConfigManager::GetPlayer().name,
-        ConfigManager::GetPlayer().texture_path
+        m_config_manager.GetPlayerJson().default_name,
+        m_config_manager.GetPlayerJson().texture_path
     };
     m_player = EntityFactory::CreatePlayer(player);
+
 
     TextStaticParams text_static_params = {
         "你好, World!",

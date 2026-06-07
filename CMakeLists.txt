@@ -48,10 +48,10 @@ add_executable(escape-from-lily
         src/core/Entities/Enemies/EnemyRose.h
         src/core/Font/FontManager.cpp
         src/core/Font/FontManager.h
-        src/core/Font/TextBase.h
-        src/core/Font/TextStypes.h
-        src/core/Font/TextStatic.cpp
-        src/core/Font/TextStatic.h
+        src/core/Font/Base/TextBase.h
+        src/core/Font/Base/TextStypes.h
+        src/core/Font/Base/TextStatic.cpp
+        src/core/Font/Base/TextStatic.h
         src/core/Font/EFL_FontDef.h
         src/core/Entities/Base/HealthyPointEntity.cpp
         src/core/Entities/Base/HealthyPointEntity.h
@@ -59,7 +59,10 @@ add_executable(escape-from-lily
         src/core/Input/MouseInput.h
         src/core/Config/ConfigManager.cpp
         src/core/Config/ConfigManager.h
-        src/core/Config/ConfigCategory.h
+        src/core/Config/Structs/DefaultStruct.h
+        src/core/Config/Structs/PlayerStruct.h
+        src/core/Config/Structs/BaseJson.h
+        src/core/Config/Structs/FontStruct.h
 )
 
 set(ASSETS_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/assets")

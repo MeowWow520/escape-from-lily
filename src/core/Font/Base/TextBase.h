@@ -5,8 +5,8 @@
 #ifndef ESCAPE_FROM_LILY_TEXTBASE_H
 #define ESCAPE_FROM_LILY_TEXTBASE_H
 #include "TextStypes.h"
-#include "../Object/ObjectScreen.h"
-#include "FontManager.h"
+#include "../../Object/ObjectScreen.h"
+#include "../FontManager.h"
 
 
 

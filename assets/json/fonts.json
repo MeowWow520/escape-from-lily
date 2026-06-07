@@ -1,0 +1,32 @@
+{
+  "default": {
+    "stype": "Static",
+    "font_size": 150.0,
+    "font_path": "NotoSanSc",
+    "color": [255, 77, 109, 255],
+    "rotation": 0.0,
+    "pivot": [0.5, 0.5],
+    "scale": 1.0,
+    "display_time": -1
+  },
+  "Hello World": {
+    "stype": "Static",
+    "font_size": 200.0,
+    "font_path": "NotoSanSc",
+    "color": [255, 77, 109, 255],
+    "rotation": 0.0,
+    "pivot": [0.5, 0.5],
+    "scale": 1.0,
+    "display_time": -1
+  },
+  "你好，世界": {
+    "stype": "Static",
+    "font_size": 150.0,
+    "font_path": "NotoSanSc",
+    "color": [255, 77, 109, 255],
+    "rotation": 0.0,
+    "pivot": [0.5, 0.5],
+    "scale": 1.0,
+    "display_time": -1
+  }
+}

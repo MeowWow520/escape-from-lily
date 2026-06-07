@@ -12,6 +12,8 @@ class Object {
     protected:
         // 获取 Game 的单例
         Game& m_game_instance = Game::GetInstance();
+        // 获取 ConfigManager 单例
+        ConfigManager& m_config_manager = ConfigManager::GetInstance();
         // 实例名字，用语日志系统
         const char* m_entity_name;
     public:

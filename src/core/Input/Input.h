@@ -16,8 +16,6 @@ class Input {
         std::unordered_map<SDL_Keycode, Action> m_key_bind;
         // 帧数动作状态映射表
         std::unordered_map<Action, ActionState> m_current_action_state;
-        // 检查函数的返回值
-        int m_return_code{};
     public:
         Input();
         virtual ~Input() = default;
@@ -87,7 +85,7 @@ class Input {
         bool UnbindAction(Action action);
 
         // 设置默认按键映射
-        virtual bool SetDefaultKeyBind();
+        virtual int SetDefaultKeyBind();
     protected:
 
         /**

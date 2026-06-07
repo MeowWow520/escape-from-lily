@@ -17,16 +17,17 @@
 
 
 Game::Game() :
-    font_manager(FontManager::GetInstance())
+    font_manager(FontManager::GetInstance()),
+    config_manager(ConfigManager::GetInstance())
 { }
 
 int Game::Initialize() {
 
-    m_title = ConfigManager::GetDisplay().window.title;
-    m_window_size = ConfigManager::GetDisplay().window.size;
+    m_title = config_manager.GetDefaultJson().display.window.title;
+    m_window_size = config_manager.GetDefaultJson().display.window.size;
     m_running = true;
     m_delta_time = 0.0f;
-    m_FPS = static_cast<Uint32>(ConfigManager::GetDisplay().fps);
+    m_FPS = config_manager.GetDefaultJson().display.fps;
     m_frame_delay = static_cast<Uint32>(1e9) / m_FPS;
     m_window = nullptr;
     m_renderer = nullptr;
@@ -74,6 +75,7 @@ int Game::Running() {
         }
     }
     Quit();
+    EFL_CHECK(LogCategory::Core, config_manager.Quit() == 0, "Config manager quit");
     return 0;
 }
 
@@ -99,7 +101,6 @@ void Game::Update(const float dt) const {
 }
 
 void Game::Render() const {
-    SDL_SetRenderDrawColor(m_renderer, COLOR(HEX_COLOR_BACKGROUND));
     SDL_RenderClear(m_renderer);
     m_current_scene->Render();
     SDL_RenderPresent(m_renderer);

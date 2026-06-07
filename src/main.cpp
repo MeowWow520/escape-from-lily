@@ -9,9 +9,12 @@
 
 int main() {
     EFL::RegisterLogCategory();
+    // 创建 ConfigManager 单例
+    ConfigManager& config_manager = ConfigManager::GetInstance();
+    EFL_CHECK(LogCategory::Core, config_manager.Initialize() == 0, "Config manager initialize");
     // 创建 Game 单例
     Game& game_instance = Game::GetInstance();
-    if (game_instance.Initialize() != 0) return -1;
+    EFL_CHECK(LogCategory::Core, game_instance.Initialize() == 0, "Game instance initialize");
     game_instance.Running();
     EFL::QuitLogger();
     return 0;

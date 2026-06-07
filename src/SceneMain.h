@@ -9,7 +9,7 @@
 #include "core/Entities/Camera.h"
 #include "core/Entities/Player.h"
 #include "core/Factory/EntityTypes.h"
-#include "core/Font/TextStatic.h"
+#include "core/Font/Base/TextStatic.h"
 
 
 class SceneMain : public Scene {

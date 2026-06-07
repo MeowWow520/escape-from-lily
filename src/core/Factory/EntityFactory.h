@@ -8,7 +8,7 @@
 #include "../Entities/Background.h"
 #include "../Entities/Camera.h"
 #include "../Entities/Player.h"
-#include "../Font/TextStatic.h"
+#include "../Font/Base/TextStatic.h"
 
 
 class EntityFactory {
