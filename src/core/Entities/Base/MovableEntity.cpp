@@ -7,9 +7,10 @@
 
 
 int MovableEntity::Initialize() {
-    m_max_speed = DEFAULT_MAX_SPEED;
-    if (SWITCHER_ACCELERATION)
-        m_acceleration = DEFAULT_ACCELERATION;
+    m_max_speed = m_config_manager.GetPlayerJson().max_speed;
+    if (m_config_manager.GetDefaultJson().feature.acceleration)
+        // TODO: acceleration
+        m_acceleration = 0;
     return 0;
 }
 

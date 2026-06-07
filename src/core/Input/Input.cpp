@@ -6,8 +6,6 @@
 
 
 Input::Input() {
-    m_return_code = 0;
-
 }
 
 void Input::Update(float dt) {
@@ -44,8 +42,8 @@ bool Input::UnbindAction(const Action action) {
     return false;
 }
 
-bool Input::SetDefaultKeyBind() {
-    return true;
+int Input::SetDefaultKeyBind() {
+    return 0;
 }
 
 void Input::SetActionState(const Action action, const ActionState state) {

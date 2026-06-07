@@ -48,7 +48,7 @@ int Game::Initialize() {
 
     // 设置按键绑定
     m_key_input = new KeyboardInput();
-    EFL_CHECK(LogCategory::Input, m_key_input->SetDefaultKeyBind(), "Keyboard SetDefaultKeyBind");
+    EFL_CHECK(LogCategory::Input, m_key_input->SetDefaultKeyBind() == 0, "Keyboard SetDefaultKeyBind");
 
     // 创建场景
     m_current_scene = new SceneMain();

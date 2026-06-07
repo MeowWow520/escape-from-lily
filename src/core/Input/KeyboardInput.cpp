@@ -10,9 +10,8 @@
 #include "../Logger/Log.h"
 
 
-KeyboardInput::KeyboardInput() {
-    m_return_code = 0;
-}
+KeyboardInput::KeyboardInput() = default;
+
 
 void KeyboardInput::HandleEvents(const SDL_Event event) {
     // 如果不是键盘事件，跳过
