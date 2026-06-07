@@ -34,6 +34,7 @@ int SceneMain::Initialize() {
     };
     m_player = EntityFactory::CreatePlayer(player);
 
+
     TextStaticParams text_static_params = {
         "你好, World!",
         DEFAULT_FONT_SIZE,

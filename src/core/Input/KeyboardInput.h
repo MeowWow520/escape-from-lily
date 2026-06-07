@@ -6,6 +6,8 @@
 #define ESCAPE_FROM_LILY_KEYBOARDINPUT_H
 #include "Input.h"
 #include <glm/glm.hpp>
+#include "../Config/ConfigManager.h"
+
 
 
 class KeyboardInput : public Input {
@@ -13,7 +15,7 @@ class KeyboardInput : public Input {
         KeyboardInput();
 
         // 设置键盘的默认按键绑定
-        bool SetDefaultKeyBind() override;
+        int SetDefaultKeyBind() override;
         /**
          * HandleEvents 通过处理 SDL_Event 来获取键盘上哪些按键被按下，哪些松开
          *
@@ -36,8 +38,8 @@ class KeyboardInput : public Input {
          */
         glm::vec2 GetMovementNormalizeVec2();
 
-
-
+    private:
+        ConfigManager& m_config_manager = ConfigManager::GetInstance();
 };
 
 #endif //ESCAPE_FROM_LILY_KEYBOARDINPUT_H
