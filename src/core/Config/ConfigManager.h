@@ -25,11 +25,13 @@ class ConfigManager {
 
         DefaultJson GetDefaultJson();
         PlayerJson GetPlayerJson();
+        std::vector<FontJson> GetFontJson();
 
     private:
         ConfigManager() = default;
         DefaultJson m_defaultJson{};
         PlayerJson m_playerJson{};
+        std::vector<FontJson> m_fontJsonMap{};
 };
 
 
