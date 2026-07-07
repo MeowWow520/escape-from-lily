@@ -13,9 +13,9 @@
 class Input {
     protected:
         // 按键绑定映射表
-        std::unordered_map<SDL_Keycode, Action> m_key_bind;
+        std::unordered_map<SDL_Keycode, Action> m_map_keyBind;
         // 帧数动作状态映射表
-        std::unordered_map<Action, ActionState> m_current_action_state;
+        std::unordered_map<Action, ActionState> m_map_currentActionState;
     public:
         Input();
         virtual ~Input() = default;
@@ -26,7 +26,7 @@ class Input {
          *
          * @param event 要处理的 SDL 事件系统
          */
-        virtual void HandleEvents(SDL_Event event) = 0;
+        virtual void handleEvents(SDL_Event event) = 0;
 
         /**
          * Update 更新 m_current_action_state 表格：
@@ -42,7 +42,7 @@ class Input {
          * @param action 要查询的动作
          * @return 查询的动作的当前的状态
          */
-        [[nodiscard]] ActionState GetActionState(Action action) const;
+        [[nodiscard]] ActionState getActionState(Action action) const;
 
         /**
          * 返回某一个动作是否被按下
@@ -50,7 +50,7 @@ class Input {
          * @param action 要查询的动作
          * @return 符合条件返回 true，不符合返回 false
          */
-        [[nodiscard]] bool IsActionPressed(Action action) const;
+        [[nodiscard]] bool isActionPressed(Action action) const;
 
         /**
          * 返回某一个动作是否正在按住
@@ -58,7 +58,7 @@ class Input {
          * @param action 要查询的动作
          * @return 符合条件返回 true，不符合返回 false
          */
-        [[nodiscard]] bool IsActionHeld(Action action) const;
+        [[nodiscard]] bool isActionHeld(Action action) const;
 
         /**
          * 返回某个按键是否松开
@@ -66,7 +66,7 @@ class Input {
          * @param action 要查询的动作
          * @return 符合条件返回 true，不符合返回 false
          */
-        [[nodiscard]] bool IsActionReleased(Action action) const;
+        [[nodiscard]] bool isActionReleased(Action action) const;
 
         /**
          * BindAction 绑定按键到动作
@@ -75,17 +75,17 @@ class Input {
          * @param action 对应功能的动作
          * @return 绑定成功返回 true，失败返回 false
          */
-        bool BindAction(SDL_Keycode key, Action action);
+        bool bindAction(SDL_Keycode key, Action action);
 
         /**
          * UnbindAction 解绑 xxx 动作
          * @param action 要解绑的动作
          * @return 绑定成功返回 true，失败返回 false
          */
-        bool UnbindAction(Action action);
+        bool unbindAction(Action action);
 
         // 设置默认按键映射
-        virtual int SetDefaultKeyBind();
+        virtual int setDefaultKeyBind();
     protected:
 
         /**
@@ -93,7 +93,7 @@ class Input {
          * @param action 要设置的动作
          * @param state 当前状态
          */
-        void SetActionState(Action action, ActionState state);
+        void setActionState(Action action, ActionState state);
 
 };
 

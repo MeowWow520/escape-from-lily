@@ -15,13 +15,13 @@ class KeyboardInput : public Input {
         KeyboardInput();
 
         // 设置键盘的默认按键绑定
-        int SetDefaultKeyBind() override;
+        int setDefaultKeyBind() override;
         /**
          * HandleEvents 通过处理 SDL_Event 来获取键盘上哪些按键被按下，哪些松开
          *
          * @param event 要处理的 SDL 事件系统
          */
-        void HandleEvents(SDL_Event event) override;
+        void handleEvents(SDL_Event event) override;
 
         /**
          * Update 更新 m_current_action_state 表格：
@@ -39,7 +39,7 @@ class KeyboardInput : public Input {
         glm::vec2 GetMovementNormalizeVec2();
 
     private:
-        ConfigManager& m_config_manager = ConfigManager::GetInstance();
+        ConfigManager& m_config_manager = ConfigManager::getInstance();
 };
 
 #endif //ESCAPE_FROM_LILY_KEYBOARDINPUT_H

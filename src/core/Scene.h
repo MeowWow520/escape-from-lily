@@ -11,15 +11,15 @@
 
 class Scene : public Object {
     protected:
-        glm::vec2 m_world_size{};  // 世界的大小
-        glm::vec2 m_world_scale{}; // 世界的缩放
+        glm::vec2 m_vec2_worldSize{};  // 世界的大小
+        glm::vec2 m_vec2_worldScale{}; // 世界的缩放
     public:
         explicit Scene(const char* m_entity_name = "Scene")
             : Object(m_entity_name) {}
 
         ~Scene() override = default;
         int Initialize() override { return 0; }
-        void HandleEvents(SDL_Event event) override { }
+        void handleEvents(SDL_Event event) override { }
         void Update(float dt) override { }
         void Render() override { }
         int Quit() override { return 0; }
@@ -29,10 +29,10 @@ class Scene : public Object {
 
         // setter 和 getter
         [[nodiscard]] glm::vec2 GetWorldSize() const {
-             return m_world_size;
+             return m_vec2_worldSize;
         }
         [[nodiscard]] glm::vec2 GetWorldScale() const{
-            return m_world_scale;
+            return m_vec2_worldScale;
         }
 
 };

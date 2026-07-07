@@ -15,7 +15,7 @@ class TextStatic : public TextBase {
 
 
         int Initialize() override;
-        void HandleEvents(SDL_Event event) override;
+        void handleEvents(SDL_Event event) override;
         void Render() override;
         void Update(float dt) override;
         int Quit() override;

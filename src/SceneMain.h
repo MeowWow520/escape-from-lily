@@ -18,7 +18,7 @@ class SceneMain : public Scene {
 
         ~SceneMain() override = default;
         int Initialize() override;
-        void HandleEvents(SDL_Event event) override;
+        void handleEvents(SDL_Event event) override;
         void Update(float dt) override;
         void Render() override;
         int Quit() override;

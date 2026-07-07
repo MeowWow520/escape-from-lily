@@ -8,11 +8,11 @@
 
 
 Object::Object(const char *m_entity_name) noexcept
-    : m_entity_name(m_entity_name)
+    : m_cEntityName(m_entity_name)
 {
     EFL_LOG_ENTITY_CREATED(m_entity_name);
 }
 
 Object::~Object() {
-    EFL_LOG_ENTITY_DESTROYED(m_entity_name);
+    EFL_LOG_ENTITY_DESTROYED(m_cEntityName);
 }

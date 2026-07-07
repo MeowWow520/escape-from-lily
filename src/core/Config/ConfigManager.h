@@ -10,22 +10,22 @@
 
 class ConfigManager {
     public:
-        static ConfigManager& GetInstance() {
+        static ConfigManager& getInstance() {
             static ConfigManager instance;
             return instance;
         }
         ConfigManager(const ConfigManager&) = delete;
         ConfigManager& operator=(const ConfigManager&) = delete;
 
-        int InitDefaultJsonFile(const std::string& filePath);
-        int InitPlayerJsonFile(const std::string& filePath);
-        int InitFontsJsonFile(const std::string& filePath);
+        int initDefaultJsonFile(const std::string& filePath);
+        int initPlayerJsonFile(const std::string& filePath);
+        int initFontsJsonFile(const std::string& filePath);
         int Initialize();
         int Quit();
 
-        DefaultJson GetDefaultJson();
-        PlayerJson GetPlayerJson();
-        std::vector<FontJson> GetFontJson();
+        DefaultJson getDefaultJson();
+        PlayerJson getPlayerJson();
+        std::vector<FontJson> getFontJson();
 
     private:
         ConfigManager() = default;

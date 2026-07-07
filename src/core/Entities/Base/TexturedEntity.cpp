@@ -13,115 +13,115 @@ int TexturedEntity::Initialize() {
     return 0;
 }
 
-SDL_Texture * TexturedEntity::SetTexture(SDL_Texture *newtexture) {
-    m_texture = newtexture;
-    return newtexture;
+SDL_Texture * TexturedEntity::setTexture(SDL_Texture *new_texture) {
+    m_texture = new_texture;
+    return new_texture;
 }
 
 
-[[nodiscard]] SDL_Texture* TexturedEntity::GetTexture() const {
+[[nodiscard]] SDL_Texture* TexturedEntity::getTexture() const {
     return m_texture;
 }
 
-SDL_Color TexturedEntity::SetColor(const SDL_Color newcolor) {
-    m_color_mod = newcolor;
+SDL_Color TexturedEntity::setColor(const SDL_Color newcolor) {
+    m_colorMod = newcolor;
     return newcolor;
 }
 
-SDL_Color TexturedEntity::GetColorMod() const {
-    return m_color_mod;
+SDL_Color TexturedEntity::getColorMod() const {
+    return m_colorMod;
 }
 
-SDL_BlendMode TexturedEntity::SetBlendMode(const SDL_BlendMode newblendmode) {
-    m_blend_mode = newblendmode;
-    return newblendmode;
+SDL_BlendMode TexturedEntity::setBlendMode(const SDL_BlendMode new_blend_mode) {
+    m_blendMode = new_blend_mode;
+    return new_blend_mode;
 }
 
-SDL_BlendMode TexturedEntity::GetBlendMode() const {
-    return m_blend_mode;
+SDL_BlendMode TexturedEntity::getBlendMode() const {
+    return m_blendMode;
 }
 
-bool TexturedEntity::SetDirty(const bool newdirty) {
-    m_texture_dirty = newdirty;
-    return newdirty;
+bool TexturedEntity::setDirty(const bool new_dirty) {
+    m_bTextureDirty = new_dirty;
+    return new_dirty;
 }
 
-bool TexturedEntity::GetDirty() const {
-    return m_texture_dirty;
+bool TexturedEntity::getDirty() const {
+    return m_bTextureDirty;
 }
 
-float TexturedEntity::SetRotation(const float rotation) {
-    m_rotation = rotation;
+float TexturedEntity::setRotation(const float rotation) {
+    m_fRotation = rotation;
     return rotation;
 }
 
-[[nodiscard]] float TexturedEntity::GetRotation() const {
-    return m_rotation;
+[[nodiscard]] float TexturedEntity::getRotation() const {
+    return m_fRotation;
 }
 
-glm::vec2 TexturedEntity::SetScale(const glm::vec2 newscale) {
-    m_scale = newscale;
-    return newscale;
+glm::vec2 TexturedEntity::setScale(const glm::vec2 new_scale) {
+    m_vec2_scale = new_scale;
+    return new_scale;
 }
 
-[[nodiscard]] glm::vec2 TexturedEntity::GetScale() const {
-    return m_scale;
+[[nodiscard]] glm::vec2 TexturedEntity::getScale() const {
+    return m_vec2_scale;
 }
 
-glm::vec2 TexturedEntity::SetTextureSize(const glm::vec2 newtexturesize) {
-    m_texture_size = newtexturesize;
-    return newtexturesize;
+glm::vec2 TexturedEntity::setTextureSize(const glm::vec2 new_texture_size) {
+    m_vec2_textureSize = new_texture_size;
+    return new_texture_size;
 }
 
-glm::vec2 TexturedEntity::GetTextureSize() const {
-    return m_texture_size;
+glm::vec2 TexturedEntity::getTextureSize() const {
+    return m_vec2_textureSize;
 }
 
-glm::vec2 TexturedEntity::SetPivot(const glm::vec2 newpivot) {
-    m_pivot = newpivot;
-    return newpivot;
+glm::vec2 TexturedEntity::setPivot(const glm::vec2 new_pivot) {
+    m_vec2_pivot = new_pivot;
+    return new_pivot;
 }
 
-[[nodiscard]] glm::vec2 TexturedEntity::GetPivot() const {
-    return m_pivot;
+[[nodiscard]] glm::vec2 TexturedEntity::getPivot() const {
+    return m_vec2_pivot;
 }
 
-glm::vec2 TexturedEntity::SetHitbox(const glm::vec2 newhitbox) {
-    m_entity_hitbox = newhitbox;
-    return newhitbox;
+glm::vec2 TexturedEntity::setHitbox(const glm::vec2 new_hitbox) {
+    m_vec2_entityHitbox = new_hitbox;
+    return new_hitbox;
 }
 
-glm::vec2 TexturedEntity::GetHitbox() const {
-    return m_entity_hitbox;
+glm::vec2 TexturedEntity::getHitbox() const {
+    return m_vec2_entityHitbox;
 }
 
-bool TexturedEntity::SetVisible(const bool newvisible) {
-    m_visible = newvisible;
+bool TexturedEntity::setVisible(const bool newvisible) {
+    m_bVisible = newvisible;
     return newvisible;
 }
 
-[[nodiscard]] bool TexturedEntity::GetVisible() const {
-    return m_visible;
+[[nodiscard]] bool TexturedEntity::getVisible() const {
+    return m_bVisible;
 }
 
-std::string TexturedEntity::SetPath(std::string newpath) {
-    m_path = newpath;
-    return newpath;
+std::string TexturedEntity::setPath(std::string new_path) {
+    m_strPath = new_path;
+    return new_path;
 }
 
-[[nodiscard]] std::string TexturedEntity::GetPath() const {
-    return m_path;
+[[nodiscard]] std::string TexturedEntity::getPath() const {
+    return m_strPath;
 }
 
-SDL_Rect TexturedEntity::SetRect(const SDL_Rect newrect) {
-    m_rect = newrect;
-    return newrect;
+SDL_Rect TexturedEntity::setRect(const SDL_Rect new_rect) {
+    m_rect = new_rect;
+    return new_rect;
 }
 
-SDL_Rect TexturedEntity::GetRect() const {
+SDL_Rect TexturedEntity::getRect() const {
     return m_rect;
 }
 
-glm::vec2 TexturedEntity::TransScreenPos() const {
-    return m_world_pos - m_game_instance.GetCurrentScene()->GetCamera()->GetWorldPos();
+glm::vec2 TexturedEntity::transScreenPos() const {
+    return m_vec2_worldPos - m_game_instance.getCurrentScene()->GetCamera()->getWorldPos();
 }

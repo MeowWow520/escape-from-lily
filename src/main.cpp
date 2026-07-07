@@ -8,14 +8,14 @@
 
 
 int main() {
-    EFL::RegisterLogCategory();
+    EFL::registerLogCategory();
     // 创建 ConfigManager 单例
-    ConfigManager& config_manager = ConfigManager::GetInstance();
+    ConfigManager& config_manager = ConfigManager::getInstance();
     EFL_CHECK(LogCategory::Core, config_manager.Initialize() == 0, "Config manager initialize");
     // 创建 Game 单例
-    Game& game_instance = Game::GetInstance();
+    Game& game_instance = Game::getInstance();
     EFL_CHECK(LogCategory::Core, game_instance.Initialize() == 0, "Game instance initialize");
     game_instance.Running();
-    EFL::QuitLogger();
+    EFL::quitLogger();
     return 0;
 }
