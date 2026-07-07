@@ -10,7 +10,7 @@ class Game;
 
 class FontManager {
     public:
-        static FontManager& GetInstance() {
+        static FontManager& getInstance() {
             static FontManager instance;
             return instance;
         }
@@ -19,12 +19,12 @@ class FontManager {
 
 
         int Initialize(Game& game);
-        void HandleEvents(SDL_Event event);
+        void handleEvents(SDL_Event event);
         void Update(float dt);
         void Render();
         int Quit();
 
-        [[nodiscard]] TTF_TextEngine* GetTTFEngine() const;
+        [[nodiscard]] TTF_TextEngine* getTTFEngine() const;
 
     private:
         FontManager() = default;

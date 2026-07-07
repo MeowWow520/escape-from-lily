@@ -34,7 +34,7 @@ namespace EFL {
         }
     }
 
-    const char *GetCategoryName(const LogCategory cate) noexcept {
+    const char *getCategoryName(const LogCategory cate) noexcept {
         switch (cate) {
             case LogCategory::Core:     return "Core";
             case LogCategory::Entity:   return "Entity";
@@ -46,7 +46,7 @@ namespace EFL {
         }
         return "unknow";
     }
-    void RegisterLogCategory(const LogConfig& config) {
+    void registerLogCategory(const LogConfig& config) {
         // 创建日志目录（如果不存在）
         std::filesystem::create_directories(
             std::filesystem::path(config.file_path).parent_path()
@@ -69,7 +69,7 @@ namespace EFL {
         CreateLogger("Font", config, file_sink);
         spdlog::info("Log system initialized, file: {}", config.file_path);
     }
-    void QuitLogger() {
+    void quitLogger() {
         spdlog::get("Core")->flush();
         spdlog::get("Entity")->flush();
         spdlog::get("Input")->flush();

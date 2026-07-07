@@ -20,7 +20,7 @@ class FontManager;
 class Game {
     public:
         // 获取单例
-        static Game& GetInstance() {
+        static Game& getInstance() {
             static Game instance;
             return instance;
         }
@@ -38,7 +38,7 @@ class Game {
          * @return 运行成功返回 0，失败返回 -1
          */
         int Running();
-        void HandleEvents();
+        void handleEvents();
         void Update(float dt) const;
         void Render() const;
 
@@ -50,31 +50,31 @@ class Game {
         int Quit();
 
         // setter 和 getter
-        [[nodiscard]] glm::vec2 GetWindowSize() const;
-        bool SetRunning(bool newrunning);
-        [[nodiscard]] bool GetRunning() const;
+        [[nodiscard]] glm::vec2 getWindowSize() const;
+        bool setRunning(bool new_running);
+        [[nodiscard]] bool getRunning() const;
         // m_delta_time
-        [[nodiscard]] Uint32 GetFPS() const;
-        [[nodiscard]] SDL_Window *GetSDLWindow() const;
-        [[nodiscard]] SDL_Renderer *GetSDLRenderer() const;
-        [[nodiscard]] Scene* GetCurrentScene() const;
-        [[nodiscard]] KeyboardInput* GetKeyboardInput() const;
+        [[nodiscard]] Uint32 getFPS() const;
+        [[nodiscard]] SDL_Window *getSDLWindow() const;
+        [[nodiscard]] SDL_Renderer *getSDLRenderer() const;
+        [[nodiscard]] Scene* getCurrentScene() const;
+        [[nodiscard]] KeyboardInput* getKeyboardInput() const;
 
     private:
         FontManager& font_manager;
         ConfigManager& config_manager;
         Game();
 
-        std::string m_title{};
-        glm::vec2 m_window_size{};
-        bool m_running{};
-        float m_delta_time{};
-        Uint32 m_frame_delay{};
-        Uint32 m_FPS{};
+        std::string m_strTitle{};
+        glm::vec2 m_vec2_windowSize{};
+        bool m_bRunning{};
+        float m_fDeltaTime{};
+        Uint32 m_i32FrameDelay{};
+        Uint32 m_i32FPS{};
         SDL_Window* m_window{};
         SDL_Renderer* m_renderer{};
-        Scene* m_current_scene{};
-        KeyboardInput *m_key_input{};
+        Scene* m_currentScene{};
+        KeyboardInput *m_keyInput{};
 };
 
 #endif //ESCAPE_FROM_LILY_GAME_H

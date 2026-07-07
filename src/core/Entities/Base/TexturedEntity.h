@@ -13,17 +13,17 @@ class TexturedEntity : public ObjectScreen {
     protected:
 
         SDL_Texture *m_texture{};                          // 实体的纹理
-        SDL_Color m_color_mod{COLOR(0xFFFFFFFF)};        // 颜色调制 + 透明度
-        SDL_BlendMode m_blend_mode{SDL_BLENDMODE_BLEND};   // 像素混合模式
-        bool m_texture_dirty{false};                       // 脏标记
-        bool m_visible{false};
-        float m_rotation{0.0f};            // 旋转角度
-        std::string m_path{};              // 纹理的文件路径
-        SDL_Rect m_rect{};                 // 精灵图矩形
-        glm::vec2 m_texture_size{};        // 纹理原始尺寸
-        glm::vec2 m_scale{1.0f, 1.0f}; // 缩放
-        glm::vec2 m_pivot{0.5f, 0.5f}; // 旋转中心 归一化
-        glm::vec2 m_entity_hitbox{1.0f, 1.0f}; // 碰撞箱
+        SDL_Color m_colorMod{COLOR(0xFFFFFFFF)};        // 颜色调制 + 透明度
+        SDL_BlendMode m_blendMode{SDL_BLENDMODE_BLEND};   // 像素混合模式
+        bool m_bTextureDirty{false};                       // 脏标记
+        bool m_bVisible{false};
+        float m_fRotation{0.0f};                // 旋转角度
+        std::string m_strPath{};                // 纹理的文件路径
+        SDL_Rect m_rect{};                      // 精灵图矩形
+        glm::vec2 m_vec2_textureSize{};         // 纹理原始尺寸
+        glm::vec2 m_vec2_scale{1.0f, 1.0f}; // 缩放
+        glm::vec2 m_vec2_pivot{0.5f, 0.5f}; // 旋转中心 归一化
+        glm::vec2 m_vec2_entityHitbox{1.0f, 1.0f}; // 碰撞箱
     public:
         explicit TexturedEntity(const char* m_entity_name = "TexturedEntity")
             : ObjectScreen(m_entity_name) { }
@@ -32,36 +32,36 @@ class TexturedEntity : public ObjectScreen {
 
         int Initialize() override;
         // setter 和 getter
-        SDL_Texture* SetTexture(SDL_Texture* newtexture);
-        [[nodiscard]] SDL_Texture* GetTexture() const;
-        SDL_Color SetColor(SDL_Color newcolor);
-        [[nodiscard]] SDL_Color GetColorMod() const;
-        SDL_BlendMode SetBlendMode(SDL_BlendMode newblendmode);
-        [[nodiscard]] SDL_BlendMode GetBlendMode() const;
-        bool SetDirty(bool newdirty);
-        [[nodiscard]] bool GetDirty() const;
-        bool SetVisible(bool newvisible);
-        [[nodiscard]] bool GetVisible() const;
-        float SetRotation(float rotation);
-        [[nodiscard]] float GetRotation() const;
-        std::string SetPath(std::string newpath);
-        [[nodiscard]] std::string GetPath() const;
-        SDL_Rect SetRect(SDL_Rect newrect);
-        [[nodiscard]] SDL_Rect GetRect() const;
-        glm::vec2 SetTextureSize(glm::vec2 newtexturesize);
-        [[nodiscard]] glm::vec2 GetTextureSize() const;
-        glm::vec2 SetScale(glm::vec2 newscale);
-        [[nodiscard]] glm::vec2 GetScale() const;
-        glm::vec2 SetPivot(glm::vec2 newpivot);
-        [[nodiscard]] glm::vec2 GetPivot() const;
-        glm::vec2 SetHitbox(glm::vec2 newhitbox);
-        [[nodiscard]] glm::vec2 GetHitbox() const;
+        SDL_Texture* setTexture(SDL_Texture* new_texture);
+        [[nodiscard]] SDL_Texture* getTexture() const;
+        SDL_Color setColor(SDL_Color new_color);
+        [[nodiscard]] SDL_Color getColorMod() const;
+        SDL_BlendMode setBlendMode(SDL_BlendMode new_blend_mode);
+        [[nodiscard]] SDL_BlendMode getBlendMode() const;
+        bool setDirty(bool new_dirty);
+        [[nodiscard]] bool getDirty() const;
+        bool setVisible(bool new_visible);
+        [[nodiscard]] bool getVisible() const;
+        float setRotation(float rotation);
+        [[nodiscard]] float getRotation() const;
+        std::string setPath(std::string new_path);
+        [[nodiscard]] std::string getPath() const;
+        SDL_Rect setRect(SDL_Rect new_rect);
+        [[nodiscard]] SDL_Rect getRect() const;
+        glm::vec2 setTextureSize(glm::vec2 new_texture_size);
+        [[nodiscard]] glm::vec2 getTextureSize() const;
+        glm::vec2 setScale(glm::vec2 new_scale);
+        [[nodiscard]] glm::vec2 getScale() const;
+        glm::vec2 setPivot(glm::vec2 new_pivot);
+        [[nodiscard]] glm::vec2 getPivot() const;
+        glm::vec2 setHitbox(glm::vec2 new_hitbox);
+        [[nodiscard]] glm::vec2 getHitbox() const;
 
         /**
          * TranScreenPos是将世界坐标转化为屏幕坐标的函数
          * @return 屏幕坐标
          */
-        [[nodiscard]] glm::vec2 TransScreenPos() const;
+        [[nodiscard]] glm::vec2 transScreenPos() const;
 };
 
 #endif //ESCAPE_FROM_LILY_TEXTUREDENTITY_H

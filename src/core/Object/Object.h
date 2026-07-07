@@ -11,22 +11,22 @@
 class Object {
     protected:
         // 获取 Game 的单例
-        Game& m_game_instance = Game::GetInstance();
+        Game& m_game_instance = Game::getInstance();
         // 获取 ConfigManager 单例
-        ConfigManager& m_config_manager = ConfigManager::GetInstance();
+        ConfigManager& m_config_manager = ConfigManager::getInstance();
         // 实例名字，用语日志系统
-        const char* m_entity_name;
+        const char* m_cEntityName;
     public:
         explicit Object(const char* m_entity_name) noexcept;
         virtual ~Object();
 
         virtual int Initialize() { return 0; }
-        virtual void HandleEvents([[maybe_unused]]SDL_Event event) { }
+        virtual void handleEvents([[maybe_unused]]SDL_Event event) { }
         virtual void Update([[maybe_unused]] const float dt) { }
         virtual void Render() { }
         virtual int Quit() { return 0; }
 
-        [[nodiscard]] const char* GetName() const { return m_entity_name; }
+        [[nodiscard]] const char* GetName() const { return m_cEntityName; }
 };
 
 #endif //ESCAPE_FROM_LILY_OBJECT_H

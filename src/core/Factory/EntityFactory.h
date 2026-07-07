@@ -19,10 +19,10 @@ class EntityFactory {
         EntityFactory(const EntityFactory&) = default;
         EntityFactory& operator=(const EntityFactory&) = default;
 
-        static EntityPtr<Camera> CreateCamera(const EntityParams& params);
-        static EntityPtr<Background> CreateBackground(const EntityParams& params);
-        static EntityPtr<Player> CreatePlayer(const EntityParams& params);
-        static EntityPtr<TextStatic> CreateTextStatic(const EntityParams& params);
+        static EntityPtr<Camera> createCamera(const EntityParams& params);
+        static EntityPtr<Background> createBackground(const EntityParams& params);
+        static EntityPtr<Player> createPlayer(const EntityParams& params);
+        static EntityPtr<TextStatic> createTextStatic(const EntityParams& params);
 };
 
 

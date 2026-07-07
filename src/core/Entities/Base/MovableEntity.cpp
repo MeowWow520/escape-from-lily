@@ -7,36 +7,36 @@
 
 
 int MovableEntity::Initialize() {
-    m_max_speed = m_config_manager.GetPlayerJson().max_speed;
-    if (m_config_manager.GetDefaultJson().feature.acceleration)
+    m_fMaxSpeed = m_config_manager.getPlayerJson().max_speed;
+    if (m_config_manager.getDefaultJson().feature.acceleration)
         // TODO: acceleration
-        m_acceleration = 0;
+        m_fAcceleration = 0;
     return 0;
 }
 
-float MovableEntity::GetMaxSpeed() const {
-    return m_max_speed;
+float MovableEntity::getMaxSpeed() const {
+    return m_fMaxSpeed;
 }
 
-float MovableEntity::SetMaxSpeed(const float newmaxspeed) {
-    m_max_speed = newmaxspeed;
-    return newmaxspeed;
+float MovableEntity::setMaxSpeed(const float new_max_speed) {
+    m_fMaxSpeed = new_max_speed;
+    return new_max_speed;
 }
 
-float MovableEntity::GetAcceleration() const {
-    return m_acceleration;
+float MovableEntity::getAcceleration() const {
+    return m_fAcceleration;
 }
 
-float MovableEntity::SetAcceleration(const float newacceleration) {
-    m_acceleration = newacceleration;
+float MovableEntity::setAcceleration(const float newacceleration) {
+    m_fAcceleration = newacceleration;
     return newacceleration;
 }
 
-glm::vec2 MovableEntity::GetVector() const {
-    return m_vector;
+glm::vec2 MovableEntity::getVector() const {
+    return m_vec2_vector;
 }
 
-glm::vec2 MovableEntity::SetVector(const glm::vec2 newvector) {
-    m_vector = newvector;
-    return newvector;
+glm::vec2 MovableEntity::setVector(const glm::vec2 new_vector) {
+    m_vec2_vector = new_vector;
+    return new_vector;
 }

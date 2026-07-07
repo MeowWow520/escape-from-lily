@@ -28,7 +28,7 @@ struct PlayerParams {
 
 struct CameraParams {
     glm::vec2 world_pos;
-    float m_border;
+    float border;
 };
 
 struct BackgroundParams {

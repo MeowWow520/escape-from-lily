@@ -18,19 +18,19 @@ namespace EFL {
         bool enable_logging = true;                           // 输出文件
     };
 
-    const char* GetCategoryName(LogCategory cate) noexcept;
+    const char* getCategoryName(LogCategory cate) noexcept;
 
-    void RegisterLogCategory(const LogConfig& config = {});
+    void registerLogCategory(const LogConfig& config = {});
 
-    void QuitLogger();
+    void quitLogger();
 } // Escape from lily
 
 
 #define EFL_LOGGER_INFO(cat, ...)      \
-    spdlog::get(EFL::GetCategoryName(cat))->info(__VA_ARGS__)
+    spdlog::get(EFL::getCategoryName(cat))->info(__VA_ARGS__)
 
 #define EFL_LOGGER_ERROR(cat, ...)     \
-    spdlog::get(EFL::GetCategoryName(cat))->error(__VA_ARGS__)
+    spdlog::get(EFL::getCategoryName(cat))->error(__VA_ARGS__)
 
 #define EFL_LOG_ENTITY_CREATED(name)   \
     EFL_LOGGER_INFO(LogCategory::Entity, "{} object constructed", name)
@@ -45,7 +45,7 @@ namespace EFL {
     }                                             \
     EFL_LOGGER_INFO(cat, "{} successful", msg);
 
-#define EFL_CHACK_WITH_GET_ERROR(cat, call, msg)                     \
+#define EFL_CHECK_WITH_GET_ERROR(cat, call, msg)                     \
     if (!(call)) {                                                   \
         EFL_LOGGER_ERROR(cat, "{} failed: {}", msg, SDL_GetError()); \
         return -1;                                                   \

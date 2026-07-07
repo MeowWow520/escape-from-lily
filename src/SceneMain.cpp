@@ -10,29 +10,29 @@
 
 int SceneMain::Initialize() {
     // 设置世界缩放 和 世界大小
-    m_world_scale = glm::vec2{3, 3};
-    m_world_size = m_game_instance.GetWindowSize() * m_world_scale;
+    m_vec2_worldScale = glm::vec2{3, 3};
+    m_vec2_worldSize = m_game_instance.getWindowSize() * m_vec2_worldScale;
 
     // 创建相机
     CameraParams camera = {
-        (m_world_size - m_game_instance.GetWindowSize()) / glm::vec2(2),
-         100.0f * m_game_instance.GetCurrentScene()->GetWorldScale().x
+        (m_vec2_worldSize - m_game_instance.getWindowSize()) / glm::vec2(2),
+         100.0f * m_game_instance.getCurrentScene()->GetWorldScale().x
     };
-    m_camera = EntityFactory::CreateCamera(camera);
+    m_camera = EntityFactory::createCamera(camera);
 
     // 创建背景
     BackgroundParams background = {
         "assets/images/backgrounds/purple.png",
         {0,0}
     };
-    m_current_background = EntityFactory::CreateBackground(background);
+    m_current_background = EntityFactory::createBackground(background);
 
     // 创建玩家
     PlayerParams player = {
-        m_config_manager.GetPlayerJson().default_name,
-        m_config_manager.GetPlayerJson().texture_path
+        m_config_manager.getPlayerJson().default_name,
+        m_config_manager.getPlayerJson().texture_path
     };
-    m_player = EntityFactory::CreatePlayer(player);
+    m_player = EntityFactory::createPlayer(player);
 
 
     TextStaticParams text_static_params = {
@@ -42,12 +42,12 @@ int SceneMain::Initialize() {
         {50.00, 50.00},
         -1,
     };
-    m_text_static = EntityFactory::CreateTextStatic(text_static_params);
+    m_text_static = EntityFactory::createTextStatic(text_static_params);
 
     return 0;
 }
 
-void SceneMain::HandleEvents(SDL_Event event) {
+void SceneMain::handleEvents(SDL_Event event) {
     (void)event;
 }
 

@@ -11,7 +11,7 @@ using json = nlohmann::json;
 
 
 
-int ConfigManager::InitDefaultJsonFile(const std::string &filePath) {
+int ConfigManager::initDefaultJsonFile(const std::string &filePath) {
     std::ifstream ifs(filePath);
     if (!ifs.is_open()) {
         EFL_LOGGER_ERROR(LogCategory::Core, "Open {} failed", filePath);
@@ -46,7 +46,7 @@ int ConfigManager::InitDefaultJsonFile(const std::string &filePath) {
     return 0;
 }
 
-int ConfigManager::InitPlayerJsonFile(const std::string &filePath) {
+int ConfigManager::initPlayerJsonFile(const std::string &filePath) {
     std::ifstream ifs(filePath);
     if (!ifs.is_open()) {
         EFL_LOGGER_ERROR(LogCategory::Core, "Open {} failed", filePath);
@@ -74,7 +74,7 @@ int ConfigManager::InitPlayerJsonFile(const std::string &filePath) {
     return 0;
 }
 
-int ConfigManager::InitFontsJsonFile(const std::string &filePath) {
+int ConfigManager::initFontsJsonFile(const std::string &filePath) {
     std::ifstream ifs(filePath);
     if (!ifs.is_open()) {
         EFL_LOGGER_ERROR(LogCategory::Core, "Open {} failed", filePath);
@@ -118,9 +118,9 @@ int ConfigManager::InitFontsJsonFile(const std::string &filePath) {
 }
 
 int ConfigManager::Initialize() {
-    EFL_CHECK(LogCategory::Core, !InitDefaultJsonFile("assets/json/default.json"), "InitDefaultJsonFile");
-    EFL_CHECK(LogCategory::Core, !InitPlayerJsonFile("assets/json/player.json"),   "InitPlayerJsonFile" );
-    EFL_CHECK(LogCategory::Core, !InitFontsJsonFile("assets/json/fonts.json"),     "InitFontsJsonFile"  );
+    EFL_CHECK(LogCategory::Core, !initDefaultJsonFile("assets/json/default.json"), "initDefaultJsonFile");
+    EFL_CHECK(LogCategory::Core, !initPlayerJsonFile("assets/json/player.json"),   "initPlayerJsonFile" );
+    EFL_CHECK(LogCategory::Core, !initFontsJsonFile("assets/json/fonts.json"),     "initFontsJsonFile"  );
     return 0;
 }
 
@@ -131,15 +131,15 @@ int ConfigManager::Quit() {
     return 0;
 }
 
-DefaultJson ConfigManager::GetDefaultJson() {
+DefaultJson ConfigManager::getDefaultJson() {
     return m_defaultJson;
 }
 
-PlayerJson ConfigManager::GetPlayerJson() {
+PlayerJson ConfigManager::getPlayerJson() {
     return m_playerJson;
 }
 
-std::vector<FontJson> ConfigManager::GetFontJson() {
+std::vector<FontJson> ConfigManager::getFontJson() {
     return m_fontJsonMap;
 }
 

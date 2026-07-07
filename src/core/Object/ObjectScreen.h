@@ -9,7 +9,7 @@
 
 class ObjectScreen : public ObjectWorld {
     protected:
-        glm::vec2 m_screen_pos{};
+        glm::vec2 m_vec2_screenPos{};
     public:
         explicit ObjectScreen(const char* m_entity_name = "ObjectScreen")
             : ObjectWorld(m_entity_name) {}
@@ -20,14 +20,14 @@ class ObjectScreen : public ObjectWorld {
          * 获取屏幕坐标
          * @return 屏幕坐标
          */
-        [[nodiscard]] glm::vec2 GetScreenPos() const { return m_screen_pos; }
+        [[nodiscard]] glm::vec2 getScreenPos() const { return m_vec2_screenPos; }
         /**
          * 设置屏幕坐标
          * @param new_pos 新的屏幕坐标
          * @return 设置后的屏幕坐标
          */
-        glm::vec2 SetScreenPos(const glm::vec2& new_pos) {
-            m_screen_pos = new_pos;
+        glm::vec2 setScreenPos(const glm::vec2& new_pos) {
+            m_vec2_screenPos = new_pos;
             return new_pos;
         }
 };

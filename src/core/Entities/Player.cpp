@@ -13,46 +13,46 @@
 
 int Player::Initialize() {
 
-    m_max_speed = m_config_manager.GetPlayerJson().max_speed;
+    m_fMaxSpeed = m_config_manager.getPlayerJson().max_speed;
 
-    m_visible = true;
-    if (!m_path.data() || m_path[0] == '\0') {
+    m_bVisible = true;
+    if (!m_strPath.data() || m_strPath[0] == '\0') {
         EFL_LOGGER_ERROR(LogCategory::Entity, "Player Initialize() failed: m_path is NULL");
         return -1;
     }
-    m_texture = IMG_LoadTexture(m_game_instance.GetSDLRenderer(), m_path.c_str());
+    m_texture = IMG_LoadTexture(m_game_instance.getSDLRenderer(), m_strPath.c_str());
     EFL_CHECK(LogCategory::Entity, m_texture, "Player IMG_LoadTexture");
-    SDL_GetTextureSize(m_texture, &m_texture_size.x, &m_texture_size.y);
-    m_world_pos = (m_game_instance.GetCurrentScene()->GetWorldSize() - m_texture_size ) / glm::vec2(2.0f);
-    EFL_LOGGER_INFO(LogCategory::Entity, "Play's m_world_pos be set in ({}, {})", m_world_pos.x, m_world_pos.y);
-    m_screen_pos = TransScreenPos();
+    SDL_GetTextureSize(m_texture, &m_vec2_textureSize.x, &m_vec2_textureSize.y);
+    m_vec2_worldPos = (m_game_instance.getCurrentScene()->GetWorldSize() - m_vec2_textureSize ) / glm::vec2(2.0f);
+    EFL_LOGGER_INFO(LogCategory::Entity, "Play's m_world_pos be set in ({}, {})", m_vec2_worldPos.x, m_vec2_worldPos.y);
+    m_vec2_screenPos = transScreenPos();
     return MovableEntity::Initialize();
 }
 
-void Player::HandleEvents(SDL_Event event) {
-    MovableEntity::HandleEvents(event);
+void Player::handleEvents(SDL_Event event) {
+    MovableEntity::handleEvents(event);
 }
 
 void Player::Update(const float dt) {
-    m_world_pos += m_game_instance.GetKeyboardInput()->GetMovementNormalizeVec2() * m_max_speed * dt;
-    m_world_pos.x = std::clamp(m_world_pos.x,0.0f,
-        m_game_instance.GetCurrentScene()->GetWorldSize().x - m_texture_size.x);
-    m_world_pos.y = std::clamp(m_world_pos.y, 0.0f,
-        m_game_instance.GetCurrentScene()->GetWorldSize().y - m_texture_size.y);
-    m_screen_pos = TransScreenPos();
+    m_vec2_worldPos += m_game_instance.getKeyboardInput()->GetMovementNormalizeVec2() * m_fMaxSpeed * dt;
+    m_vec2_worldPos.x = std::clamp(m_vec2_worldPos.x,0.0f,
+        m_game_instance.getCurrentScene()->GetWorldSize().x - m_vec2_textureSize.x);
+    m_vec2_worldPos.y = std::clamp(m_vec2_worldPos.y, 0.0f,
+        m_game_instance.getCurrentScene()->GetWorldSize().y - m_vec2_textureSize.y);
+    m_vec2_screenPos = transScreenPos();
 }
 
 void Player::Render() {
-    const SDL_FRect destination = EFL_Vec2AddToRectFloat(m_screen_pos, m_texture_size);
+    const SDL_FRect destination = EFL_Vec2AddToRectFloat(m_vec2_screenPos, m_vec2_textureSize);
     // 依据移动方向选择纹理样式
-    if (m_game_instance.GetKeyboardInput()->GetMovementNormalizeVec2().x < 0.0f) {
-        SDL_RenderTextureRotated(m_game_instance.GetSDLRenderer(), m_texture,
+    if (m_game_instance.getKeyboardInput()->GetMovementNormalizeVec2().x < 0.0f) {
+        SDL_RenderTextureRotated(m_game_instance.getSDLRenderer(), m_texture,
             nullptr, &destination,
-            m_rotation, nullptr , SDL_FLIP_HORIZONTAL);
+            m_fRotation, nullptr , SDL_FLIP_HORIZONTAL);
     } else {
-        SDL_RenderTextureRotated(m_game_instance.GetSDLRenderer(), m_texture,
+        SDL_RenderTextureRotated(m_game_instance.getSDLRenderer(), m_texture,
             nullptr, &destination,
-            m_rotation, nullptr, SDL_FLIP_NONE);
+            m_fRotation, nullptr, SDL_FLIP_NONE);
     }
 }
 
@@ -63,7 +63,7 @@ int Player::Quit() {
     return MovableEntity::Quit();
 }
 
-std::string Player::SetName(std::string name) {
-    m_player_name = name;
+std::string Player::setName(std::string name) {
+    m_strPlayerName = name;
     return name;
 }

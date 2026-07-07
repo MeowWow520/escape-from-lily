@@ -9,15 +9,15 @@
 
 class HealthyPointEntity : public MovableEntity {
     protected:
-        float m_f_health{};
-        float m_f_get_damage{};
+        float m_fHealth{};
+        float m_fGetDamage{};
     public:
         explicit HealthyPointEntity(const char* m_entity_name = "HealthyPointEntity")
             : MovableEntity(m_entity_name) { }
         ~HealthyPointEntity() override = default;
 
         int Initialize() override;
-        void HandleEvents(SDL_Event event) override;
+        void handleEvents(SDL_Event event) override;
         void Update(float deltaTime) override;
         void Render() override;
         int Quit() override;

@@ -11,12 +11,12 @@
 
 int FontManager::Initialize(Game& game) {
     m_game_instance = &game;
-    m_text_engine = TTF_CreateRendererTextEngine(m_game_instance->GetSDLRenderer());
-    EFL_CHACK_WITH_GET_ERROR(LogCategory::Font, m_text_engine, "TTF_CreateRendererTextEngine failed");
+    m_text_engine = TTF_CreateRendererTextEngine(m_game_instance->getSDLRenderer());
+    EFL_CHECK_WITH_GET_ERROR(LogCategory::Font, m_text_engine, "TTF_CreateRendererTextEngine failed");
     return 0;
 }
 
-void FontManager::HandleEvents(SDL_Event event) {
+void FontManager::handleEvents(SDL_Event event) {
 }
 
 void FontManager::Update(float dt) {
@@ -34,7 +34,7 @@ int FontManager::Quit() {
     return 0;
 }
 
-TTF_TextEngine* FontManager::GetTTFEngine() const {
+TTF_TextEngine* FontManager::getTTFEngine() const {
     return m_text_engine;
 }
 

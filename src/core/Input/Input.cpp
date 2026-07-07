@@ -11,42 +11,42 @@ Input::Input() {
 void Input::Update(float dt) {
 }
 
-ActionState Input::GetActionState(const Action action) const {
-    return m_current_action_state.find(action)->second;
+ActionState Input::getActionState(const Action action) const {
+    return m_map_currentActionState.find(action)->second;
 }
 
-bool Input::IsActionPressed(const Action action) const {
-    return (m_current_action_state.find(action)->second == ActionState::Pressed);
+bool Input::isActionPressed(const Action action) const {
+    return (m_map_currentActionState.find(action)->second == ActionState::Pressed);
 }
 
-bool Input::IsActionHeld(const Action action) const {
-    return (m_current_action_state.find(action)->second == ActionState::Held);
+bool Input::isActionHeld(const Action action) const {
+    return (m_map_currentActionState.find(action)->second == ActionState::Held);
 }
 
-bool Input::IsActionReleased(const Action action) const {
-    return (m_current_action_state.find(action)->second == ActionState::Released);
+bool Input::isActionReleased(const Action action) const {
+    return (m_map_currentActionState.find(action)->second == ActionState::Released);
 }
 
-bool Input::BindAction(const SDL_Keycode key, Action action) {
-    m_key_bind.try_emplace(key, action);
+bool Input::bindAction(const SDL_Keycode key, Action action) {
+    m_map_keyBind.try_emplace(key, action);
     return true;
 }
 
-bool Input::UnbindAction(const Action action) {
-    for (auto it = m_key_bind.begin(); it != m_key_bind.end(); ++it) {
+bool Input::unbindAction(const Action action) {
+    for (auto it = m_map_keyBind.begin(); it != m_map_keyBind.end(); ++it) {
         if (it->second == action) {
-            m_key_bind.erase(it);
+            m_map_keyBind.erase(it);
             return true;
         }
     }
     return false;
 }
 
-int Input::SetDefaultKeyBind() {
+int Input::setDefaultKeyBind() {
     return 0;
 }
 
-void Input::SetActionState(const Action action, const ActionState state) {
+void Input::setActionState(const Action action, const ActionState state) {
     // TODO: 检测
-    m_current_action_state[action] = state;
+    m_map_currentActionState[action] = state;
 }
