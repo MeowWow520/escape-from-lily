@@ -26,11 +26,11 @@ int Player::Initialize() {
     m_vec2_worldPos = (m_game_instance.getCurrentScene()->GetWorldSize() - m_vec2_textureSize ) / glm::vec2(2.0f);
     EFL_LOGGER_INFO(LogCategory::Entity, "Play's m_world_pos be set in ({}, {})", m_vec2_worldPos.x, m_vec2_worldPos.y);
     m_vec2_screenPos = transScreenPos();
-    return MovableEntity::Initialize();
+    return HealthyPointEntity::Initialize();
 }
 
 void Player::handleEvents(SDL_Event event) {
-    MovableEntity::handleEvents(event);
+    HealthyPointEntity::handleEvents(event);
 }
 
 void Player::Update(const float dt) {
@@ -60,7 +60,7 @@ int Player::Quit() {
     if (m_texture != nullptr)
         SDL_DestroyTexture(m_texture);
     m_texture = nullptr;
-    return MovableEntity::Quit();
+    return HealthyPointEntity::Quit();
 }
 
 std::string Player::setName(std::string name) {
