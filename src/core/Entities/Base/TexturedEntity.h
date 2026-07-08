@@ -11,14 +11,14 @@
 class TexturedEntity : public ObjectScreen {
     protected:
 
-        SDL_Texture *m_texture{};                          // 实体的纹理
+        SDL_Texture *m_texture{};                         // 实体的纹理
         SDL_Color m_colorMod{COLOR(0xFFFFFFFF)};        // 颜色调制 + 透明度
         SDL_BlendMode m_blendMode{SDL_BLENDMODE_BLEND};   // 像素混合模式
-        bool m_bTextureDirty{false};                       // 脏标记
+        bool m_bTextureDirty{false};                      // 脏标记
         bool m_bVisible{false};
         float m_fRotation{0.0f};                // 旋转角度
         std::string m_strPath{};                // 纹理的文件路径
-        SDL_Rect m_rect{};                      // 精灵图矩形
+        SDL_Rect m_rect{0,0,0,0};     // 精灵图矩形
         glm::vec2 m_vec2_textureSize{};         // 纹理原始尺寸
         glm::vec2 m_vec2_scale{1.0f, 1.0f}; // 缩放
         glm::vec2 m_vec2_pivot{0.5f, 0.5f}; // 旋转中心 归一化

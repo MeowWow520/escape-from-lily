@@ -9,8 +9,8 @@
 #include <variant>
 #include <glm/vec2.hpp>
 
-#include "../Font/Base/TextStypes.h"
 #include "../Object/Object.h"
+#include "Param.h"
 
 enum class EntityType : uint8_t {
     Player,
@@ -22,8 +22,10 @@ enum class EntityType : uint8_t {
 };
 
 struct PlayerParams {
-    std::string m_player_name;
-    std::string texture_path;
+    Param<std::string> m_player_name{DEFAULT};
+    Param<std::string> texture_path;
+
+    Param<glm::vec2> world_pos{DEFAULT};
 };
 
 struct CameraParams {

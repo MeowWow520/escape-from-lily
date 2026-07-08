@@ -63,6 +63,8 @@ add_executable(escape-from-lily
         src/core/Config/Structs/PlayerStruct.h
         src/core/Config/Structs/BaseJson.h
         src/core/Config/Structs/FontStruct.h
+        src/core/Factory/Param.h
+        src/core/Factory/Param.h
 )
 
 set(ASSETS_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/assets")

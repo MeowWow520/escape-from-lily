@@ -9,8 +9,8 @@
 
 class HealthyPointEntity : public MovableEntity {
     protected:
-        float m_fHealth{};
-        float m_fGetDamage{};
+        float m_fHealth{-1.0f};
+        float m_fGetDamage{0.0f};
     public:
         explicit HealthyPointEntity(const char* m_entity_name = "HealthyPointEntity")
             : MovableEntity(m_entity_name) { }

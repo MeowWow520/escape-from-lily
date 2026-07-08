@@ -26,7 +26,7 @@ class Object {
         virtual void Render() { }
         virtual int Quit() { return 0; }
 
-        [[nodiscard]] const char* GetName() const { return m_cEntityName; }
+        [[nodiscard]] const char* getEntityName() const { return m_cEntityName; }
 };
 
 #endif //ESCAPE_FROM_LILY_OBJECT_H
