@@ -45,11 +45,16 @@ EntityPtr<Player> EntityFactory::createPlayer(const PlayerParams& params) {
     // 创建实体
     EntityPtr<Player> entity(new Player());
 
-    entity->setName(params.player_name.value);
-    entity->setPath(params.texture_path.value);
-
+    if (params.player_name.source == ParamSource::Custom)
+        entity->setName(params.player_name.value);
+    if (params.texture_path.source == ParamSource::Custom)
+        entity->setPath(params.texture_path.value);
+    else if (params.texture_path.source == ParamSource::Asked)
+        EFL_LOGGER_ERROR(LogCategory::Factory, "Created Player warning: must set a texture path");
     if (params.max_speed.source == ParamSource::Custom)
         entity->setMaxSpeed(params.max_speed.value);
+    else if (params.max_speed.source == ParamSource::Default)
+        entity->setMaxSpeed(m_configManager.getDefaultJson().max_speed.value);
 
 
     // 初始化

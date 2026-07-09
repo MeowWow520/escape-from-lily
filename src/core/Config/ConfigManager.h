@@ -18,19 +18,18 @@ class ConfigManager {
         ConfigManager& operator=(const ConfigManager&) = delete;
 
         int initDefaultJsonFile(const std::string& filePath);
-        int initPlayerJsonFile(const std::string& filePath);
         int initFontsJsonFile(const std::string& filePath);
         int Initialize();
         int Quit();
 
         DefaultJson getDefaultJson();
-        PlayerJson getPlayerJson();
         std::vector<FontJson> getFontJson();
 
     private:
         ConfigManager() = default;
-        DefaultJson m_defaultJson{};
-        PlayerJson m_playerJson{};
+
+    protected:
+        DefaultJson m_defaultJson;
         std::vector<FontJson> m_fontJsonMap{};
 };
 

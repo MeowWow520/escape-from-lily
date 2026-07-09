@@ -25,49 +25,24 @@ int ConfigManager::initDefaultJsonFile(const std::string &filePath) {
     }
     EFL_LOGGER_INFO(LogCategory::Core, "Open {} successful", filePath);
 
-
-    const Uint32 fps = config["display"]["fps"];
-    const auto window_size = glm::vec2(config["display"]["window"]["size"][0],
-        config["display"]["window"]["size"][1]);
-    const std::string window_title = config["display"]["window"]["title"];
-    const bool acceleration = config["feature"]["acceleration"];
-    const bool key_logging = config["feature"]["key-logging"];
-    const std::string default_color = config["font"]["default_color"];
-    const std::string notosansc = config["font"]["NotoSanSc"];
-
-    m_defaultJson = {
-        {fps, {window_size, window_title}},
-        {acceleration, key_logging},
-        {default_color, notosansc},
+    j_PlayerParams jPlayer_params = {
+        config["PLayerParams"]["player_params"],
+        {config["PLayerParams"]["scale"][0],config["PLayerParams"]["scale"][1]},
+        {config["PLayerParams"]["pivot"][0], config["PLayerParams"]["pivot"][1]},
+        config["PLayerParams"]["max_speed"],
+        config["PLayerParams"]["acceleration"],
+        config["PLayerParams"]["health"],
+        config["PLayerParams"]["visible"],
+        config["PLayerParams"]["rotation"],
+        config["PLayerParams"]["color"],
+        config["PLayerParams"]["blend_mode"],
+        config["PLayerParams"]["rect"],
+    };
+    j_CameraParams jCamera_params = {
+        config["PLayerParams"]["camera_params"]
     };
 
-    ifs.close();
-    config.clear();
-    return 0;
-}
-
-int ConfigManager::initPlayerJsonFile(const std::string &filePath) {
-    std::ifstream ifs(filePath);
-    if (!ifs.is_open()) {
-        EFL_LOGGER_ERROR(LogCategory::Core, "Open {} failed", filePath);
-        return -1;
-    }
-    json config = json::parse (ifs);
-
-    if (config.is_null()) {
-        EFL_LOGGER_ERROR(LogCategory::Core, "Load json file failed: json is null ");
-        return -1;
-    }
-    EFL_LOGGER_INFO(LogCategory::Core, "Open {} successful", filePath);
-
-    const std::string default_name = config["default_name"];
-    const std::string texture_path = config["texture_path"];
-    const float max_speed =  config["max_speed"];
-    m_playerJson = {
-        default_name,
-        texture_path,
-        max_speed
-    };
+    m_defaultJson = { jPlayer_params, jCamera_params };
 
     ifs.close();
     config.clear();
@@ -119,24 +94,18 @@ int ConfigManager::initFontsJsonFile(const std::string &filePath) {
 
 int ConfigManager::Initialize() {
     EFL_CHECK(LogCategory::Core, !initDefaultJsonFile("assets/json/default.json"), "initDefaultJsonFile");
-    EFL_CHECK(LogCategory::Core, !initPlayerJsonFile("assets/json/player.json"),   "initPlayerJsonFile" );
     EFL_CHECK(LogCategory::Core, !initFontsJsonFile("assets/json/fonts.json"),     "initFontsJsonFile"  );
     return 0;
 }
 
 int ConfigManager::Quit() {
     m_defaultJson = {};
-    m_playerJson = {};
     m_fontJsonMap = {};
     return 0;
 }
 
 DefaultJson ConfigManager::getDefaultJson() {
     return m_defaultJson;
-}
-
-PlayerJson ConfigManager::getPlayerJson() {
-    return m_playerJson;
 }
 
 std::vector<FontJson> ConfigManager::getFontJson() {

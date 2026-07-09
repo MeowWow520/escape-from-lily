@@ -19,10 +19,13 @@ class EntityFactory {
         EntityFactory(const EntityFactory&) = default;
         EntityFactory& operator=(const EntityFactory&) = default;
 
-        static EntityPtr<Camera> createCamera(const CameraParams& params);
-        static EntityPtr<Background> createBackground(const BackgroundParams& params);
-        static EntityPtr<Player> createPlayer(const PlayerParams& params);
-        static EntityPtr<TextStatic> createTextStatic(const TextStaticParams& params);
+        EntityPtr<Camera> createCamera(const CameraParams& params);
+        EntityPtr<Background> createBackground(const BackgroundParams& params);
+        EntityPtr<Player> createPlayer(const PlayerParams& params);
+        EntityPtr<TextStatic> createTextStatic(const TextStaticParams& params);
+
+    private:
+        ConfigManager& m_config_manager = ConfigManager::getInstance();
 };
 
 
