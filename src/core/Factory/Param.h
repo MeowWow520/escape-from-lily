@@ -13,10 +13,18 @@
 struct DefaultTag {};
 inline constexpr DefaultTag DEFAULT{};
 
-struct TextureTag {};
-inline constexpr TextureTag Determined{};
+struct AskedTag {};
+inline constexpr AskedTag ASKED{};
 
-enum class ParamSource : uint8_t { Default, FromTexture, Custom };
+struct DeterminedTag {};
+inline constexpr DeterminedTag DETERMINED{};
+
+enum class ParamSource : uint8_t {
+    Default,
+    Determined,
+    Custom,
+    Asked
+};
 
 template<typename T>
 struct Param {
@@ -25,10 +33,11 @@ struct Param {
 
     Param() = default;
 
-    explicit Param(DefaultTag) : source(ParamSource::Default) {}
-    explicit Param(TextureTag) : source(ParamSource::FromTexture) {}
-    explicit Param(const T& v) : source(ParamSource::Custom), value(v) {}
-    explicit Param(T&& v) noexcept : source(ParamSource::Custom), value(std::move(v)) {}
+    explicit Param(DefaultTag) {}
+    explicit Param(AskedTag)       : source(ParamSource::Asked) {}
+    explicit Param(DeterminedTag)  : source(ParamSource::Determined) {}
+    Param(const T& v)     : source(ParamSource::Custom), value(v) {}
+    Param(T&& v) noexcept : source(ParamSource::Custom), value(std::move(v)) {}
 };
 
 #endif // !ESCAPE_FROM_LILY_PARAM_H

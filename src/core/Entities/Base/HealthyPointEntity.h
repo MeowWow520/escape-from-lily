@@ -21,6 +21,11 @@ class HealthyPointEntity : public MovableEntity {
         void Update(float deltaTime) override;
         void Render() override;
         int Quit() override;
+
+        [[nodiscard]] float getHealth() const;
+        float setHealth(float new_health);
+        [[nodiscard]] float getGetDamage() const;
+        float setGetDamage(float new_getDamage);
 };
 
 

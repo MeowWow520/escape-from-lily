@@ -7,12 +7,7 @@
 
 
 
-EntityPtr<Camera> EntityFactory::createCamera(const EntityParams &params) {
-    // 检查是否符合条件
-    if (!std::holds_alternative<CameraParams>(params)) {
-        EFL_LOGGER_ERROR(LogCategory::Factory, "Wrong params pass to EntityType::CameraParams");
-        return nullptr;
-    }
+EntityPtr<Camera> EntityFactory::createCamera(const CameraParams &params) {
     // 创建实体
     const auto&[world_pos, m_border] = std::get<CameraParams>(params);
     EntityPtr<Camera> bg(new Camera());
@@ -29,12 +24,7 @@ EntityPtr<Camera> EntityFactory::createCamera(const EntityParams &params) {
     return entity;
 }
 
-EntityPtr<Background> EntityFactory::createBackground(const EntityParams &params) {
-    // 检查是否符合条件
-    if (!std::holds_alternative<BackgroundParams>(params)) {
-        EFL_LOGGER_ERROR(LogCategory::Factory, "Wrong params pass to EntityType::BackgroundParams");
-        return nullptr;
-    }
+EntityPtr<Background> EntityFactory::createBackground(const BackgroundParams &params) {
     // 创建实体
     const auto&[texture_path, world_pos] = std::get<BackgroundParams>(params);
     EntityPtr<Background> bg(new Background());
@@ -51,19 +41,17 @@ EntityPtr<Background> EntityFactory::createBackground(const EntityParams &params
     return entity;
 }
 
-EntityPtr<Player> EntityFactory::createPlayer(const EntityParams &params) {
-    // 检查是否符合条件
-    if (!std::holds_alternative<PlayerParams>(params)) {
-        EFL_LOGGER_ERROR(LogCategory::Factory, "Wrong params pass to EntityType::PlayerParams");
-        return nullptr;
-    }
+EntityPtr<Player> EntityFactory::createPlayer(const PlayerParams& params) {
     // 创建实体
-    const auto&[m_player_name, texture_path] = std::get<PlayerParams>(params);
-    EntityPtr<Player> bg(new Player());
-    // 设置初始参数
-    bg->setName(m_player_name);
-    bg->setPath(texture_path);
-    EntityPtr<Player> entity = std::move(bg);
+    EntityPtr<Player> entity(new Player());
+
+    entity->setName(params.player_name.value);
+    entity->setPath(params.texture_path.value);
+
+    if (params.max_speed.source == ParamSource::Custom)
+        entity->setMaxSpeed(params.max_speed.value);
+
+
     // 初始化
     if (entity->Initialize() != 0) {
         EFL_LOGGER_ERROR(LogCategory::Factory, "Initialize entity failed");
@@ -73,12 +61,7 @@ EntityPtr<Player> EntityFactory::createPlayer(const EntityParams &params) {
     return entity;
 }
 
-EntityPtr<TextStatic> EntityFactory::createTextStatic(const EntityParams &params) {
-    // 检查是否符合条件
-    if (!std::holds_alternative<TextStaticParams>(params)) {
-        EFL_LOGGER_ERROR(LogCategory::Factory, "Wrong params pass to EntityType::TextStaticParams");
-        return nullptr;
-    }
+EntityPtr<TextStatic> EntityFactory::createTextStatic(const TextStaticParams &params) {
     // 创建实体
     const auto&[text, font_size, color, screen_pos, display_time] = std::get<TextStaticParams>(params);
     EntityPtr<TextStatic> bg(new TextStatic());

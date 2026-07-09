@@ -28,12 +28,11 @@ int SceneMain::Initialize() {
     m_current_background = EntityFactory::createBackground(background);
 
     // 创建玩家
-    PlayerParams player = {
-        m_config_manager.getPlayerJson().default_name,
-        m_config_manager.getPlayerJson().texture_path
-    };
-    m_player = EntityFactory::createPlayer(player);
-
+    m_player = EntityFactory::createPlayer(PlayerParams{
+        .player_name = std::string{"MeowWow520"},
+        .texture_path = std::string{"assets/images/backgrounds/purple.png"},
+        .health = 5.00f,
+    });
 
     TextStaticParams text_static_params = {
         "你好, World!",
