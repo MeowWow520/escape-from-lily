@@ -7,14 +7,12 @@
 #include <variant>
 #include "DefaultStruct.h"
 #include "FontStruct.h"
-#include "PlayerStruct.h"
 
 
 
 using JsonStruct = std::variant<
     std::monostate,
     DefaultJson,
-    PlayerJson,
     FontJson
 >;
 

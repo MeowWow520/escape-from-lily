@@ -6,34 +6,35 @@
 #define ESCAPE_FROM_LILY_DEFAULTSTRUCT_H
 #include <string>
 #include <glm/vec2.hpp>
-#include <SDL3/SDL_stdinc.h>
 
 
-
-struct s_window {
-    glm::vec2 size{};
+struct j_WindowParams {
     std::string title;
+    glm::vec2 window_size;
+    Uint32 FPS;
 };
 
-struct s_display {
-    Uint32 fps{};
-    s_window window{};
+struct j_PlayerParams {
+    std::string player_name;
+    glm::vec2 scale;
+    glm::vec2 pivot;
+    float max_speed;
+    float acceleration;
+    float health;
+    bool visible;
+    float rotation;
+    SDL_Color color;
+    std::string blend_mode;
+    SDL_Rect rect;
 };
-
-struct s_feature {
-    bool acceleration{};
-    bool key_logging{};
-};
-
-struct s_font {
-    std::string default_color{};
-    std::string notosansc{};
+struct j_CameraParams {
+    std::string name;
 };
 
 struct DefaultJson {
-    s_display display{};
-    s_feature feature{};
-    s_font font{};
+    j_WindowParams window_params;
+    j_PlayerParams player_params;
+    j_CameraParams camera_params;
 };
 
 #endif //ESCAPE_FROM_LILY_DEFAULTSTRUCT_H

@@ -6,11 +6,10 @@
 #define ESCAPE_FROM_LILY_ENTITYTYPES_H
 #include <memory>
 #include <string>
-#include <variant>
 #include <glm/vec2.hpp>
 
-#include "../Font/Base/TextStypes.h"
 #include "../Object/Object.h"
+#include "Param.h"
 
 enum class EntityType : uint8_t {
     Player,
@@ -22,41 +21,24 @@ enum class EntityType : uint8_t {
 };
 
 struct PlayerParams {
-    std::string m_player_name;
-    std::string texture_path;
+    Param  <std::string> player_name  {DEFAULT};
+    Param  <std::string> texture_path {ASKED};
+    Param    <glm::vec2> world_pos    {DETERMINED};
+    Param    <glm::vec2> screen_pos   {DETERMINED};
+    Param    <glm::vec2> texture_size {DETERMINED};
+    Param    <glm::vec2> scale        {DEFAULT};
+    Param    <glm::vec2> hitbox       {DETERMINED};
+    Param    <glm::vec2> pivot        {DEFAULT};
+    Param        <float> max_speed    {DEFAULT};
+    Param        <float> acceleration {DEFAULT};
+    Param        <float> health       {DEFAULT};
+    Param         <bool> visible      {DEFAULT};
+    Param        <float> rotation     {DEFAULT};
+    Param    <SDL_Color> color_mod    {DEFAULT};
+    Param<SDL_BlendMode> blend_mode   {DEFAULT};
+    Param     <SDL_Rect> rect         {DEFAULT};
 };
 
-struct CameraParams {
-    glm::vec2 world_pos;
-    float border;
-};
-
-struct BackgroundParams {
-    std::string texture_path;
-    glm::vec2 world_pos;
-};
-
-struct UserInterfaceParams {
-    std::string texture_path;
-    glm::vec2 screen_position;
-};
-struct TextStaticParams {
-    std::string text;
-    float font_size;
-    SDL_Color color;
-    glm::vec2 screen_pos;
-    float display_time;
-};
-
-
-using EntityParams = std::variant<
-    std::monostate,
-    PlayerParams,
-    CameraParams,
-    BackgroundParams,
-    UserInterfaceParams,
-    TextStaticParams
->;
 
 struct EntityDeleter {
     void operator()(Object* p) const noexcept {

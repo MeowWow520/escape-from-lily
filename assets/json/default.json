@@ -1,17 +1,23 @@
 {
-  "display": {
-    "fps": 120,
-    "window": {
-      "size": [1920, 1080],
-      "title": "escape-from-lily"
-    }
+  "WindowParams": {
+    "title": "escape-from-lily",
+    "window_size": [1960, 1080],
+    "FPS": 120
   },
-  "feature": {
-    "acceleration": false,
-    "key-logging": false
+  "PLayerParams": {
+    "player_name": "Lily",
+    "scale": [1, 1],
+    "pivot": [0.5, 0.5],
+    "max_speed": 750.00,
+    "acceleration": 0.00,
+    "health": 100.00,
+    "visible": true,
+    "rotation": 0.00,
+    "color_mod": [0, 0, 0, 0],
+    "blend_mode": "SDL_BLENDMODE_NONE",
+    "rect": [0, 0, 0, 0]
   },
-  "font": {
-    "default_color": "ff4d6dff",
-    "NotoSanSc": "assets/fonts/Noto_Sans_SC/static/NotoSansSC-ExtraBold.ttf"
+  "CameraParams": {
+    "name": "aaa"
   }
 }

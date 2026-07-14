@@ -11,11 +11,12 @@
 class MovableEntity : public TexturedEntity {
     protected:
         // 实体的最大速度
-        float m_fMaxSpeed{};
+        float m_fMaxSpeed{750.0f};
         // 实体的加速度，默认值为：TBD。// TODO：待实装
-        float m_fAcceleration{};
+        float m_fAcceleration{100.0f};
         // 实体的运动方向
-        glm::vec2 m_vec2_vector{};
+        //FIXME: 没有用到的成员？
+        glm::vec2 m_vec2_vector{0.0f,0.0f};
     public:
         explicit MovableEntity(const char* m_entity_name = "MovableEntity")
             : TexturedEntity(m_entity_name) { }

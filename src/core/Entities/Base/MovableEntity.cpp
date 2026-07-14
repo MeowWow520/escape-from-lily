@@ -27,9 +27,9 @@ float MovableEntity::getAcceleration() const {
     return m_fAcceleration;
 }
 
-float MovableEntity::setAcceleration(const float newacceleration) {
-    m_fAcceleration = newacceleration;
-    return newacceleration;
+float MovableEntity::setAcceleration(const float new_acceleration) {
+    m_fAcceleration = new_acceleration;
+    return new_acceleration;
 }
 
 glm::vec2 MovableEntity::getVector() const {

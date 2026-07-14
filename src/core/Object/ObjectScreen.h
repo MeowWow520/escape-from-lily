@@ -9,7 +9,7 @@
 
 class ObjectScreen : public ObjectWorld {
     protected:
-        glm::vec2 m_vec2_screenPos{};
+        glm::vec2 m_vec2_screenPos{0.0f, 0.0f};
     public:
         explicit ObjectScreen(const char* m_entity_name = "ObjectScreen")
             : ObjectWorld(m_entity_name) {}

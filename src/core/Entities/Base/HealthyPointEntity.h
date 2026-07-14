@@ -9,8 +9,8 @@
 
 class HealthyPointEntity : public MovableEntity {
     protected:
-        float m_fHealth{};
-        float m_fGetDamage{};
+        float m_fHealth{-1.0f};
+        float m_fGetDamage{0.0f};
     public:
         explicit HealthyPointEntity(const char* m_entity_name = "HealthyPointEntity")
             : MovableEntity(m_entity_name) { }
@@ -21,6 +21,11 @@ class HealthyPointEntity : public MovableEntity {
         void Update(float deltaTime) override;
         void Render() override;
         int Quit() override;
+
+        [[nodiscard]] float getHealth() const;
+        float setHealth(float new_health);
+        [[nodiscard]] float getGetDamage() const;
+        float setGetDamage(float new_getDamage);
 };
 
 

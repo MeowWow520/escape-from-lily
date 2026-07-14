@@ -9,7 +9,7 @@
 
 class ObjectWorld : public Object {
     protected:
-        glm::vec2 m_vec2_worldPos{};
+        glm::vec2 m_vec2_worldPos{0.0f, 0.0f};
     public:
         explicit ObjectWorld(const char* m_entity_name = "ObjectWorld")
             : Object(m_entity_name) {}

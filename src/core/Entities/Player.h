@@ -11,7 +11,7 @@
 class Player : public HealthyPointEntity {
     protected:
         // 玩家名称
-        std::string m_strPlayerName;
+        std::string m_strPlayerName{"Lily"};
     public:
         explicit Player() : HealthyPointEntity("Player") {}
 
