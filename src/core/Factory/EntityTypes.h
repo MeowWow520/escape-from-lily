@@ -39,28 +39,6 @@ struct PlayerParams {
     Param     <SDL_Rect> rect         {DEFAULT};
 };
 
-struct CameraParams {
-    glm::vec2 world_pos;
-    float border;
-};
-
-struct BackgroundParams {
-    std::string texture_path;
-    glm::vec2 world_pos;
-};
-
-struct UserInterfaceParams {
-    std::string texture_path;
-    glm::vec2 screen_position;
-};
-struct TextStaticParams {
-    std::string text;
-    float font_size;
-    SDL_Color color;
-    glm::vec2 screen_pos;
-    float display_time;
-};
-
 
 struct EntityDeleter {
     void operator()(Object* p) const noexcept {

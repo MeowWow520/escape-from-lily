@@ -5,70 +5,31 @@
 #include "nlohmann/json.hpp"
 #include "ConfigManager.h"
 #include <fstream>
+
+#include "../Factory/EntityTypes.h"
 #include "../Logger/Log.h"
 
 using json = nlohmann::json;
 
-
-
-int ConfigManager::initDefaultJsonFile(const std::string &filePath) {
-    std::ifstream ifs(filePath);
-    if (!ifs.is_open()) {
-        EFL_LOGGER_ERROR(LogCategory::Core, "Open {} failed", filePath);
+int ConfigManager::Initialize() {
+    std::ifstream ifsFont("assets/json/fonts.json");
+    if (!ifsFont.is_open()) {
+        EFL_LOGGER_ERROR(LogCategory::Core, "Open {} failed", "assets/json/fonts.json");
         return -1;
     }
-    json config = json::parse (ifs);
-
-    if (config.is_null()) {
+    json configFont = json::parse (ifsFont);
+    if (configFont.is_null()) {
         EFL_LOGGER_ERROR(LogCategory::Core, "Load json file failed: json is null ");
         return -1;
     }
-    EFL_LOGGER_INFO(LogCategory::Core, "Open {} successful", filePath);
-
-    j_PlayerParams jPlayer_params = {
-        config["PLayerParams"]["player_params"],
-        {config["PLayerParams"]["scale"][0],config["PLayerParams"]["scale"][1]},
-        {config["PLayerParams"]["pivot"][0], config["PLayerParams"]["pivot"][1]},
-        config["PLayerParams"]["max_speed"],
-        config["PLayerParams"]["acceleration"],
-        config["PLayerParams"]["health"],
-        config["PLayerParams"]["visible"],
-        config["PLayerParams"]["rotation"],
-        config["PLayerParams"]["color"],
-        config["PLayerParams"]["blend_mode"],
-        config["PLayerParams"]["rect"],
-    };
-    j_CameraParams jCamera_params = {
-        config["PLayerParams"]["camera_params"]
-    };
-
-    m_defaultJson = { jPlayer_params, jCamera_params };
-
-    ifs.close();
-    config.clear();
-    return 0;
-}
-
-int ConfigManager::initFontsJsonFile(const std::string &filePath) {
-    std::ifstream ifs(filePath);
-    if (!ifs.is_open()) {
-        EFL_LOGGER_ERROR(LogCategory::Core, "Open {} failed", filePath);
-        return -1;
-    }
-    json config = json::parse (ifs);
-
-    if (config.is_null()) {
-        EFL_LOGGER_ERROR(LogCategory::Core, "Load json file failed: json is null ");
-        return -1;
-    }
-    EFL_LOGGER_INFO(LogCategory::Core, "Open {} successful", filePath);
-
-    if (!config.is_object()) {
+    EFL_LOGGER_INFO(LogCategory::Core, "Open {} successful", "assets/json/fonts.json");
+    if (!configFont.is_object()) {
         EFL_LOGGER_ERROR(LogCategory::Core, "Load json file failed: json is not a object");
         return -1;
     }
+
     // 遍历
-    for (auto it = config.begin(); it != config.end(); ++it) {
+    for (auto it = configFont.begin(); it != configFont.end(); ++it) {
         const auto& obj = it.value();
 
         FontJson entry;
@@ -86,15 +47,57 @@ int ConfigManager::initFontsJsonFile(const std::string &filePath) {
 
         m_fontJsonMap.push_back(entry);
     }
+    ifsFont.close();
+    configFont.clear();
+    // ----------------------------
+    std::ifstream ifsDefault("assets/json/fonts.json");
+    if (!ifsDefault.is_open()) {
+        EFL_LOGGER_ERROR(LogCategory::Core, "Open {} failed", "assets/json/fonts.json");
+        return -1;
+    }
+    json configDefault = json::parse (ifsDefault);
+    if (configDefault.is_null()) {
+        EFL_LOGGER_ERROR(LogCategory::Core, "Load json file failed: json is null ");
+        return -1;
+    }
+    EFL_LOGGER_INFO(LogCategory::Core, "Open {} successful", "assets/json/fonts.json");
+    if (!configDefault.is_object()) {
+        EFL_LOGGER_ERROR(LogCategory::Core, "Load json file failed: json is not a object");
+        return -1;
+    }
 
-    ifs.close();
-    config.clear();
-    return 0;
-}
+    m_defaultJson =
+    {
+        {
+            configDefault["WindowParams"]["title"],
+            {configDefault["WindowParams"]["window_size"][0], configDefault["WindowParams"]["window_size"][0]},
+            configDefault["WindowParams"]["FPS"]
+        },
+        {
+            configDefault["PLayerParams"]["player_name"],
+            {configDefault["PLayerParams"]["scale"][0], configDefault["PLayerParams"]["scale"][1]},
+            {configDefault["PLayerParams"]["pivot"][0], configDefault["PLayerParams"]["pivot"][1]},
+            configDefault["PLayerParams"]["max_speed"],
+            configDefault["PLayerParams"]["acceleration"],
+            configDefault["PLayerParams"]["health"],
+            configDefault["PLayerParams"]["visible"],
+            configDefault["PLayerParams"]["rotation"],
+            configDefault["PLayerParams"]["color"],
+            configDefault["PLayerParams"]["display_time"],
+            SDL_Rect{
+                configDefault["PLayerParams"]["rect"][0],
+                configDefault["PLayerParams"]["rect"][1],
+                configDefault["PLayerParams"]["rect"][2],
+                configDefault["PLayerParams"]["rect"][3]
+            }
+        },
+        {
+            configDefault["CameraParams"]["name"]
+        }
+    };
+    ifsDefault.close();
+    configDefault.clear();
 
-int ConfigManager::Initialize() {
-    EFL_CHECK(LogCategory::Core, !initDefaultJsonFile("assets/json/default.json"), "initDefaultJsonFile");
-    EFL_CHECK(LogCategory::Core, !initFontsJsonFile("assets/json/fonts.json"),     "initFontsJsonFile"  );
     return 0;
 }
 
@@ -104,11 +107,10 @@ int ConfigManager::Quit() {
     return 0;
 }
 
-DefaultJson ConfigManager::getDefaultJson() {
+DefaultJson ConfigManager::getDefaultJson() const {
     return m_defaultJson;
 }
 
-std::vector<FontJson> ConfigManager::getFontJson() {
+std::vector<FontJson> ConfigManager::getFontJson() const {
     return m_fontJsonMap;
 }
-

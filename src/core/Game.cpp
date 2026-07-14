@@ -23,11 +23,11 @@ Game::Game() :
 
 int Game::Initialize() {
 
-    m_strTitle = config_manager.getDefaultJson().display.window.title;
-    m_vec2_windowSize = config_manager.getDefaultJson().display.window.size;
+    m_strTitle = config_manager.getDefaultJson().window_params.title;
+    m_vec2_windowSize = config_manager.getDefaultJson().window_params.window_size;
     m_bRunning = true;
     m_fDeltaTime = 0.0f;
-    m_i32FPS = config_manager.getDefaultJson().display.fps;
+    m_i32FPS = config_manager.getDefaultJson().window_params.FPS;
     m_i32FrameDelay = static_cast<Uint32>(1e9) / m_i32FPS;
     m_window = nullptr;
     m_renderer = nullptr;

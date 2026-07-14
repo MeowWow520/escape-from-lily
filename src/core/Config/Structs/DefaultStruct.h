@@ -6,7 +6,13 @@
 #define ESCAPE_FROM_LILY_DEFAULTSTRUCT_H
 #include <string>
 #include <glm/vec2.hpp>
-#include <SDL3/SDL_stdinc.h>
+
+
+struct j_WindowParams {
+    std::string title;
+    glm::vec2 window_size;
+    Uint32 FPS;
+};
 
 struct j_PlayerParams {
     std::string player_name;
@@ -24,7 +30,9 @@ struct j_PlayerParams {
 struct j_CameraParams {
     std::string name;
 };
+
 struct DefaultJson {
+    j_WindowParams window_params;
     j_PlayerParams player_params;
     j_CameraParams camera_params;
 };

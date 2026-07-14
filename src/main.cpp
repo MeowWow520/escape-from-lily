@@ -5,7 +5,7 @@
 #include "core/Game.h"
 #include "core/Config/ConfigManager.h"
 #include "core/Logger/Log.h"
-
+#include "core/Factory/EntityFactory.h"
 
 int main() {
     EFL::registerLogCategory();

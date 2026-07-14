@@ -1,4 +1,9 @@
 {
+  "WindowParams": {
+    "title": "escape-from-lily",
+    "window_size": [1960, 1080],
+    "FPS": 120
+  },
   "PLayerParams": {
     "player_name": "Lily",
     "scale": [1, 1],
@@ -11,5 +16,8 @@
     "color_mod": [0, 0, 0, 0],
     "blend_mode": "SDL_BLENDMODE_NONE",
     "rect": [0, 0, 0, 0]
+  },
+  "CameraParams": {
+    "name": "aaa"
   }
 }
