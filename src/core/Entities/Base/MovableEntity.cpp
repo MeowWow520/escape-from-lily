@@ -7,7 +7,7 @@
 
 
 int MovableEntity::Initialize() {
-    m_fMaxSpeed = m_config_manager.getPlayerJson().max_speed;
+    m_fMaxSpeed = m_config_manager.getDefaultJson().player_params.max_speed;
     if (m_config_manager.getDefaultJson().feature.acceleration)
         // TODO: acceleration
         m_fAcceleration = 0;

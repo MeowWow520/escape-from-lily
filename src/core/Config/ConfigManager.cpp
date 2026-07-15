@@ -11,6 +11,8 @@
 
 using json = nlohmann::json;
 
+
+
 int ConfigManager::Initialize() {
     std::ifstream ifsFont("assets/json/fonts.json");
     if (!ifsFont.is_open()) {
@@ -50,9 +52,9 @@ int ConfigManager::Initialize() {
     ifsFont.close();
     configFont.clear();
     // ----------------------------
-    std::ifstream ifsDefault("assets/json/fonts.json");
+    std::ifstream ifsDefault("assets/json/default.json");
     if (!ifsDefault.is_open()) {
-        EFL_LOGGER_ERROR(LogCategory::Core, "Open {} failed", "assets/json/fonts.json");
+        EFL_LOGGER_ERROR(LogCategory::Core, "Open {} failed", "assets/json/default.json");
         return -1;
     }
     json configDefault = json::parse (ifsDefault);
@@ -60,7 +62,7 @@ int ConfigManager::Initialize() {
         EFL_LOGGER_ERROR(LogCategory::Core, "Load json file failed: json is null ");
         return -1;
     }
-    EFL_LOGGER_INFO(LogCategory::Core, "Open {} successful", "assets/json/fonts.json");
+    EFL_LOGGER_INFO(LogCategory::Core, "Open {} successful", "assets/json/default.json");
     if (!configDefault.is_object()) {
         EFL_LOGGER_ERROR(LogCategory::Core, "Load json file failed: json is not a object");
         return -1;
@@ -70,29 +72,38 @@ int ConfigManager::Initialize() {
     {
         {
             configDefault["WindowParams"]["title"],
-            {configDefault["WindowParams"]["window_size"][0], configDefault["WindowParams"]["window_size"][0]},
+            {configDefault["WindowParams"]["window_size"][0], configDefault["WindowParams"]["window_size"][1]},
             configDefault["WindowParams"]["FPS"]
         },
         {
-            configDefault["PLayerParams"]["player_name"],
-            {configDefault["PLayerParams"]["scale"][0], configDefault["PLayerParams"]["scale"][1]},
-            {configDefault["PLayerParams"]["pivot"][0], configDefault["PLayerParams"]["pivot"][1]},
-            configDefault["PLayerParams"]["max_speed"],
-            configDefault["PLayerParams"]["acceleration"],
-            configDefault["PLayerParams"]["health"],
-            configDefault["PLayerParams"]["visible"],
-            configDefault["PLayerParams"]["rotation"],
-            configDefault["PLayerParams"]["color"],
-            configDefault["PLayerParams"]["display_time"],
+            configDefault["PlayerParams"]["player_name"],
+            {configDefault["PlayerParams"]["scale"][0], configDefault["PlayerParams"]["scale"][1]},
+            {configDefault["PlayerParams"]["pivot"][0], configDefault["PlayerParams"]["pivot"][1]},
+            configDefault["PlayerParams"]["max_speed"],
+            configDefault["PlayerParams"]["acceleration"],
+            configDefault["PlayerParams"]["health"],
+            configDefault["PlayerParams"]["visible"],
+            configDefault["PlayerParams"]["rotation"],
+            SDL_Color{
+                configDefault["PlayerParams"]["color"][0],
+                configDefault["PlayerParams"]["color"][1],
+                configDefault["PlayerParams"]["color"][2],
+                configDefault["PlayerParams"]["color"][3]
+            },
+            configDefault["PlayerParams"]["blend_mode"],
             SDL_Rect{
-                configDefault["PLayerParams"]["rect"][0],
-                configDefault["PLayerParams"]["rect"][1],
-                configDefault["PLayerParams"]["rect"][2],
-                configDefault["PLayerParams"]["rect"][3]
+                configDefault["PlayerParams"]["rect"][0],
+                configDefault["PlayerParams"]["rect"][1],
+                configDefault["PlayerParams"]["rect"][2],
+                configDefault["PlayerParams"]["rect"][3]
             }
         },
         {
             configDefault["CameraParams"]["name"]
+        },
+        {
+            configDefault["Feature"]["key_logging"],
+            configDefault["Feature"]["acceleration"]
         }
     };
     ifsDefault.close();
