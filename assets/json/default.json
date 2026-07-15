@@ -4,7 +4,7 @@
     "window_size": [1960, 1080],
     "FPS": 120
   },
-  "PLayerParams": {
+  "PlayerParams": {
     "player_name": "Lily",
     "scale": [1, 1],
     "pivot": [0.5, 0.5],
@@ -13,11 +13,15 @@
     "health": 100.00,
     "visible": true,
     "rotation": 0.00,
-    "color_mod": [0, 0, 0, 0],
+    "color": [0, 0, 0, 0],
     "blend_mode": "SDL_BLENDMODE_NONE",
     "rect": [0, 0, 0, 0]
   },
   "CameraParams": {
     "name": "aaa"
+  },
+  "Feature": {
+    "key_logging": false,
+    "acceleration": false
   }
 }
